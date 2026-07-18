@@ -1,0 +1,9 @@
+RewriteEngine On
+
+# 1. Route /admin directly to your admin script
+RewriteRule ^admin/?$ admin.php [L,QSA]
+
+# 2. Optional: Remove .php extension from all other files too
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME}.php -f
+RewriteRule ^([^\s]+)$ $1.php [L]
