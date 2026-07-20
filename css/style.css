@@ -374,6 +374,27 @@ aside {
 
 }
 
+/* HOME IMAGE */
+
+#placeholder-main figure {
+    width: 100%;
+    height: 400px;
+    margin: 0;
+    overflow: hidden;
+    border-radius: 12px;
+}
+
+#placeholder-main picture {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+#placeholder-main img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
 
 /* NAVIGATION */
 nav {
@@ -538,6 +559,10 @@ input[type=submit] {
 /* PHONES */
 /* PHONES */
 @media (max-width: 600px) {
+
+     #placeholder-main figure {
+        height:250px;
+    }
 
     .comment-content-box {
         flex-direction: column;

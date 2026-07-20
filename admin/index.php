@@ -1,5 +1,6 @@
 <?php
 require 'includes/auth.php';
+
 require 'includes/db.php';
 
 include 'includes/header.php';

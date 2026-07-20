@@ -8,7 +8,6 @@ include 'includes/header.php';
 
 $message = "";
 $messageType = "";
-/*Todo: make sure to update  this message 'Please verify your email before logging in. Update appearence of message*/
 
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -42,12 +41,12 @@ WHERE u.username = ?
         
        if (!$user['email_verified']) {
         $messageType = "warning";
-    $message = "Please verify your email before logging in before you can access your account.";
+        $message = "Please verify your email before logging in before you can access your account.";
         } 
         else {
         session_regenerate_id(true);
 
-        $_SESSION['user_id'] = $user['id'];
+       $_SESSION['user_id'] = $user['id'];
         $_SESSION['username'] = $user['username'];
         $_SESSION['role'] = $user['role'];
 

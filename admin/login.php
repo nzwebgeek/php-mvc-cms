@@ -1,6 +1,9 @@
 <?php
 session_start();
-
+if (isset($_SESSION['admin_logged_in']) && $_SESSION['admin_logged_in'] === true) {
+    header("Location: index.php");
+    exit;
+}
 require 'includes/db.php';
  $error ="";
 
@@ -41,13 +44,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
              session_regenerate_id(true);
 
             $_SESSION['admin_logged_in'] = true;
-            $_SESSION['user_id'] = $user['id'];
-            $_SESSION['username'] = $user['username'];
-            $_SESSION['role_id'] = $user['role_id'];
-            $_SESSION['role_name'] = $user['role_name'];
+            $_SESSION['admin_user_id'] = $user['id'];
+            $_SESSION['admin_username'] = $user['username'];
+            $_SESSION['admin_role'] = $user['role_name'];
 
             header("Location: index.php");
-            exit;    
+            exit;   
 
             } 
     }
@@ -87,6 +89,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             >
 
             <input type="submit" value="Login">
+
+            <p>
+                <a  class="button" href="../index.php">← Back to Website</a>
+            </p>
+
         </form>
             
             </section>

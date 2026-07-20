@@ -7,7 +7,7 @@ require 'db.php';
 $stmt = $conn->prepare("SELECT * FROM pages WHERE slug IN (?, ?, ?, ?, ?, ?)");
 
 $home = "home";
-$aside = "aside";
+$aside = "aside"; /**image*/
 $features = "features";
 $services = "services";
 $social = "social";
@@ -44,14 +44,26 @@ while ($row = $result->fetch_assoc()) {
 
   
     <main id="placeholder-main">
-          <figure   >
+          <figure>
+        <!--Fetch dynamic image-->
+                    <?php
+            $image = !empty($pages['home']['hero_image'])
+                ? htmlspecialchars($pages['home']['hero_image'])
+                : "/images/tech.jpg";
+
+            $alt = !empty($pages['home']['hero_image_alt'])
+                ? htmlspecialchars($pages['home']['hero_image_alt'])
+                : "Website image";
+            ?>
+
             <picture>
-                <source media="(min-width: 800px)" srcset="/images/tech.jpg">
-                <source media="(min-width: 400px)" srcset="/images/tech.jpg">
-                <img src="/images/tech.jpg" alt="Sunset over the mountains">
-            </picture>
-            <figcaption>Sunset — shown in different sizes depending on screen.</figcaption>
-            </figure>
+                <source media="(min-width:800px)" srcset="<?= $image ?>">
+                <source media="(min-width:400px)" srcset="<?= $image ?>">
+                <img src="<?= $image ?>" alt="<?= $alt ?>">
+            </picture>        
+
+
+            <figcaption><?= htmlspecialchars($alt) ?></figcaption>        </figure>
 
         <section class="placeholder-content">
            <h2><?= htmlspecialchars($pages['home']['main_heading']) ?></h2>
@@ -59,8 +71,7 @@ while ($row = $result->fetch_assoc()) {
         </section>
 
         <aside id="placeholder-aside">
-            <h3><?= htmlspecialchars($pages['features']['main_heading'] ?? '') ?></h3>
-            <ul class="placeholder-menu">
+<h3><?= htmlspecialchars($pages['aside']['main_heading'] ?? '') ?></h3>            <ul class="placeholder-menu">
                 <li>✓ Experienced Development Team</li>
                 <li>✓ Modern Technology Stack</li>
                 <li>✓ Secure & Scalable Solutions</li>

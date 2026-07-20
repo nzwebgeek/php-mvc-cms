@@ -61,76 +61,126 @@ if (isset($_POST['submit'])) {
         mkdir($uploadDir, 0755, true);
     }
 
-    if (isset($_FILES['image']) && $_FILES['image']['error'] === 0) {
+    // No file selected
+    if (!isset($_FILES['image'])) {
 
-        $allowed = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+        $message = "Please select an image.";
+
+    // PHP upload error
+    } elseif ($_FILES['image']['error'] !== UPLOAD_ERR_OK) {
+
+        switch ($_FILES['image']['error']) {
+
+            case UPLOAD_ERR_INI_SIZE:
+            case UPLOAD_ERR_FORM_SIZE:
+                $message = "Image is too large.";
+                break;
+
+            default:
+                $message = "Upload failed.";
+        }
+
+    } else {
+
+        $allowedExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
 
         $extension = strtolower(
             pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION)
         );
 
-        if (!in_array($extension, $allowed)) {
+        // Check file extension
+        if (!in_array($extension, $allowedExtensions)) {
 
             $message = "Only JPG, JPEG, PNG, GIF and WebP images are allowed.";
 
-        } elseif ($_FILES['image']['size'] > (10 * 1024 * 1024)) {
+        // Check file size (20MB)
+        } elseif ($_FILES['image']['size'] > (20 * 1024 * 1024)) {
 
             $message = "Image must be under 10MB.";
 
         } else {
 
-            $newFileName = uniqid('img_', true) . '.' . $extension;
-            $filePath = $uploadDir . $newFileName;
+            // Verify MIME type
+            $finfo = finfo_open(FILEINFO_MIME_TYPE);
+            $mime = finfo_file($finfo, $_FILES['image']['tmp_name']);
+            finfo_close($finfo);
 
-            if (move_uploaded_file($_FILES['image']['tmp_name'], $filePath)) {
+            $allowedMime = [
+                'image/jpeg',
+                'image/png',
+                'image/gif',
+                'image/webp'
+            ];
 
-                $stmt = $conn->prepare("
-                    INSERT INTO images (filename, filepath)
-                    VALUES (?, ?)
-                ");
+            if (!in_array($mime, $allowedMime)) {
 
-                $stmt->bind_param("ss", $newFileName, $filePath);
-
-                if ($stmt->execute()) {
-
-                    $imageId = $conn->insert_id;
-
-                    $stmt->close();
-
-                    $stmt = $conn->prepare("
-                        UPDATE users
-                        SET image_id = ?
-                        WHERE id = ?
-                    ");
-
-                    $stmt->bind_param(
-                        "ii",
-                        $imageId,
-                        $_SESSION['user_id']
-                    );
-
-                    $stmt->execute();
-                    $stmt->close();
-
-                    $message = "Image uploaded successfully.";
-
-                } else {
-
-                    $message = "Database error: " . $stmt->error;
-                }
+                $message = "Invalid image type.";
 
             } else {
 
-                $message = "Failed to upload image.";
+                // Generate unique filename
+                $newFileName = uniqid('img_', true) . '.' . $extension;
+                $filePath = $uploadDir . $newFileName;
+
+                // Move uploaded file
+                if (move_uploaded_file($_FILES['image']['tmp_name'], $filePath)) {
+
+                    $stmt = $conn->prepare("
+                        INSERT INTO images (filename, filepath)
+                        VALUES (?, ?)
+                    ");
+
+                    $stmt->bind_param(
+                        "ss",
+                        $newFileName,
+                        $filePath
+                    );
+
+                    if ($stmt->execute()) {
+
+                        $imageId = $conn->insert_id;
+                        $stmt->close();
+
+                        $stmt = $conn->prepare("
+                            UPDATE users
+                            SET image_id = ?
+                            WHERE id = ?
+                        ");
+
+                        $stmt->bind_param(
+                            "ii",
+                            $imageId,
+                            $_SESSION['user_id']
+                        );
+
+                        if ($stmt->execute()) {
+
+                            $message = "Image uploaded successfully.";
+
+                        } else {
+
+                            $message = "Failed to update user profile.";
+
+                        }
+
+                        $stmt->close();
+
+                    } else {
+
+                        $message = "Database error: " . $stmt->error;
+                        $stmt->close();
+
+                    }
+
+                } else {
+
+                    $message = "Failed to upload image.";
+
+                }
             }
         }
-
-    } else {
-
-        $message = "Please select an image.";
     }
 }
-
 /* ==========================================
    Load User
 ========================================== */
@@ -785,15 +835,13 @@ $stmt->close();
 <a href="#" class="show-form" data-form="profileForm">
 🎨 Theme Colours
 </a>
+<?php if (in_array($_SESSION['role'] ?? '', ['Super Admin','Admin'])): ?>
 
-<?php if (in_array($_SESSION['role'] ?? '', ['Super Admin', 'Admin'])): ?>
-
-<a href="/admin/">
+<a href="/admin/login.php">
 ⚙ Admin Panel
 </a>
 
 <?php endif; ?>
-
 <a href="logout.php">
 🚪 Logout
 </a>
