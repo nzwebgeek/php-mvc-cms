@@ -1,7 +1,8 @@
 <?php
-include 'includes/header.php';
-require 'db.php';
+require 'includes/db.php';
+require 'includes/settings.php';
 
+include 'includes/header.php';
 $message = "";
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {

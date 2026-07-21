@@ -17,12 +17,18 @@
 body{
     background:#f4f6f9;
 }
-a{
-    color: white;
+.button{
+    display:inline-block;
+    background:#2563eb;
+    color:#fff;
+    padding:10px 18px;
+    border-radius:5px;
+    text-decoration:none;
 }
-a:hover{
-    color: wheat;
-    background-color: navy;
+
+.button:hover{
+    background:#1d4ed8;
+    color:white;
 }
 .topbar{
     height:60px;
@@ -179,7 +185,35 @@ input[type=submit]:hover {
     cursor:pointer;
 }
 
+.pagination{
+    margin-top:30px;
+    display:flex;
+    gap:10px;
+    justify-content:center;
+    flex-wrap:wrap;
+}
+
+.pagination .button{
+    padding:8px 14px;
+}
+
+.pagination .active-page{
+    background:#111827;
+    color:white;
+}
+
 /* Mobile */
+/* Mobile button spacing */
+@media (max-width:880px){
+
+    .button{
+        margin-bottom:1rem;
+    }
+
+}
+
+
+/* Mobile layout */
 @media (max-width:768px){
 
     .menu-toggle{
@@ -222,14 +256,23 @@ input[type=submit]:hover {
         overflow-x:auto;
     }
 
-    .success-message {
-    background: #d4edda;
-    color: #155724;
-    border: 1px solid #c3e6cb;
-    padding: 12px 16px;
-    margin: 20px 0;
-    border-radius: 4px;
-    font-weight: 600;
-}
+    .success-message{
+        background:#d4edda;
+        color:#155724;
+        border:1px solid #c3e6cb;
+        padding:12px 16px;
+        margin:20px 0;
+        border-radius:4px;
+        font-weight:600;
+    }
+
+     .pagination{
+        gap:5px;
+    }
+
+    .pagination .button{
+        padding:8px 12px;
+        font-size:14px;
+    }
 
 }

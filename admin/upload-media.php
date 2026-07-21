@@ -1,6 +1,7 @@
 <?php
 
-include 'includes/db.php';
+require 'includes/auth.php';
+require __DIR__ . '/../includes/db.php';
 
 
 // Check logged in user

@@ -10,7 +10,7 @@ if (isset($_GET['saved'])) {
     $message = "Colours saved successfully.";
 }
 
-include 'db.php';
+include 'includes/db.php';
 
 if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");

@@ -9,3 +9,4 @@ if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== tru
     header("Location: login.php");
     exit;
 }
+/*"If this user has not successfully logged into the admin area, block access."*/

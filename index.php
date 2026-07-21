@@ -1,17 +1,18 @@
 
-<?php include 'includes/header.php'; 
+<?php 
+require 'includes/db.php';
+require 'includes/settings.php';
 
-
-require 'db.php';
+include 'includes/header.php';
 
 $stmt = $conn->prepare("SELECT * FROM pages WHERE slug IN (?, ?, ?, ?, ?, ?)");
 
 $home = "home";
 $aside = "aside"; /**image*/
-$features = "features";
-$services = "services";
-$social = "social";
-$footer = "footer";
+$features = "features"; /**latest insights*/
+$services = "services"; /*featured services**/
+$social = "social"; /**social media*/
+$footer = "footer"; /*basic footer*/
 
 $stmt->bind_param(
     "ssssss",
@@ -32,6 +33,7 @@ $pages = [];
 while ($row = $result->fetch_assoc()) {
     $pages[$row['slug']] = $row;
 }
+$page = $pages['home'];
 ?>
 <div class="placeholder-container">
 
@@ -83,30 +85,36 @@ while ($row = $result->fetch_assoc()) {
 
     </main>
 
-    <section class="placeholder-features">
-        <article><h3><?= htmlspecialchars($pages['features']['main_heading']) ?></h3>
-        <ul class="placeholder-menu">
-            <p><?= nl2br(htmlspecialchars($pages['features']['main_content'])) ?></p>
-        </ul>
-    
 
-     
-       
-       </article>
-        <article><h3><?= htmlspecialchars($pages['services']['main_heading']) ?></h3>
-        <ul class="placeholder-menu">
-           <p><?= nl2br(htmlspecialchars($pages['services']['main_content'])) ?></p>
-        </ul>
-        </article>
-        <article><h3><?= htmlspecialchars($pages['social']['main_heading']) ?></h3>
-        <ul class="placeholder-menu">
-            <p><?= nl2br(htmlspecialchars($pages['social']['main_content'])) ?></p>
-        </ul>
-    
-    
-    
-        </article>
-    </section>
+<?php if (!empty($pages['features'])): ?>
+
+<section class="placeholder-features">
+
+    <article>
+        <h3><?= htmlspecialchars($pages['features']['main_heading'] ?? '') ?></h3>
+        <p><?= nl2br(htmlspecialchars($pages['features']['main_content'] ?? '')) ?></p>
+    </article>
+
+
+    <?php if (!empty($pages['services'])): ?>
+    <article>
+        <h3><?= htmlspecialchars($pages['services']['main_heading'] ?? '') ?></h3>
+        <p><?= nl2br(htmlspecialchars($pages['services']['main_content'] ?? '')) ?></p>
+    </article>
+    <?php endif; ?>
+
+
+    <?php if (!empty($pages['social'])): ?>
+    <article>
+        <h3><?= htmlspecialchars($pages['social']['main_heading'] ?? '') ?></h3>
+        <p><?= nl2br(htmlspecialchars($pages['social']['main_content'] ?? '')) ?></p>
+    </article>
+    <?php endif; ?>
+
+</section>
+
+<?php endif; ?>
+
 </div>
 
 <?php include 'includes/footer.php'; ?>

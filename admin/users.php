@@ -1,6 +1,6 @@
 <?php
 require 'includes/auth.php';
-require 'includes/db.php';
+require __DIR__ . '/../includes/db.php';
 
 $sql = "
 SELECT

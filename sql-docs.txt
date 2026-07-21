@@ -1,0 +1,13 @@
+ALTER TABLE site_settings
+ADD theme VARCHAR(20) DEFAULT 'Light',
+ADD maintenance_mode TINYINT(1) DEFAULT 0,
+ADD admin_email VARCHAR(255);
+
+
+ALTER TABLE site_settings
+ADD seo_title VARCHAR(255),
+ADD seo_description TEXT;
+
+ALTER TABLE pages
+ADD seo_title VARCHAR(255),
+ADD seo_description TEXT;

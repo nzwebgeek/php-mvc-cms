@@ -2,8 +2,7 @@
 
 session_start();
 
-include 'includes/db.php';
-
+require '../includes/db.php';
 
 // Check ID
 if (!isset($_GET['id'])) {

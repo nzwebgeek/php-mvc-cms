@@ -1,6 +1,5 @@
 <?php
-require 'db.php';
-
+require 'includes/db.php';
     $token = $_GET['token'] ?? '';
     $tokenHash = hash('sha256', $token);
 

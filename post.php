@@ -1,7 +1,9 @@
 <?php
 
+require 'includes/db.php';
+require 'includes/settings.php';
+
 include 'includes/header.php';
-include 'db.php';
 include 'helpers/helper.php';
 
 if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {

@@ -4,7 +4,7 @@ if (isset($_SESSION['admin_logged_in']) && $_SESSION['admin_logged_in'] === true
     header("Location: index.php");
     exit;
 }
-require 'includes/db.php';
+require '../includes/db.php';
  $error ="";
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -16,8 +16,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (empty($username) || empty($password)) {
     $error = "Please enter your username and password.";
     }
-
-    // Query your users table here...
+    else{
+ // Query your users table here...
     $stmt = $conn->prepare(
         "SELECT
             u.id,
@@ -57,6 +57,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $error = "Invalid username or password.";
 }
 
+    }
+
+   
     
 }
 ?>

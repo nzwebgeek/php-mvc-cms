@@ -1,15 +1,12 @@
 <?php
-//session_start();
+
+require 'includes/db.php';
+require 'includes/settings.php';
+require 'helpers/helper.php';
+
 include 'includes/header.php';
-require 'db.php';
 
 $message = "";
-//$role_id = 5; // User
-/*Todo: make sure if verify link expires, you can reset it*/
-/*Problem: Verify page loaded
-Token: 9cf846f26f62d00f8c3fc1ae91a169316fb0b700af6a7305006472cd9346ed7c
-Rows updated: 0
-Invalid or expired verification link.*/
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 

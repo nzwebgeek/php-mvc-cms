@@ -1,9 +1,11 @@
 <?php
 
 session_start();
+require 'includes/auth.php';
+require '../includes/db.php';
 
-include 'includes/db.php';
-
+include 'includes/header.php';
+include 'includes/sidebar.php';
 
 // Get media files
 $stmt = $conn->prepare("

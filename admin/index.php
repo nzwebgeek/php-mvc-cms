@@ -1,10 +1,13 @@
 <?php
+
 require 'includes/auth.php';
 
-require 'includes/db.php';
+require '../includes/db.php';
+require '../includes/settings.php';
 
 include 'includes/header.php';
 include 'includes/sidebar.php';
+
 ?>
 
 <main class="content">

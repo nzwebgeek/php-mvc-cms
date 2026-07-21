@@ -1,7 +1,7 @@
 <?php
-require_once "includes/db.php";
-
+require '../includes/db.php';
 $id = (int)$_GET['id'];
+
 
 $stmt = $conn->prepare("SELECT * FROM posts WHERE id=?");
 $stmt->bind_param("i", $id);

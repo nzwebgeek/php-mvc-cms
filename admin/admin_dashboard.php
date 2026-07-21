@@ -1,6 +1,5 @@
 <?php
-include 'includes/db.php';
-
+require '../includes/db.php';
 // Select User
 $stmt = $conn->prepare("SELECT COUNT(*) AS total FROM users");
 $stmt->execute();

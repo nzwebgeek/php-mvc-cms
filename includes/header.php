@@ -6,13 +6,45 @@ if (session_status() === PHP_SESSION_NONE) {
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portfolio</title>
-    <link rel="stylesheet" href="css/style.css">
-      
 
-    <script src="js/script.js" defer></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<?php
+$pageTitle = $page['seo_title']
+    ?? $settings['seo_title']
+    ?? $settings['site_name']
+    ?? 'Website';
+
+$pageDescription = $page['seo_description']
+    ?? $settings['seo_description']
+    ?? '';
+?>
+
+<title>
+<?= htmlspecialchars($pageTitle, ENT_QUOTES, 'UTF-8') ?>
+</title>
+
+<?php if (!empty($pageDescription)): ?>
+
+<meta 
+    name="description" 
+    content="<?= htmlspecialchars($pageDescription, ENT_QUOTES, 'UTF-8') ?>"
+>
+
+<?php endif; ?>
+
+<title><?= htmlspecialchars($pageTitle) ?></title>
+
+<?php if (!empty($pageDescription)): ?>
+<meta name="description" content="<?= htmlspecialchars($pageDescription) ?>">
+<?php endif; ?>
+
+<meta name="robots" content="index, follow">
+
+<link rel="stylesheet" href="css/style.css">
+<script src="js/script.js" defer></script>
+
 </head>
 <body>
  

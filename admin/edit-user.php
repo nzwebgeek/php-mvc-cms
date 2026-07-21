@@ -1,6 +1,6 @@
 <?php
 require 'includes/auth.php';
-require 'includes/db.php';
+require '../includes/db.php';
 
 
 $id = (int)$_GET['id'];

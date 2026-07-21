@@ -1,6 +1,6 @@
 <?php
 
-require 'db.php';
+require 'includes/db.php';
 
 $token = trim($_GET['token'] ?? '');
 

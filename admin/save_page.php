@@ -1,6 +1,6 @@
 <?php
 require 'includes/auth.php';
-require __DIR__ . '/includes/db.php';
+require __DIR__ . '/../includes/db.php';
 
 
 $id = $_POST['id'];
@@ -8,74 +8,85 @@ $id = $_POST['id'];
 $main_heading = $_POST['main_heading'];
 $main_content = $_POST['main_content'];
 
+$seo_title = $_POST['seo_title'] ?? '';
+$seo_description = $_POST['seo_description'] ?? '';
+
 $hero_title = $_POST['hero_title'];
 $hero_subtitle = $_POST['hero_subtitle'];
-$hero_image_alt = $_POST['hero_image_alt'];
+$hero_media_id = !empty($_POST['hero_media_id'])
+    ? (int)$_POST['hero_media_id']
+    : null;/**Footer */
+$column1_title = $_POST['column1_title'] ?? '';
+$column1_content = $_POST['column1_content'] ?? '';
 
-$existing_image = $_POST['existing_image'];
-$imagePath = $existing_image;
+$column2_title = $_POST['column2_title'] ?? '';
+$column2_content = $_POST['column2_content'] ?? '';
 
-$remove_image = isset($_POST['remove_image']);
-/*Add the delete logic before the upload code*/
-/* Remove image */
-if ($remove_image && !empty($existing_image)) {
+$column3_title = $_POST['column3_title'] ?? '';
+$column3_content = $_POST['column3_content'] ?? '';
 
-    $file = dirname(__DIR__) . $existing_image;
-
-    if (file_exists($file)) {
-        unlink($file);
-    }
-
-    $imagePath = NULL;
-}
-
-
-/* Upload new image */
-if (!empty($_FILES['hero_image']['name'])) {
-
-    $targetDir = __DIR__ . "/../images/";
-
-    $filename = time() . "_" . basename($_FILES["hero_image"]["name"]);
-
-    $targetFile = $targetDir . $filename;
-
-
-    if (move_uploaded_file($_FILES["hero_image"]["tmp_name"], $targetFile)) {
-
-        $imagePath = "/images/" . $filename;
-
-    } else {
-
-        die("Image upload failed.");
-
-    }
-}
+$column4_title = $_POST['column4_title'] ?? '';
+$column4_content = $_POST['column4_content'] ?? '';
+/*copyright_text*/
+$column5_title = $_POST['column5_title'] ?? '';
+$column5_content = $_POST['column5_content'] ?? '';
 
 /*Check if errors */
 $stmt = $conn->prepare("
 UPDATE pages SET
     main_heading=?,
     main_content=?,
+    seo_title=?,
+    seo_description=?,
     hero_title=?,
     hero_subtitle=?,
-    hero_image=NULLIF(?, ''),
-    hero_image_alt=?
+    hero_media_id=?,
+
+    column1_title=?,
+    column1_content=?,
+
+    column2_title=?,
+    column2_content=?,
+
+    column3_title=?,
+    column3_content=?,
+
+    column4_title=?,
+    column4_content=?,
+
+    column5_title=?,
+    column5_content=?
+
 WHERE id=?
 ");
 
-if (!$stmt) {
-    die("Prepare failed: " . $conn->error);
-}
+
+
 
 $stmt->bind_param(
-"ssssssi",
-$main_heading,
-$main_content,
-$hero_title,
-$hero_subtitle,
-$imagePath,
-$hero_image_alt,
-$id
+    "ssssissssssssssi",
+    $main_heading,
+    $main_content,
+    $hero_title,
+    $hero_subtitle,
+    $hero_media_id,
+
+    $column1_title,
+    $column1_content,
+
+    $column2_title,
+    $column2_content,
+
+    $column3_title,
+    $column3_content,
+
+    $column4_title,
+    $column4_content,
+
+    $column5_title,
+    $column5_content,
+
+    $id
 );
 
 /*Check if the UPDATE worked*/

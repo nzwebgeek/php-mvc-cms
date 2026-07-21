@@ -3,8 +3,12 @@
 session_start();
 
 
-require 'db.php';
+require 'includes/db.php';
+require 'includes/settings.php';
+
 include 'includes/header.php';
+include 'helpers/helper.php';
+
 
 $message = "";
 $messageType = "";

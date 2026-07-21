@@ -1,8 +1,7 @@
 <?php
 
 require 'includes/auth.php';
-require __DIR__ . '/includes/db.php';
-
+require '../includes/db.php';
 
 $id = $_POST['id'];
 $image = $_POST['image'];

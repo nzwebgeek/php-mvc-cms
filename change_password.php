@@ -1,6 +1,10 @@
 <?php
+require 'includes/db.php';
+require 'includes/settings.php';
+require 'helpers/helper.php';
+
 include 'includes/header.php';
-require 'db.php';
+
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 

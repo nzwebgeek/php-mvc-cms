@@ -1,7 +1,13 @@
-<?php include 'includes/header.php'; ?>
-<?php include 'db.php'; ?>
-<?php include './helpers/helper.php'; ?>
-<?php include './helpers/admin-helper.php';?>
+<?php
+
+require 'includes/db.php';
+require 'includes/settings.php';
+require 'helpers/helper.php';
+require 'helpers/admin-helper.php';
+
+include 'includes/header.php';
+
+?>
 
 <main class="blog-container">
 

@@ -1,8 +1,7 @@
 <?php
 
 require 'includes/auth.php';
-require 'includes/db.php';
-
+require '../includes/db.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 

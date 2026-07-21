@@ -1,4 +1,12 @@
-<?php include 'includes/header.php' ?>
+<?php
+
+require 'includes/db.php';
+require 'includes/settings.php';
+require 'helpers/helper.php';
+
+include 'includes/header.php';
+
+?>
 
 
 
