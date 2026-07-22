@@ -55,6 +55,15 @@ switch ($page) {
         include 'posts.php';
         break;
 
+     case 'comments':
+        include 'comments.php';
+        break;
+
+    case 'approve-comment':
+            include 'approve-comment.php';
+            break;
+
+
     case 'create-post':
     include 'create-post.php';
     break;

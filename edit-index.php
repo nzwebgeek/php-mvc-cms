@@ -70,26 +70,25 @@ if (isset($_POST['comments'])) {
     $user_id = $_SESSION['user_id'];
     $post_id = (int)$_POST['post_id'];
     $comment = trim($_POST['comments']);
-    $created_at = date('Y-m-d H:i:s');
 
     if (!empty($comment)) {
 
         $stmt = $conn->prepare("
             INSERT INTO comments 
-            (post_id, user_id, comment, created_at)
-            VALUES (?, ?, ?, ?)
+            (post_id, user_id, comment, status, created_at)
+            VALUES (?, ?, ?, 'pending', NOW())
         ");
 
         $stmt->bind_param(
-            "iiss",
+            "iis",
             $post_id,
             $user_id,
-            $comment,
-            $created_at
+            $comment
         );
 
+
         if ($stmt->execute()) {
-            $message = "Comment posted successfully!";
+            $message = "Comment submitted and waiting for approval.";
         } else {
             $message = "Error posting comment.";
         }
@@ -153,6 +152,7 @@ include 'includes/header.php';
     FROM comments
     JOIN users ON comments.user_id = users.id
     WHERE comments.post_id = ?
+    AND comments.status = 'approved'
     ORDER BY comments.id DESC
     ");
 

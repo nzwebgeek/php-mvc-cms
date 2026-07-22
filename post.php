@@ -11,13 +11,22 @@ if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
 }
 
 $postId = (int) $_GET['id'];
-
-$sql = "SELECT posts.*, users.username
-        FROM posts
-        JOIN users
-        ON posts.user_id = users.id
-        WHERE posts.id = ?";
-
+// some post should still load without an image
+$sql = "
+SELECT 
+    posts.*,
+    users.username,
+    media.filename AS image_filename,
+    media.alt_text AS image_alt
+FROM posts
+JOIN users
+ON posts.user_id = users.id
+LEFT JOIN media
+ON posts.featured_media_id = media.id
+WHERE posts.id = ?
+AND posts.status = 'published'
+";
+// cannot view draft posts publicly as above where added
 $stmt = $conn->prepare($sql);
 
 $stmt->bind_param("i",$postId);
@@ -27,6 +36,10 @@ $stmt->execute();
 $result = $stmt->get_result();
 
 $post = $result->fetch_assoc();
+// prevents eg; post.php?id=9999
+if (!$post) {
+    die("Post not found.");
+}
 
 ?>
 
@@ -37,6 +50,21 @@ $post = $result->fetch_assoc();
         <h1 class="post-title">
             <?= htmlspecialchars($post['title']) ?>
         </h1>
+
+    <article class="post-card">
+
+    <?php if (!empty($post['image_filename'])): ?>
+
+        <img
+            src="uploads/<?= htmlspecialchars($post['image_filename']) ?>"
+            alt="<?= htmlspecialchars($post['image_alt']) ?>"
+            class="post-image">
+
+    <?php endif; ?>
+
+
+    <h1 class="post-title"></h1>
+
 
         <div class="post-meta">
             By <strong><?= htmlspecialchars($post['username']) ?></strong>

@@ -1,4 +1,5 @@
 <?php
+require 'includes/auth.php';
 require '../includes/db.php';
 
 // Load media library
@@ -27,6 +28,7 @@ LEFT JOIN media
 ON posts.featured_media_id = media.id
 WHERE posts.id=?
 ");
+
 $stmt->bind_param("i", $id);
 $stmt->execute();
 $post = $stmt->get_result()->fetch_assoc();
@@ -39,30 +41,29 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $title = $_POST['title'];
     $content = $_POST['content'];
+    $status = $_POST['status'] ?? 'draft';
 
     $featured_media_id = !empty($_POST['featured_media_id'])
     ? (int)$_POST['featured_media_id']
     : null;
 
-    $stmt = $conn->prepare("UPDATE posts 
-    SET title=?, content=?, featured_media_id=?
-    WHERE id=?");
+    $stmt = $conn->prepare("
+        UPDATE posts
+        SET title=?, content=?, featured_media_id=?, status=?
+        WHERE id=?
+        ");
 
-    $stmt->bind_param(
-        "ssii",
-        $title,
-        $content,
-        $featured_media_id,
-        $id
-    );
+  $stmt->bind_param(
+    "ssisi",
+    $title,
+    $content,
+    $featured_media_id,
+    $status,
+    $id
+);
 
     $stmt->execute();
    
-
-    //header("Location:index.php?page=posts");
-    // 1 to dredirect user after action to posts.php
-   // header("Location:index.php?page=posts&success=updated");
-    //exit;
     header("Location:index.php?page=edit-post&id=" . $id . "&success=updated");
     exit;
     /*Now after saving, you stay on the edit screen.*/
@@ -85,6 +86,30 @@ type="text"
 name="title"
 value="<?= htmlspecialchars($post['title']) ?>"
 required>
+
+<input
+type="text"
+name="title"
+value="<?= htmlspecialchars($post['title']) ?>"
+required>
+
+<br><br>
+
+<label>Status</label>
+
+<select name="status">
+
+<option value="draft"
+<?= $post['status'] === 'draft' ? 'selected' : '' ?>>
+Draft
+</option>
+
+<option value="published"
+<?= $post['status'] === 'published' ? 'selected' : '' ?>>
+Published
+</option>
+
+</select>
 
 <br><br>
 

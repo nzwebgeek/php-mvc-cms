@@ -66,3 +66,11 @@ ON UPDATE CURRENT_TIMESTAMP;
 ALTER TABLE posts
 ADD featured_media_id INT NULL
 AFTER content;
+
+ORDER BY p.created_at DESC
+
+hide pending comments - WHERE comments.post_id = ?
+AND comments.status = 'approved'
+ORDER BY comments.id DESC
+
+Next Phase is to conver GET to POST 
