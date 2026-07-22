@@ -34,6 +34,7 @@ while ($row = $result->fetch_assoc()) {
     $pages[$row['slug']] = $row;
 }
 $page = $pages['home'];
+$currentPage = $pages['home'];
 ?>
 <div class="placeholder-container">
 
@@ -73,7 +74,8 @@ $page = $pages['home'];
         </section>
 
         <aside id="placeholder-aside">
-<h3><?= htmlspecialchars($pages['aside']['main_heading'] ?? '') ?></h3>            <ul class="placeholder-menu">
+<h3><?= htmlspecialchars($pages['aside']['main_heading'] ?? '') ?></h3>
+    <ul class="placeholder-menu">
                 <li>✓ Experienced Development Team</li>
                 <li>✓ Modern Technology Stack</li>
                 <li>✓ Secure & Scalable Solutions</li>

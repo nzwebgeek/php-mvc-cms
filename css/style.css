@@ -362,6 +362,8 @@ aside {
     gap:1.5rem;
     padding:0 2rem;
     color:black;
+    align-items: stretch;
+
 
 }
 
@@ -371,6 +373,8 @@ aside {
     background:white;
     padding:2rem;
     border-radius:8px;
+    display: flex;
+    flex-direction: column;
 
 }
 
