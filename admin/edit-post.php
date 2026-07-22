@@ -1,9 +1,32 @@
 <?php
 require '../includes/db.php';
+
+// Load media library
+$mediaResult = $conn->query("
+    SELECT id, filename, original_name, alt_text
+    FROM media
+    ORDER BY original_name
+");
+
+$mediaItems = [];
+
+while ($row = $mediaResult->fetch_assoc()) {
+    $mediaItems[] = $row;
+}
+
+
 $id = (int)$_GET['id'];
 
-
-$stmt = $conn->prepare("SELECT * FROM posts WHERE id=?");
+$stmt = $conn->prepare("
+SELECT 
+    posts.*,
+    media.filename AS image_filename,
+    media.alt_text AS image_alt
+FROM posts
+LEFT JOIN media
+ON posts.featured_media_id = media.id
+WHERE posts.id=?
+");
 $stmt->bind_param("i", $id);
 $stmt->execute();
 $post = $stmt->get_result()->fetch_assoc();
@@ -17,8 +40,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $title = $_POST['title'];
     $content = $_POST['content'];
 
-    $stmt = $conn->prepare("UPDATE posts SET title=?, content=? WHERE id=?");
-    $stmt->bind_param("ssi", $title, $content, $id);
+    $featured_media_id = !empty($_POST['featured_media_id'])
+    ? (int)$_POST['featured_media_id']
+    : null;
+
+    $stmt = $conn->prepare("UPDATE posts 
+    SET title=?, content=?, featured_media_id=?
+    WHERE id=?");
+
+    $stmt->bind_param(
+        "ssii",
+        $title,
+        $content,
+        $featured_media_id,
+        $id
+    );
+
     $stmt->execute();
    
 
@@ -28,11 +65,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     //exit;
     header("Location:index.php?page=edit-post&id=" . $id . "&success=updated");
     exit;
+    /*Now after saving, you stay on the edit screen.*/
     
 }
 ?>
 <!--Tod: need a updated successfully message-->
 <h1>Edit Post</h1>
+<?php if (isset($_GET['success']) && $_GET['success'] === 'updated'): ?>
+
+<div class="success">
+    ✅ Post updated successfully.
+</div>
+
+<?php endif; ?>
 <form method="post">
 
 <input
@@ -43,13 +88,56 @@ required>
 
 <br><br>
 
+<h3>Featured Image</h3>
+
+<?php if (!empty($post['image_filename'])): ?>
+
+<img
+src="../uploads/<?= htmlspecialchars($post['image_filename']) ?>"
+alt="<?= htmlspecialchars($post['image_alt']) ?>"
+style="max-width:300px;display:block;margin-bottom:15px;">
+
+<?php else: ?>
+
+<p>No image selected.</p>
+
+<?php endif; ?>
+
+
+<br>
+
+<label>Change Featured Image</label>
+
+<select name="featured_media_id">
+
+    <option value="">
+        -- No Image --
+    </option>
+
+    <?php foreach ($mediaItems as $image): ?>
+
+        <option
+            value="<?= $image['id'] ?>"
+            <?= ((int)$post['featured_media_id'] === (int)$image['id']) ? 'selected' : '' ?>
+        >
+
+            <?= htmlspecialchars($image['original_name']) ?>
+
+        </option>
+
+    <?php endforeach; ?>
+
+</select>
+
+<br><br>
+
 <textarea
 name="content"
 rows="12"
 cols="80"><?= htmlspecialchars($post['content']) ?></textarea>
 
-<br><br>
 
-<button class="button" type="submit">Save Changes</button>
+
+<button class="button" type="submit">Update Post</button>
 
 </form>
