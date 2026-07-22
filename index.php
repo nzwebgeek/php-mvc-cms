@@ -4,7 +4,8 @@ require 'includes/db.php';
 require 'includes/settings.php';
 
 include 'includes/header.php';
-
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 $stmt = $conn->prepare("SELECT * FROM pages WHERE slug IN (?, ?, ?, ?, ?, ?)");
 
 $home = "home";
@@ -30,6 +31,8 @@ $result = $stmt->get_result();
 
 $pages = [];
 
+$tick = '✓ '; // tick
+
 while ($row = $result->fetch_assoc()) {
     $pages[$row['slug']] = $row;
 }
@@ -39,8 +42,8 @@ $currentPage = $pages['home'];
 <div class="placeholder-container">
 
     <section class="placeholder-hero">
-        <h1><?= htmlspecialchars($pages['home']['hero_title']) ?></h1>
-        <p><?= htmlspecialchars($pages['home']['hero_subtitle']) ?></p>
+        <h1><?= htmlspecialchars($pages['home']['hero_title'] ?: 'Welcome to our website') ?></h1>
+        <p><?= htmlspecialchars($pages['home']['hero_subtitle'] ?: 'Professional web development solutions.') ?></p>
         <button id="toggleBtn">Change Color</button>
 
     </section>
@@ -69,18 +72,14 @@ $currentPage = $pages['home'];
             <figcaption><?= htmlspecialchars($alt) ?></figcaption>        </figure>
 
         <section class="placeholder-content">
-           <h2><?= htmlspecialchars($pages['home']['main_heading']) ?></h2>
-            <p><?= nl2br(htmlspecialchars($pages['home']['main_content'])) ?></p>
+           <h2><?= htmlspecialchars($pages['home']['main_heading']  ?: 'Home') ?></h2>
+            <p><?= nl2br(htmlspecialchars($pages['home']['main_content']  ?: 'Content coming soon.')) ?></p>
         </section>
 
         <aside id="placeholder-aside">
-<h3><?= htmlspecialchars($pages['aside']['main_heading'] ?? '') ?></h3>
+    <h3><?= htmlspecialchars($pages['aside']['main_heading'] ?? '') ?></h3>
     <ul class="placeholder-menu">
-                <li>✓ Experienced Development Team</li>
-                <li>✓ Modern Technology Stack</li>
-                <li>✓ Secure & Scalable Solutions</li>
-                <li>✓ Agile Project Delivery</li>
-                <li>✓ Dedicated Support</li>
+                <li><?= nl2br(htmlspecialchars($pages['aside']['main_content']  ?: 'Content coming soon.')) ?></li>
             </ul>
            
         </aside>
@@ -88,34 +87,24 @@ $currentPage = $pages['home'];
     </main>
 
 
-<?php if (!empty($pages['features'])): ?>
-
 <section class="placeholder-features">
 
     <article>
-        <h3><?= htmlspecialchars($pages['features']['main_heading'] ?? '') ?></h3>
-        <p><?= nl2br(htmlspecialchars($pages['features']['main_content'] ?? '')) ?></p>
+        <h3><?= htmlspecialchars($pages['features']['main_heading'] ?? 'Content coming soon.') ?></h3>
+        <p><?= nl2br(htmlspecialchars($pages['features']['main_content'] ?? 'Content coming soon.')) ?></p>
     </article>
 
-
-    <?php if (!empty($pages['services'])): ?>
     <article>
-        <h3><?= htmlspecialchars($pages['services']['main_heading'] ?? '') ?></h3>
-        <p><?= nl2br(htmlspecialchars($pages['services']['main_content'] ?? '')) ?></p>
+        <h3><?= htmlspecialchars($pages['services']['main_heading'] ?? 'Content coming soon.') ?></h3>
+        <p><?= nl2br(htmlspecialchars($pages['services']['main_content'] ?? 'Content coming soon.')) ?></p>
     </article>
-    <?php endif; ?>
 
-
-    <?php if (!empty($pages['social'])): ?>
     <article>
-        <h3><?= htmlspecialchars($pages['social']['main_heading'] ?? '') ?></h3>
-        <p><?= nl2br(htmlspecialchars($pages['social']['main_content'] ?? '')) ?></p>
+        <h3><?= htmlspecialchars($pages['social']['main_heading'] ?? 'Content coming soon.') ?></h3>
+        <p><?= nl2br(htmlspecialchars($pages['social']['main_content'] ?? 'Content coming soon.')) ?></p>
     </article>
-    <?php endif; ?>
 
 </section>
-
-<?php endif; ?>
 
 </div>
 

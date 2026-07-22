@@ -144,6 +144,11 @@ form {
   color: black;
 }
 
+.form-upload-blog{
+      background-color: grey;
+
+}
+
 label {display: block;}
 
 input[type=text], 

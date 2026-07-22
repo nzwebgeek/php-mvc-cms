@@ -1,12 +1,8 @@
 <?php
 
-session_start();
+//session_start();
 require 'includes/auth.php';
 require '../includes/db.php';
-
-include 'includes/header.php';
-include 'includes/sidebar.php';
-
 // Get media files
 $stmt = $conn->prepare("
     SELECT *
@@ -39,6 +35,7 @@ $result = $stmt->get_result();
     border:1px solid #ddd;
     padding:15px;
     background:#fff;
+    
 }
 
 .card img {
@@ -51,7 +48,27 @@ $result = $stmt->get_result();
     font-size:14px;
     margin-top:10px;
 }
+.button{
+    display:inline-block;
+    background:#2563eb;
+    color:#fff;
+    padding:10px 18px;
+    border-radius:5px;
+    text-decoration:none;
+}
 
+
+@media (max-width:1800px){
+   .gallery {
+  display: grid;
+  /* The magic line: */
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 16px;
+}
+
+
+
+}
 </style>
 
 </head>
@@ -63,7 +80,7 @@ $result = $stmt->get_result();
 <h1>Media Library</h1>
 
 
-<a href="media.php">
+<a class="button" href="media.php">
 Upload New Image
 </a>
 
@@ -116,13 +133,13 @@ readonly
 style="width:100%;">
 <br><br>
 
-<a 
+<a class="delete-button"
 href="delete-media.php?id=<?php echo $row['id']; ?>"
 onclick="return confirm('Delete this image?');">
 
-<button>
+
 Delete
-</button>
+
 
 </a>
 </div>

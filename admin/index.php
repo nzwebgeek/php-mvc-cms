@@ -67,6 +67,11 @@ switch ($page) {
         include 'media.php';
         break;
 
+     case 'media-library':
+        include 'media-library.php';
+        break;
+
+
     case 'upload-media':
         include 'upload-media.php';
         break;
@@ -84,6 +89,31 @@ switch ($page) {
 }
 
 ?>
+<!--every admin page can use exactly the same code:
+reuse for Pages, Posts, Media, Users, and any other admin section-->
+<?php if (isset($_GET['success'])): ?>
+    <div class="success">
+
+        <?php
+        switch ($_GET['success']) {
+
+            case 'created':
+                echo "✅ Created successfully.";
+                break;
+
+            case 'updated':
+                echo "✏️ Updated successfully.";
+                break;
+
+            case 'deleted':
+                echo "🗑️ Deleted successfully.";
+                break;
+
+        }
+        ?>
+
+    </div>
+<?php endif; ?>
 
 </main>
 

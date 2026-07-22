@@ -64,9 +64,14 @@ WHERE id=?
 
 
 $stmt->bind_param(
-    "ssssissssssssssi",
+    "ssssssissssssssssi",
+
     $main_heading,
     $main_content,
+
+    $seo_title,
+    $seo_description,
+
     $hero_title,
     $hero_subtitle,
     $hero_media_id,

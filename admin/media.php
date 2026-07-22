@@ -1,7 +1,9 @@
+
+<h1>Media Upload</h1>
 <form action="index.php?page=upload-media"
       method="POST"
       enctype="multipart/form-data">
-<h1>Media Upload</h1>
+
 <p>Feel free to upload an image for a webpage template.</p>
 <label>Select Image</label>
 
@@ -27,6 +29,7 @@ Upload
 </form>
 <br>
 
-<a href="media-library.php">
+<a class="media-btn" href="index.php?page=media-library">
 View Media Library
 </a>
+

@@ -11,3 +11,58 @@ ADD seo_description TEXT;
 ALTER TABLE pages
 ADD seo_title VARCHAR(255),
 ADD seo_description TEXT;
+
+For tomorrow...
+
+✅ Finished the Settings page.
+✅ Cleaned up the database connections.
+✅ Added page SEO fields.
+✅ Confirmed they save to the database.
+
+The only thing left is to wire those values into the header. That's a relatively small change, and it's easier to tackle when you're fresh.
+
+I think your CMS is getting to the stage where it's less about adding features and more about polishing what's already there, which is a good sign that you're close to finishing it.
+
+every admin page can use exactly the same code:
+
+<?php if (isset($_GET['success'])): ?>
+    <div class="success">
+
+        <?php
+        switch ($_GET['success']) {
+
+            case 'created':
+                echo "✅ Created successfully.";
+                break;
+
+            case 'updated':
+                echo "✏️ Updated successfully.";
+                break;
+
+            case 'deleted':
+                echo "🗑️ Deleted successfully.";
+                break;
+
+        }
+        ?>
+
+    </div>
+<?php endif; ?>
+
+ALTER TABLE posts
+ADD slug VARCHAR(255) NOT NULL AFTER title;
+
+ALTER TABLE posts
+ADD featured_media_id INT NULL AFTER slug;
+This prepares you for authors.
+ALTER TABLE posts
+ADD status ENUM('draft','published') DEFAULT 'draft' AFTER featured_media_id;
+
+ALTER TABLE posts
+ADD updated_at TIMESTAMP
+DEFAULT CURRENT_TIMESTAMP
+ON UPDATE CURRENT_TIMESTAMP;
+
+ALTER TABLE posts
+ADD featured_media_id INT NULL
+AFTER content;

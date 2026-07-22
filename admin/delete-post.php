@@ -25,8 +25,8 @@ if ($stmt->execute()) {
 }
 
 echo "Error deleting post.";
-$stmt->execute();
+//$stmt->execute();
 
-header("Location: index.php?page=posts");
-exit;
+//header("Location: index.php?page=posts");
+//exit;
 

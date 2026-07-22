@@ -91,8 +91,7 @@ $result = $stmt->get_result();
     rows="8"><?= htmlspecialchars((string)($page['main_content'] ?? ''), ENT_QUOTES, 'UTF-8') ?>
 </textarea>
 
-<!--SEO Features-->
-
+<!--SEO Features Start-->
 <hr>
 
 <h3>SEO Settings</h3>

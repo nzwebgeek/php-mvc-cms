@@ -20,9 +20,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt = $conn->prepare("UPDATE posts SET title=?, content=? WHERE id=?");
     $stmt->bind_param("ssi", $title, $content, $id);
     $stmt->execute();
+   
 
-    header("Location:index.php?post=posts");
+    //header("Location:index.php?page=posts");
+    // 1 to dredirect user after action to posts.php
+   // header("Location:index.php?page=posts&success=updated");
+    //exit;
+    header("Location:index.php?page=edit-post&id=" . $id . "&success=updated");
     exit;
+    
 }
 ?>
 <!--Tod: need a updated successfully message-->

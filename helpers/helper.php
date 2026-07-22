@@ -54,7 +54,7 @@ function comments($conn, $postId)
 
     // Count total comments
     $countSql = "SELECT COUNT(*) AS total
-             FROM blogg
+             FROM comments
              WHERE post_id = ?";
 
             $stmt = $conn->prepare($countSql);
@@ -65,12 +65,12 @@ function comments($conn, $postId)
             $totalComments = $countResult->fetch_assoc()['total'];
 
     // Get only this page of comments
-    $sql = "SELECT blogg.comment, users.username
-            FROM blogg
+    $sql = "SELECT comments.comment, users.username
+            FROM comments
             INNER JOIN users
-            ON blogg.user_id = users.id
-            WHERE blogg.post_id = ?
-            ORDER BY blogg.id DESC
+            ON comments.user_id = users.id
+            WHERE comments.post_id = ?
+            ORDER BY comments.id DESC
             LIMIT ?, ?";
 
             $stmt = $conn->prepare($sql);

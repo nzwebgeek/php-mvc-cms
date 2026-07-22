@@ -41,7 +41,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 ?>
 
 <main>
-  <h1>Upload Blog Image</h1>
+    
+        <h1>Upload Blog Image</h1>
 <p>Feel free to upload an image here for the blog sectional.</p>
 <form method="POST" enctype="multipart/form-data">
 
@@ -54,6 +55,9 @@ required
 <button class="button" type="submit">
 Upload
 </button>
+
+  
+
 
 </form>  
 </main>

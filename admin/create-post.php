@@ -1,16 +1,32 @@
 <?php
-// create-post.php
+
 
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
 $error = "";
+$error = "";
+
+// Load media library
+$mediaResult = $conn->query("
+    SELECT id, filename, original_name, alt_text
+    FROM media
+    ORDER BY original_name
+");
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     $title = trim($_POST['title']);
     $content = trim($_POST['content']);
+
+    $featured_media_id = !empty($_POST['featured_media_id'])
+    ? (int)$_POST['featured_media_id']
+    : null;
+
+    $slug = strtolower($title);
+    $slug = preg_replace('/[^a-z0-9]+/', '-', $slug);
+    $slug = trim($slug, '-');
 
     if ($title === "" || $content === "") {
 
@@ -18,19 +34,22 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     } else {
 
-        $stmt = $conn->prepare("
-            INSERT INTO posts (user_id, title, content, created_at)
-            VALUES (?, ?, ?, NOW())
+       $stmt = $conn->prepare("
+            INSERT INTO posts
+            (user_id, title, slug, featured_media_id, content, created_at)
+            VALUES (?, ?, ?, ?, ?, NOW())
         ");
 
-        $stmt->bind_param(
-            "iss",
+      $stmt->bind_param(
+            "issis",
             $_SESSION['user_id'],
             $title,
+            $slug,
+            $featured_media_id,
             $content
         );
 
-        if ($stmt->execute()) {
+                if ($stmt->execute()) {
 
             $newPostId = $stmt->insert_id;
 
@@ -72,6 +91,32 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             style="width:100%;"
             required>
     </p>
+
+<p>
+
+    <label>Featured Image</label><br>
+
+    <select
+        name="featured_media_id"
+        style="width:100%;">
+
+        <option value="">
+            -- No Image --
+        </option>
+
+        <?php while ($image = $mediaResult->fetch_assoc()): ?>
+
+            <option value="<?= $image['id'] ?>">
+
+                <?= htmlspecialchars($image['original_name']) ?>
+
+            </option>
+
+        <?php endwhile; ?>
+
+    </select>
+
+</p>    
 
     <p>
         <label>Content</label><br>

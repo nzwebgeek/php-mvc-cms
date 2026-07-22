@@ -5,7 +5,25 @@ require 'includes/auth.php';?>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CMS Admin</title>
+  <title>
+<?= htmlspecialchars(
+    $currentPage['seo_title']
+    ?? $settings['seo_title']
+    ?? $settings['site_name']
+    ?? 'Website'
+) ?>
+</title>
+
+<meta
+    name="description"
+    content="<?= htmlspecialchars(
+        $currentPage['seo_description']
+        ?? $settings['seo_description']
+        ?? ''
+    ) ?>">
+
+<meta name="description"
+      content="A lightweight PHP CMS built from scratch with a custom admin dashboard.">
 
     <link rel="stylesheet" href="assets/css/style.css">
     <script src="assets/js/app.js" defer></script>
@@ -19,13 +37,13 @@ require 'includes/auth.php';?>
         ☰
     </button>
 
-    <div class="logo">
-        My CMS
+   <div class="logo">
+    <?= htmlspecialchars($settings['site_name'] ?? 'My CMS') ?>
     </div>
 
     <div class="user">
         Welcome,
-        <strong><?= htmlspecialchars($_SESSION['username']); ?></strong>
+        <strong><?= htmlspecialchars($_SESSION['username'] ?? 'Administrator'); ?></strong>
         <a href="logout.php">Logout</a>
     </div>
 

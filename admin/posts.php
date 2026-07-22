@@ -10,6 +10,7 @@ FROM posts p
 LEFT JOIN users u
 ON p.user_id = u.id
 ORDER BY p.created_at DESC
+
 ";
 
 $result = $conn->query($sql);
@@ -25,6 +26,9 @@ $result = $conn->query($sql);
             echo "Post deleted successfully.";
         } elseif ($_GET['success'] === 'created') {
             echo "Post created successfully.";
+        }
+         elseif ($_GET['success'] === 'updated') {
+            echo "✏️ Post updated successfully.";
         }
         ?>
     </div>

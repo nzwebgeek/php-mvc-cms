@@ -22,7 +22,7 @@ if ($postId === 0) {
 }
 
 
-require_once 'db.php';
+require_once 'includes/db.php';
 
 $message = "";
 
@@ -33,7 +33,7 @@ if (isset($_POST['update'])) {
     $comment = trim($_POST['comment']);
     $user_id = $_SESSION['user_id'];
 
-    $stmt = $conn->prepare("UPDATE blogg SET comment = ? WHERE id = ?  AND user_id = ?");
+    $stmt = $conn->prepare("UPDATE comments SET comment = ? WHERE id = ?  AND user_id = ?");
     $stmt->bind_param("sii", $comment, $id, $user_id);
 
     if ($stmt->execute()) {
@@ -51,7 +51,7 @@ if (isset($_POST['delete_id'])) {
     $id = (int)$_POST['delete_id'];
     $user_id = $_SESSION['user_id'];
 
-    $stmt = $conn->prepare("DELETE FROM blogg WHERE id = ? AND user_id = ?");
+    $stmt = $conn->prepare("DELETE FROM comments WHERE id = ? AND user_id = ?");
     $stmt->bind_param("ii", $id, $user_id);
 
     if ($stmt->execute()) {
@@ -75,7 +75,7 @@ if (isset($_POST['comments'])) {
     if (!empty($comment)) {
 
         $stmt = $conn->prepare("
-            INSERT INTO blogg 
+            INSERT INTO comments 
             (post_id, user_id, comment, created_at)
             VALUES (?, ?, ?, ?)
         ");
@@ -149,11 +149,11 @@ include 'includes/header.php';
 
     <?php
     $stmt = $conn->prepare("
-    SELECT blogg.*, users.username
-    FROM blogg
-    JOIN users ON blogg.user_id = users.id
-    WHERE blogg.post_id = ?
-    ORDER BY blogg.id DESC
+    SELECT comments.*, users.username
+    FROM comments
+    JOIN users ON comments.user_id = users.id
+    WHERE comments.post_id = ?
+    ORDER BY comments.id DESC
     ");
 
 $stmt->bind_param("i", $postId);

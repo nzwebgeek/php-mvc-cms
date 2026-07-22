@@ -2,7 +2,18 @@
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
+
+// Temporarily disabled during development
+/*
+if (!empty($settings['maintenance_mode']) && !isset($_SESSION['user_id'])) {
+    die("
+        <h1>Website Under Maintenance</h1>
+        <p>Please check back later.</p>
+    ");
+}
+*/
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -12,33 +23,18 @@ if (session_status() === PHP_SESSION_NONE) {
 
 <?php
 $pageTitle = $page['seo_title']
-    ?? $settings['seo_title']
-    ?? $settings['site_name']
+    ?? ($settings['seo_title'] ?? null)
+    ?? ($settings['site_name'] ?? null)
     ?? 'Website';
 
 $pageDescription = $page['seo_description']
-    ?? $settings['seo_description']
-    ?? '';
+    ?? ($settings['seo_description'] ?? '');
 ?>
 
-<title>
-<?= htmlspecialchars($pageTitle, ENT_QUOTES, 'UTF-8') ?>
-</title>
-
 <?php if (!empty($pageDescription)): ?>
-
-<meta 
-    name="description" 
-    content="<?= htmlspecialchars($pageDescription, ENT_QUOTES, 'UTF-8') ?>"
->
 
 <?php endif; ?>
 
-<title><?= htmlspecialchars($pageTitle) ?></title>
-
-<?php if (!empty($pageDescription)): ?>
-<meta name="description" content="<?= htmlspecialchars($pageDescription) ?>">
-<?php endif; ?>
 
 <meta name="robots" content="index, follow">
 
@@ -52,11 +48,15 @@ $pageDescription = $page['seo_description']
 <div class="container" id="container">
 
 <header>
+    <h1>
+        <?= htmlspecialchars($settings['site_name'] ?? 'My Website', ENT_QUOTES, 'UTF-8'); ?>
+    </h1>
+   
     <nav>
         <ul>
            <li>
-            Welcome <?= htmlspecialchars($_SESSION['username'] ?? 'Guest'); ?>
-            </li>
+    Welcome <?= htmlspecialchars($_SESSION['username'] ?? 'Guest', ENT_QUOTES, 'UTF-8'); ?>           
+        </li>
         </ul>
       <ul>
         <?php if (isset($_SESSION['user_id'])): ?>        
