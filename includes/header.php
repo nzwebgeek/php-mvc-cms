@@ -14,6 +14,8 @@ if (!empty($settings['maintenance_mode']) && !isset($_SESSION['user_id'])) {
 */
 ?>
 
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -42,8 +44,11 @@ $pageDescription = $page['seo_description']
 <script src="js/script.js" defer></script>
 
 </head>
-<body>
- 
+ <?php
+$theme = strtolower($settings['theme'] ?? 'light');
+?>
+<body class="theme-<?= htmlspecialchars($theme, ENT_QUOTES, 'UTF-8') ?>">
+
 
 <div class="container" id="container">
 
@@ -53,7 +58,7 @@ $pageDescription = $page['seo_description']
     </h1>
    
     <nav>
-        <ul>
+        <ul id="welcome">
            <li>
     Welcome <?= htmlspecialchars($_SESSION['username'] ?? 'Guest', ENT_QUOTES, 'UTF-8'); ?>           
         </li>
