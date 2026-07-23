@@ -63,7 +63,7 @@ if ($check->num_rows > 0) {
     /*Verification Start*/
     if ($stmt->execute()) {
 
-    $verifyLink = "http://stage-two.test/verify.php?token=" . $token;
+    $verifyLink = "http://stage-three.test/verify.php?token=" . $token;
 
 
     $subject = "Confirm your account";

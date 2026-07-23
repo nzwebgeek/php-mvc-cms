@@ -1,0 +1,26 @@
+cms/
+│
+├── config/
+│   └── config.php
+│
+├── core/
+│   ├── Database.php
+│   ├── Model.php
+│   ├── Controller.php
+│   └── Router.php
+│
+├── models/
+│   └── Page.php
+│
+├── controllers/
+│   └── PageController.php
+│
+├── views/
+│   ├── home.php
+│   └── page.php
+│
+├── public/
+│   ├── index.php
+│   └── .htaccess
+│
+└── database.sql

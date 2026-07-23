@@ -4,7 +4,7 @@ ini_set('display_errors', 1);
 
 // Database configuration
 $host = "localhost";      // Database host
-$dbname = "test2_db";      // Database name
+$dbname = "test3_db";      // Database name
 $username = "root";       // Database username
 $password = "";           // Database password
 

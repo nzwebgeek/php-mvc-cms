@@ -40,7 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 $stmt->execute();
         $stmt->execute();
 
-        $link = "http://stage-two.test/reset-password.php?token=".$token;
+        $link = "http://stage-three.test/reset-password.php?token=".$token;
 
         // Mail example
         mail(
