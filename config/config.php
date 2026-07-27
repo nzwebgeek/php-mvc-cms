@@ -1,8 +1,20 @@
 <?php
 
 return [
-    'host' => 'localhost',
-    'dbname' => 'test3_db',
-    'username' => 'root',
-    'password' => ''
+
+    'database' => [
+        'host' => 'localhost',
+        'dbname' => 'cms',
+        'username' => 'root',
+        'password' => ''
+    ],
+
+    'app' => [
+        'url' => 'http://stage-three.test'
+    ],
+
+    'mail' => [
+        'from' => 'noreply@stage-three.test'
+    ]
+
 ];

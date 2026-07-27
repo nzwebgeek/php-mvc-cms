@@ -1,38 +1,76 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Core;
 
 use PDO;
 use PDOException;
+use InvalidArgumentException;
 
 class Database
 {
     private static ?PDO $connection = null;
 
-    public static function connect(): PDO
+    private const REQUIRED_KEYS = [
+        'host',
+        'dbname',
+        'username',
+        'password',
+        'charset'
+    ];
+
+    public static function connect(array $config): PDO
     {
-        if (self::$connection === null) {
+        if (self::$connection !== null) {
+            return self::$connection;
+        }
 
-            $host = "localhost";
-            $dbname = "test3_db";
-            $username = "root";
-            $password = "";
+        foreach (self::REQUIRED_KEYS as $key) {
 
-            $dsn = "mysql:host=$host;dbname=$dbname;charset=utf8mb4";
-
-            try {
-                self::$connection = new PDO(
-                    $dsn,
-                    $username,
-                    $password,
-                    [
-                        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-                        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
-                    ]
+            if (!isset($config[$key])) {
+                throw new InvalidArgumentException(
+                    "Missing database config: {$key}"
                 );
-            } catch (PDOException $e) {
-                die("Database connection failed: " . $e->getMessage());
             }
+        }
+
+        $dsn = sprintf(
+            'mysql:host=%s;dbname=%s;charset=%s',
+            $config['host'],
+            $config['dbname'],
+            $config['charset']
+        );
+
+        try {
+
+            self::$connection = new PDO(
+                $dsn,
+                $config['username'],
+                $config['password'],
+                [
+                    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+                    PDO::ATTR_EMULATE_PREPARES => false,
+                ]
+            );
+
+        } catch (PDOException $e) {
+
+            if (!empty($config['debug'])) {
+
+                throw new PDOException(
+                    $e->getMessage(),
+                    0,
+                    $e
+                );
+            }
+
+            throw new PDOException(
+                'Database connection failed.',
+                0,
+                $e
+            );
         }
 
         return self::$connection;

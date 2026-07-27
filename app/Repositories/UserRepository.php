@@ -1,0 +1,312 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Repositories;
+
+use App\Core\Repository;
+use PDO;
+
+class UserRepository extends Repository
+{
+
+    /*
+    |--------------------------------------------------------------------------
+    | Authentication
+    |--------------------------------------------------------------------------
+    */
+
+    public function findByUsername(
+        string $username
+    ): ?array {
+
+        $stmt = $this->db->prepare("
+            SELECT
+                u.id,
+                u.username,
+                u.password,
+                u.email_verified,
+                r.name AS role
+            FROM users u
+            LEFT JOIN roles r
+                ON u.role_id = r.id
+            WHERE u.username = :username
+        ");
+
+        $stmt->execute([
+            'username' => $username
+        ]);
+
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return $user ?: null;
+    }
+
+
+    public function findByEmail(
+        string $email
+    ): ?array {
+
+        $stmt = $this->db->prepare("
+            SELECT
+                id,
+                username,
+                email,
+                password,
+                role_id,
+                email_verified,
+                verification_token
+            FROM users
+            WHERE email = :email
+        ");
+
+        $stmt->execute([
+            'email' => $email
+        ]);
+
+        return $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
+    }
+
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Registration
+    |--------------------------------------------------------------------------
+    */
+
+
+    public function usernameOrEmailExists(
+        string $username,
+        string $email
+    ): bool {
+
+        $stmt = $this->db->prepare("
+            SELECT id
+            FROM users
+            WHERE username = :username
+            OR email = :email
+        ");
+
+        $stmt->execute([
+            'username' => $username,
+            'email' => $email
+        ]);
+
+        return (bool) $stmt->fetch();
+    }
+
+
+    public function createUser(
+        string $username,
+        string $email,
+        string $password,
+        int $roleId,
+        string $token
+    ): bool {
+
+        $stmt = $this->db->prepare("
+            INSERT INTO users
+            (
+                username,
+                email,
+                password,
+                role_id,
+                verification_token
+            )
+            VALUES
+            (
+                :username,
+                :email,
+                :password,
+                :role_id,
+                :token
+            )
+        ");
+
+        return $stmt->execute([
+            'username' => $username,
+            'email' => $email,
+            'password' => $password,
+            'role_id' => $roleId,
+            'token' => $token
+        ]);
+    }
+
+
+
+    public function findRoleIdByName(
+        string $role
+    ): ?int {
+
+        $stmt = $this->db->prepare("
+            SELECT id
+            FROM roles
+            WHERE name = :role
+        ");
+
+        $stmt->execute([
+            'role' => $role
+        ]);
+
+        $result = $stmt->fetch();
+
+        return $result['id'] ?? null;
+    }
+
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Password Reset
+    |--------------------------------------------------------------------------
+    */
+
+
+    public function findByResetToken(
+        string $tokenHash
+    ): ?array {
+
+        $stmt = $this->db->prepare("
+            SELECT
+                id,
+                username,
+                email
+            FROM users
+            WHERE reset_token = :token
+            AND reset_expires > NOW()
+        ");
+
+        $stmt->execute([
+            'token' => $tokenHash
+        ]);
+
+        return $stmt->fetch() ?: null;
+    }
+
+
+
+    public function savePasswordResetToken(
+        int $userId,
+        string $tokenHash,
+        string $expires
+    ): bool {
+
+        $stmt = $this->db->prepare("
+            UPDATE users
+            SET
+                reset_token = :token,
+                reset_expires = :expires
+            WHERE id = :id
+        ");
+
+        return $stmt->execute([
+            'token' => $tokenHash,
+            'expires' => $expires,
+            'id' => $userId
+        ]);
+    }
+
+
+
+    public function updatePassword(
+        int $userId,
+        string $password
+    ): bool {
+
+        $stmt = $this->db->prepare("
+            UPDATE users
+            SET
+                password = :password,
+                reset_token = NULL,
+                reset_expires = NULL
+            WHERE id = :id
+        ");
+
+        return $stmt->execute([
+            'password' => $password,
+            'id' => $userId
+        ]);
+    }
+
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Dashboard/Profile
+    |--------------------------------------------------------------------------
+    */
+
+
+    public function findById(
+        int $id
+    ): ?array {
+
+        $stmt = $this->db->prepare("
+            SELECT
+                u.id,
+                u.username,
+                u.email,
+                u.theme_color,
+                u.background_color,
+                u.text_color,
+                i.filepath
+            FROM users u
+            LEFT JOIN images i
+                ON u.image_id = i.id
+            WHERE u.id = :id
+        ");
+
+        $stmt->execute([
+            'id' => $id
+        ]);
+
+        return $stmt->fetch() ?: null;
+    }
+
+
+
+    public function updateTheme(
+        int $id,
+        string $theme,
+        string $background,
+        string $text
+    ): bool {
+
+        $stmt = $this->db->prepare("
+            UPDATE users
+            SET
+                theme_color = :theme,
+                background_color = :background,
+                text_color = :text
+            WHERE id = :id
+        ");
+
+        return $stmt->execute([
+            'theme' => $theme,
+            'background' => $background,
+            'text' => $text,
+            'id' => $id
+        ]);
+    }
+
+
+
+    public function updateImage(
+        int $userId,
+        int $imageId
+    ): bool {
+
+        $stmt = $this->db->prepare("
+            UPDATE users
+            SET image_id = :image
+            WHERE id = :id
+        ");
+
+        return $stmt->execute([
+            'image' => $imageId,
+            'id' => $userId
+        ]);
+    }
+
+}

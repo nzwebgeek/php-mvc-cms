@@ -1,11 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
+namespace App\Core;
+
 abstract class Controller
 {
-    protected function view(string $file, array $data = [])
-    {
-        extract($data);
+    protected array $data = [];
 
-        require __DIR__ . "/../views/$file.php";
+    protected function view(
+        string $view,
+        array $data = []
+    ): void {
+
+        View::render($view, $data);
     }
 }

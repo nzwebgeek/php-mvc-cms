@@ -37,7 +37,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $user['id']
         );
 
-$stmt->execute();
         $stmt->execute();
 
         $link = "http://stage-three.test/reset-password.php?token=".$token;

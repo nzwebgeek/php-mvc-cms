@@ -24,3 +24,36 @@ cms/
 │   └── .htaccess
 │
 └── database.sql
+
+eg; slit each (original page)
+into MVC sucas this:
+app/
+├── Controllers/
+│   └── DashboardController.php
+│
+├── Models/
+│   ├── User.php
+│   ├── Image.php
+│   └── Post.php
+│
+├── Views/
+│   └── dashboard/
+│       └── index.php
+
+app/
+│
+├── Models/
+│   └── User.php
+│        (data only)
+│
+├── Repositories/
+│   └── UserRepository.php
+│        (all SQL)
+│
+├── Services/
+│   └── AuthService.php
+│        (rules/logic)
+│
+└── Controllers/
+    └── AuthController.php
+         (HTTP handling)
