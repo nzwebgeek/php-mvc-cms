@@ -133,6 +133,22 @@ class UserRepository extends Repository
         ]);
     }
 
+    public function verifyEmail(
+        string $token
+    ): bool {
+
+        $stmt = $this->db->prepare("
+            UPDATE users
+            SET
+                email_verified = 1,
+                verification_token = NULL
+            WHERE verification_token = :token
+        ");
+
+        return $stmt->execute([
+            'token' => $token
+        ]);
+    }
 
 
     public function findRoleIdByName(
@@ -247,11 +263,16 @@ class UserRepository extends Repository
                 u.id,
                 u.username,
                 u.email,
+                r.name AS role,
                 u.theme_color,
                 u.background_color,
                 u.text_color,
                 i.filepath
             FROM users u
+
+            LEFT JOIN roles r
+            ON u.role_id = r.id
+
             LEFT JOIN images i
                 ON u.image_id = i.id
             WHERE u.id = :id
@@ -260,36 +281,47 @@ class UserRepository extends Repository
         $stmt->execute([
             'id' => $id
         ]);
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        return $stmt->fetch() ?: null;
+        if (!$user) {
+            return null;
+        }
+
+        $user['theme_color'] = $user['theme_color'] ?? '#007bff';
+        $user['background_color'] = $user['background_color'] ?? '#ffffff';
+        $user['text_color'] = $user['text_color'] ?? '#000000';
+        
+        return $user;
+
     }
 
 
 
-    public function updateTheme(
-        int $id,
-        string $theme,
-        string $background,
-        string $text
-    ): bool {
+public function updateTheme(
+    int $id,
+    string $theme,
+    string $background,
+    string $text
+): bool
+{
 
-        $stmt = $this->db->prepare("
-            UPDATE users
-            SET
-                theme_color = :theme,
-                background_color = :background,
-                text_color = :text
-            WHERE id = :id
-        ");
+    $stmt = $this->db->prepare(
+        "UPDATE users
+        SET theme_color = ?,
+            background_color = ?,
+            text_color = ?
+        WHERE id = ?"
+    );
 
-        return $stmt->execute([
-            'theme' => $theme,
-            'background' => $background,
-            'text' => $text,
-            'id' => $id
-        ]);
-    }
 
+    return $stmt->execute([
+        $theme,
+        $background,
+        $text,
+        $id
+    ]);
+
+}
 
 
     public function updateImage(
@@ -308,5 +340,6 @@ class UserRepository extends Repository
             'id' => $userId
         ]);
     }
+    
 
 }

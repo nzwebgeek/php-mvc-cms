@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Core;
 
 use ReflectionClass;
@@ -7,7 +9,6 @@ use RuntimeException;
 
 class Container
 {
-
     private array $services = [];
 
 
@@ -16,7 +17,7 @@ class Container
         object $service
     ): void {
 
-        $this->services[$name]=$service;
+        $this->services[$name] = $service;
     }
 
 
@@ -25,7 +26,7 @@ class Container
     ): object {
 
 
-        if(isset($this->services[$class])) {
+        if (isset($this->services[$class])) {
 
             return $this->services[$class];
 
@@ -35,7 +36,7 @@ class Container
         $reflection = new ReflectionClass($class);
 
 
-        if(!$reflection->isInstantiable()) {
+        if (!$reflection->isInstantiable()) {
 
             throw new RuntimeException(
                 "Cannot create {$class}"
@@ -43,32 +44,36 @@ class Container
         }
 
 
-        $constructor=$reflection->getConstructor();
+        $constructor = $reflection->getConstructor();
 
 
-        if(!$constructor) {
+        if (!$constructor) {
 
             return new $class();
         }
 
 
-        $dependencies=[];
+        $dependencies = [];
 
 
-        foreach($constructor->getParameters() as $parameter){
+        foreach ($constructor->getParameters() as $parameter) {
 
-            $type=$parameter->getType();
+            $type = $parameter->getType();
 
 
-            if(!$type){
+            if (!$type) {
 
                 throw new RuntimeException(
-                    "Cannot resolve dependency"
+                    sprintf(
+                        "Cannot resolve dependency '%s' for %s.",
+                        $parameter->getName(),
+                        $class
+                    )
                 );
             }
 
 
-            $dependencies[]=$this->get(
+            $dependencies[] = $this->get(
                 $type->getName()
             );
         }

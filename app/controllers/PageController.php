@@ -16,32 +16,34 @@ class PageController extends Controller
     ) {
     }
 
-    public function home(): void
-    {
-        $settings = $this->settings->get();
+public function home(): void
+{
+    $settings = $this->settings->get();
 
-        $page = $this->pages->findBySlug('home');
+    $pages = $this->pages->getAll();
 
-        $this->view('pages/home', [
-            'page' => $page,
-            'settings' => $settings
-        ]);
+    $this->view('pages/home', [
+        'pages' => $pages,
+        'settings' => $settings
+    ]);
+}
+   public function show(string $slug): void
+{
+    $page = $this->pages->findBySlug($slug);
+
+    if (!$page) {
+        $this->view('errors/404');
+        return;
     }
 
-    public function show(string $slug): void
-    {
-        $page = $this->pages->findBySlug($slug);
+    $settings = $this->settings->get();
 
-        if (!$page) {
-            $this->view('errors/404');
-            return;
-        }
+    $pages = $this->pages->getAll();
 
-        $settings = $this->settings->get();
-
-        $this->view('pages/page', [
-            'page' => $page,
-            'settings' => $settings
-        ]);
-    }
+    $this->view('pages/page', [
+        'page' => $page,
+        'pages' => $pages,
+        'settings' => $settings
+    ]);
+}
 }

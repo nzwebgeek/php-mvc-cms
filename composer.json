@@ -1,6 +1,6 @@
 {
     "name": "owner/stage-three",
-    "description": "Stage Three CMS",
+    "description": "Stage Three CMS - MVC Migration",
     "type": "project",
     "autoload": {
         "psr-4": {

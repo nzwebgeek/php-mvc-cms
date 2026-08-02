@@ -1,73 +1,20 @@
 <?php
-session_start();
+
 declare(strict_types=1);
 
-use App\Controllers\AuthController;
-use App\Controllers\PageController;
+session_start();
+
 use App\Core\Router;
-use App\Controllers\DashboardController;
 
 require dirname(__DIR__) . '/vendor/autoload.php';
 
-$container = require dirname(__DIR__) . '/bootstrap.php';
-
+$container = require dirname(__DIR__) . '/bootstrap/app.php';
 
 $router = new Router($container);
 
+// Load all web routes
+require dirname(__DIR__) . '/routes/web.php';
 
-
-/*
-|--------------------------------------------------------------------------
-| Pages
-|--------------------------------------------------------------------------
-*/
-
-$router->get(
-    'home',
-    [PageController::class, 'home']
-);
-
-$router->get(
-    'dashboard',
-    [DashboardController::class,'index']
-);
-
-
-$router->post(
-    'dashboard-theme',
-    [DashboardController::class,'saveTheme']
-);
-
-
-$router->post(
-    'dashboard-image',
-    [DashboardController::class,'uploadImage']
-);
-
-
-/*
-|--------------------------------------------------------------------------
-| Authentication
-|--------------------------------------------------------------------------
-*/
-
-$router->get(
-    'login',
-    [AuthController::class, 'login']
-);
-
-
-$router->get(
-    'register',
-    [AuthController::class, 'register']
-);
-
-
-$router->post(
-    'register',
-    [AuthController::class, 'store']
-);
-
-
-
+// Dispatch the current request
 $router->dispatch();
+

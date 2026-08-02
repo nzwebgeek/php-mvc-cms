@@ -1,23 +1,43 @@
-<?php require dirname(__DIR__) . '/layouts/header.php'; ?>
 
 
-<h1>
-    <?= htmlspecialchars($page['title']); ?>
-</h1>
+<div class="post-page">
+
+    <article class="post-card">
+
+        <h1 class="post-title">
+
+            <?= htmlspecialchars(
+                $page['title'] ?? '',
+                ENT_QUOTES,
+                'UTF-8'
+            ); ?>
+
+        </h1>
 
 
-<div>
+        <div class="post-content">
 
-<?= nl2br(
-    htmlspecialchars($page['content'])
-); ?>
+            <?= nl2br(
+                htmlspecialchars(
+                    $page['main_content'] ?? '',
+                    ENT_QUOTES,
+                    'UTF-8'
+                )
+            ); ?>
+
+        </div>
+
+
+        <br>
+
+
+        <a href="/">
+            Back home
+        </a>
+
+
+    </article>
 
 </div>
 
 
-<a href="?page=home">
-    Back home
-</a>
-
-
-<?php require dirname(__DIR__) . '/layouts/footer.php'; ?>

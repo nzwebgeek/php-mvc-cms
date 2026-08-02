@@ -10,19 +10,28 @@ class View
 {
     public static function render(
         string $view,
-        array $data = []
+        array $data = [],
+        string $layout = 'front'
     ): void {
 
-        $path = dirname(__DIR__) . "/views/{$view}.php";
+        $basePath = dirname(__DIR__) . '/Views';
 
-        if (!file_exists($path)) {
-            throw new RuntimeException(
-                "View '{$view}' not found."
-            );
+        $viewPath = "{$basePath}/{$view}.php";
+
+        if (!file_exists($viewPath)) {
+            throw new RuntimeException("View '{$view}' not found.");
         }
 
         extract($data, EXTR_SKIP);
 
-        require $path;
+        ob_start();
+        require $viewPath;
+        $content = ob_get_clean();
+
+        require "{$basePath}/layouts/{$layout}/header.php";
+
+        echo $content;
+
+        require "{$basePath}/layouts/{$layout}/footer.php";
     }
 }

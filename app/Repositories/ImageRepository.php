@@ -5,73 +5,95 @@ declare(strict_types=1);
 namespace App\Repositories;
 
 use App\Core\Repository;
-
+use PDO;
 
 class ImageRepository extends Repository
 {
 
 
-    public function upload(
-        array $file
-    ): int {
+    public function upload(array $file): int
+{
+    $directory = dirname(__DIR__, 2) . '/public/images/uploads/';
 
-
-        $directory = 'images/uploads/';
-
-
-        if (!is_dir($directory)) {
-
-            mkdir(
-                $directory,
-                0755,
-                true
-            );
-        }
-
-
-        $extension = strtolower(
-            pathinfo(
-                $file['name'],
-                PATHINFO_EXTENSION
-            )
+    if (!is_dir($directory)) {
+        mkdir(
+            $directory,
+            0755,
+            true
         );
+    }
 
 
-        $filename =
-            uniqid('img_', true)
-            . '.'
-            . $extension;
+    $extension = strtolower(
+        pathinfo(
+            $file['name'],
+            PATHINFO_EXTENSION
+        )
+    );
 
 
-        $path = $directory . $filename;
+    $filename =
+        uniqid('img_', true)
+        . '.'
+        . $extension;
 
 
-        move_uploaded_file(
-            $file['tmp_name'],
-            $path
+    $fullPath = $directory . $filename;
+
+
+    if (!move_uploaded_file(
+        $file['tmp_name'],
+        $fullPath
+    )) {
+        throw new \RuntimeException(
+            'Failed to move uploaded file'
         );
+    }
 
 
-        $stmt = $this->db->prepare("
-            INSERT INTO images
-            (
-                filename,
-                filepath
-            )
-            VALUES
-            (
-                :filename,
-                :filepath
-            )
+    $stmt = $this->db->prepare("
+        INSERT INTO images
+        (
+            filename,
+            filepath
+        )
+        VALUES
+        (
+            :filename,
+            :filepath
+        )
+    ");
+
+
+    $stmt->execute([
+        'filename' => $filename,
+        'filepath' => '/images/uploads/' . $filename
+    ]);
+
+
+    return (int)$this->db->lastInsertId();
+}
+    public function getBlogFeaturedImages(): array
+    {
+        $stmt = $this->db->query("
+            SELECT *
+            FROM images
+            LIMIT 2
         ");
 
+        return $stmt->fetchAll();
+    }
+    public function all(): array
+    {
+        $stmt = $this->db->query("
+            SELECT
+                id,
+                filename,
+                filepath
+            FROM images
+            ORDER BY id DESC
+        ");
 
-        $stmt->execute([
-            'filename'=>$filename,
-            'filepath'=>$path
-        ]);
-
-
-        return (int) $this->db->lastInsertId();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }
