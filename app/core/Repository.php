@@ -1,32 +1,18 @@
 <?php
 
-namespace App\Repositories;
+declare(strict_types=1);
 
-use App\Core\Repository;
+namespace App\Core;
 
-class UserRepository extends Repository
+use PDO;
+
+abstract class Repository
 {
-    public function findByUsername(string $username): ?array
+    protected PDO $db;
+
+
+    public function __construct(PDO $db)
     {
-        $stmt = $this->db->prepare("
-            SELECT
-                u.id,
-                u.username,
-                u.password,
-                u.email_verified,
-                r.name AS role
-            FROM users u
-            LEFT JOIN roles r
-                ON u.role_id = r.id
-            WHERE u.username = :username
-        ");
-
-        $stmt->execute([
-            'username' => $username
-        ]);
-
-        $user = $stmt->fetch();
-
-        return $user ?: null;
+        $this->db = $db;
     }
 }

@@ -1,20 +1,48 @@
 <?php
 
+declare(strict_types=1);
+
 return [
 
-    'database' => [
-        'host' => 'localhost',
-        'dbname' => 'cms',
-        'username' => 'root',
-        'password' => ''
-    ],
+    /*
+    |--------------------------------------------------------------------------
+    | Application
+    |--------------------------------------------------------------------------
+    */
 
     'app' => [
-        'url' => 'http://stage-three.test'
+        'name' => 'Stage Three MVC CMS',
+        'url'  => 'http://stage-three-mvc.test',
+        'env'  => 'development',
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Database
+    |--------------------------------------------------------------------------
+    */
+
+'database' => [
+
+    'host' => 'localhost',
+
+    'dbname' => 'test4_db',
+
+    'username' => 'root',
+
+    'password' => '',
+
+    'charset' => 'utf8mb4',
+
+],
+    /*
+    |--------------------------------------------------------------------------
+    | Mail
+    |--------------------------------------------------------------------------
+    */
+
     'mail' => [
-        'from' => 'noreply@stage-three.test'
-    ]
+        'from' => 'noreply@stage-three-mvc.test',
+    ],
 
 ];

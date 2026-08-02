@@ -5,45 +5,200 @@ declare(strict_types=1);
 namespace App\Repositories;
 
 use App\Core\Repository;
-
+/*repository's job is to talk to the database*/
 
 class PostRepository extends Repository
 {
 
-    public function all(): array
+public function all(): array
+{
+    $stmt = $this->db->query("
+        SELECT
+            posts.*,
+            users.username,
+            images.filepath AS image_path
+
+        FROM posts
+
+        JOIN users
+        ON posts.user_id = users.id
+
+        LEFT JOIN images
+        ON posts.featured_media_id = images.id
+
+        WHERE posts.status = 'published'
+
+        ORDER BY created_at DESC
+    ");
+
+    return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+}
+
+public function findById(int $id): ?array
+{
+    $stmt = $this->db->prepare("
+        SELECT
+            posts.*,
+
+            images.filename AS image_filename,
+            images.filepath AS image_path
+
+        FROM posts
+
+        LEFT JOIN images
+        ON posts.featured_media_id = images.id
+
+        WHERE posts.id = :id
+
+        AND posts.status = 'published'
+
+        LIMIT 1
+    ");
+
+
+    $stmt->execute([
+        'id' => $id
+    ]);
+
+
+    return $stmt->fetch(\PDO::FETCH_ASSOC) ?: null;
+}     
+public function getBlogImages(): array
     {
+    $stmt = $this->db->query("
+        SELECT *
+        FROM images
+        LIMIT 2
+    ");
 
-        $stmt = $this->db->query("
-            SELECT
-                id,
-                title,
-                content,
-                created_at
-            FROM posts
-            ORDER BY id DESC
-        ");
+    return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+}
 
-
-        return $stmt->fetchAll();
-    }
-
-
-    public function findById(
-        int $id
-    ): ?array {
-
+public function getBlogFeaturedImages(): array
+    {
         $stmt = $this->db->prepare("
             SELECT *
-            FROM posts
-            WHERE id = :id
+            FROM images
+            WHERE featured_location = 'blog_top'
+            LIMIT 2
         ");
 
+        $stmt->execute();
 
-        $stmt->execute([
-            'id'=>$id
-        ]);
-
-
-        return $stmt->fetch() ?: null;
+       return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
+
+
+// Dashboard
+public function findByUser(int $userId): array
+{
+    $stmt = $this->db->prepare("
+        SELECT
+            posts.*,
+            images.filename AS image_filename,
+            images.filepath AS image_path
+
+        FROM posts
+
+        LEFT JOIN images
+        ON posts.featured_media_id = images.id
+
+        WHERE posts.user_id = :user_id
+
+        ORDER BY posts.created_at DESC
+    ");
+
+    $stmt->execute([
+        'user_id' => $userId
+    ]);
+
+    return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+}
+
+
+public function findByIdAndUser(
+    int $id,
+    int $userId
+): ?array {
+
+    $stmt = $this->db->prepare("
+        SELECT
+            posts.*,
+            images.filepath AS image_path
+
+        FROM posts
+
+        LEFT JOIN images
+        ON posts.featured_media_id = images.id
+
+        WHERE posts.id = :id
+
+        AND posts.user_id = :user_id
+
+        LIMIT 1
+    ");
+
+
+    $stmt->execute([
+        'id' => $id,
+        'user_id' => $userId
+    ]);
+
+
+    return $stmt->fetch(\PDO::FETCH_ASSOC) ?: null;
+}
+
+
+public function update(
+    int $id,
+    int $userId,
+    array $data
+): bool {
+
+    $stmt = $this->db->prepare("
+        UPDATE posts
+        SET
+            title = :title,
+            slug = :slug,
+            status = :status,
+            content = :content,
+            updated_at = NOW()
+
+        WHERE id = :id
+        AND user_id = :user_id
+    ");
+
+
+    return $stmt->execute([
+
+        'title' => $data['title'],
+        'slug' => $data['slug'],
+        'status' => $data['status'],
+        'content' => $data['content'],
+        'id' => $id,
+        'user_id' => $userId
+
+    ]);
+}
+
+
+public function delete(
+    int $id,
+    int $userId
+): bool {
+
+    $stmt = $this->db->prepare("
+        DELETE FROM posts
+
+        WHERE id = :id
+        AND user_id = :user_id
+    ");
+
+
+    return $stmt->execute([
+        'id' => $id,
+        'user_id' => $userId
+    ]);
+}
+  
 }

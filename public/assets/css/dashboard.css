@@ -1,0 +1,446 @@
+/* ==========================================
+   Dashboard Layout
+========================================== */
+
+body {
+    background: red !important;
+}
+
+.dashboard-page {
+
+    max-width:1400px;
+
+    margin:40px auto;
+
+    padding:0 20px;
+
+    font-family:Arial, Helvetica, sans-serif;
+
+    color:var(--text);
+
+}
+
+
+
+/* ==========================================
+   Header
+========================================== */
+
+
+.dashboard-header {
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--theme),
+            #3958ff
+        );
+
+    color:white;
+
+    padding:35px;
+
+    border-radius:20px;
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:25px;
+
+    box-shadow:
+        0 10px 30px rgba(0,0,0,.08);
+
+}
+
+
+.dashboard-header h1 {
+
+    font-size:36px;
+
+    margin-bottom:8px;
+
+}
+
+
+.dashboard-header p {
+
+    opacity:.9;
+
+}
+
+
+
+.welcome {
+
+    text-align:right;
+
+}
+
+
+
+.welcome h2 {
+
+    font-size:20px;
+
+}
+
+
+
+/* ==========================================
+   Two Column Layout
+========================================== */
+
+
+.dashboard-grid {
+
+    display:grid;
+
+    grid-template-columns:280px 1fr;
+
+    gap:25px;
+
+}
+
+
+
+
+
+/* ==========================================
+   Sidebar
+========================================== */
+
+
+.sidebar {
+
+    background:white;
+
+    border-radius:18px;
+
+    overflow:hidden;
+
+    box-shadow:
+        0 10px 30px rgba(0,0,0,.08);
+
+}
+
+
+
+
+.profile-card {
+
+    background:var(--theme);
+
+    color:white;
+
+    padding:30px;
+
+    text-align:center;
+
+}
+
+
+
+.profile-card h3 {
+
+    margin-top:20px;
+
+    font-size:24px;
+
+}
+
+
+
+.profile-card p {
+
+    margin-top:10px;
+
+    opacity:.85;
+
+}
+
+
+
+
+
+.profile-image {
+
+    width:120px;
+
+    height:120px;
+
+    border-radius:50%;
+
+    object-fit:cover;
+
+    border:6px solid white;
+
+    box-shadow:
+        0 10px 25px rgba(0,0,0,.25);
+
+}
+
+
+
+
+
+.profile-placeholder {
+
+
+    width:120px;
+
+    height:120px;
+
+    border-radius:50%;
+
+    background:white;
+
+    color:#777;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    margin:auto;
+
+}
+
+
+
+
+/* ==========================================
+   Menu
+========================================== */
+
+
+.dashboard-menu {
+
+    padding:20px;
+
+}
+
+
+
+.dashboard-menu a {
+
+    display:block;
+
+    padding:14px 18px;
+
+    margin-bottom:10px;
+
+    border-radius:10px;
+
+    background:#f5f5f5;
+
+    color:#333;
+
+    text-decoration:none;
+
+    font-weight:bold;
+
+    transition:.25s;
+
+}
+
+
+
+.dashboard-menu a:hover {
+
+    background:var(--theme);
+
+    color:white;
+
+    transform:translateX(5px);
+
+}
+
+
+
+
+/* ==========================================
+   Main Content
+========================================== */
+
+
+.dashboard-content {
+
+    background:white;
+
+    border-radius:18px;
+
+    padding:35px;
+
+    box-shadow:
+
+        0 10px 30px rgba(0,0,0,.08);
+
+}
+
+
+
+
+/* ==========================================
+   Cards
+========================================== */
+
+
+.card {
+
+    background:#fff;
+
+    border-radius:16px;
+
+    padding:30px;
+
+    margin-bottom:25px;
+
+    box-shadow:
+
+        0 8px 25px rgba(0,0,0,.08);
+
+    transition:.25s;
+
+}
+
+
+
+.card:hover {
+
+    transform:translateY(-3px);
+
+    box-shadow:
+
+        0 15px 35px rgba(0,0,0,.12);
+
+}
+
+
+
+.card h2 {
+
+    margin-bottom:20px;
+
+    color:var(--theme);
+
+}
+
+
+
+.card ul {
+
+    margin-top:20px;
+
+    line-height:2;
+
+}
+
+
+
+
+
+/* ==========================================
+   Large Profile Image
+========================================== */
+
+
+.large-profile-image {
+
+
+    width:180px;
+
+    height:180px;
+
+    object-fit:cover;
+
+    border-radius:50%;
+
+    border:6px solid var(--theme);
+
+    display:block;
+
+    margin:20px auto;
+
+}
+
+
+
+.profile-placeholder-large {
+
+
+    text-align:center;
+
+    padding:50px;
+
+    background:#fafafa;
+
+    border-radius:15px;
+
+}
+
+
+
+/* ==========================================
+   Posts
+========================================== */
+
+
+.card article {
+
+
+    padding:15px;
+
+    background:#fafafa;
+
+    border-radius:10px;
+
+    margin-bottom:10px;
+
+    border-left:5px solid var(--theme);
+
+}
+
+
+
+
+
+/* ==========================================
+   Responsive
+========================================== */
+
+
+@media(max-width:900px){
+
+
+    .dashboard-grid {
+
+        grid-template-columns:1fr;
+
+    }
+
+
+
+    .dashboard-header {
+
+        flex-direction:column;
+
+        text-align:center;
+
+        gap:20px;
+
+    }
+
+
+
+    .welcome {
+
+        text-align:center;
+
+    }
+
+
+}

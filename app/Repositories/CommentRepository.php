@@ -91,7 +91,7 @@ class CommentRepository extends Repository
             SELECT
                 c.*,
                 c.username
-            FROM comments
+            FROM comments c
             JOIN users u
                 ON c.user_id = u.id
             WHERE c.post_id = :post_id

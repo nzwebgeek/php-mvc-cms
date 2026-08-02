@@ -10,9 +10,10 @@ abstract class Controller
 
     protected function view(
         string $view,
-        array $data = []
+        array $data = [],
+         string $layout = 'front'
     ): void {
 
-        View::render($view, $data);
+        View::render($view, $data,$layout);
     }
 }

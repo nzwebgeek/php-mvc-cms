@@ -46,4 +46,38 @@ class Mailer
             $message
         );
     }
+
+    public function sendVerificationEmail(
+    string $email,
+    string $username,
+    string $token
+): bool {
+
+    $verifyLink = $this->appUrl .
+        '/verify?token=' .
+        $token;
+
+    $subject = 'Confirm your account';
+
+    $body = "
+        <h2>Welcome {$username}</h2>
+
+        <p>Please confirm your email address by clicking this link:</p>
+
+        <a href=\"{$verifyLink}\">
+            Verify Account
+        </a>
+    ";
+
+    $headers  = "MIME-Version: 1.0\r\n";
+    $headers .= "Content-type:text/html;charset=UTF-8\r\n";
+    $headers .= "From: {$this->from}\r\n";
+
+    return mail(
+        $email,
+        $subject,
+        $body,
+        $headers
+    );
+}
 }
