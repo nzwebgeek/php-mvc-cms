@@ -148,6 +148,45 @@ public function findByIdAndUser(
     return $stmt->fetch(\PDO::FETCH_ASSOC) ?: null;
 }
 
+public function create(
+    int $userId,
+    array $data
+): bool {
+
+    $stmt = $this->db->prepare("
+        INSERT INTO posts (
+
+            user_id,
+            title,
+            slug,
+            content,
+            status,
+            created_at,
+            updated_at
+
+        ) VALUES (
+
+            :user_id,
+            :title,
+            :slug,
+            :content,
+            :status,
+            NOW(),
+            NOW()
+
+        )
+    ");
+
+    return $stmt->execute([
+
+        'user_id' => $userId,
+        'title'   => $data['title'],
+        'slug'    => $data['slug'],
+        'content' => $data['content'],
+        'status'  => $data['status']
+
+    ]);
+}
 
 public function update(
     int $id,

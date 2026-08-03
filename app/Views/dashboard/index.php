@@ -294,32 +294,165 @@ Upload Image
 
 
 
-
 <?php elseif ($panel === 'posts'): ?>
-
-
-<!-- POSTS PANEL -->
-
 
 <div class="card">
 
+    <div class="card-header">
 
-<div class="card-header">
+        <div>
+            <h2>My Posts</h2>
+            <p>Create and manage your blog posts.</p>
+        </div>
 
+        <a href="/dashboard?panel=posts&action=create" class="btn">
+            + New Post
+        </a>
 
-<h2>
-My Posts
-</h2>
+    </div>
 
+    <?php if ($action === 'create'): ?>
 
-<a href="/dashboard/posts/create" class="btn">
+        <h3>New Post</h3>
 
-+ New Post
+        <form action="/dashboard/posts/store" method="POST">
 
-</a>
+            <label>Title</label><br>
+            <input type="text" name="title" required>
 
+            <br><br>
+
+            <label>Slug</label><br>
+            <input type="text" name="slug">
+
+            <br><br>
+
+            <label>Status</label><br>
+
+            <select name="status">
+                <option value="draft">Draft</option>
+                <option value="published">Published</option>
+            </select>
+
+            <br><br>
+
+            <label>Content</label><br>
+
+            <textarea name="content" rows="12"></textarea>
+
+            <br><br>
+
+            <button type="submit">Create Post</button>
+
+            <a href="/dashboard?panel=posts" class="btn">
+                Cancel
+            </a>
+
+        </form>
+
+    <?php elseif ($editPost !== null): ?>
+
+        <h3>Edit Post</h3>
+
+        <form action="/dashboard/posts/update?id=<?= $editPost['id'] ?>" method="POST">
+
+            <label>Title</label><br>
+
+            <input
+                type="text"
+                name="title"
+                value="<?= htmlspecialchars($editPost['title']) ?>"
+                required
+            >
+
+            <br><br>
+
+            <label>Slug</label><br>
+
+            <input
+                type="text"
+                name="slug"
+                value="<?= htmlspecialchars($editPost['slug']) ?>"
+            >
+
+            <br><br>
+
+            <label>Status</label><br>
+
+            <select name="status">
+
+                <option
+                    value="draft"
+                    <?= $editPost['status'] === 'draft' ? 'selected' : '' ?>
+                >
+                    Draft
+                </option>
+
+                <option
+                    value="published"
+                    <?= $editPost['status'] === 'published' ? 'selected' : '' ?>
+                >
+                    Published
+                </option>
+
+            </select>
+
+            <br><br>
+
+            <label>Content</label><br>
+
+            <textarea
+                name="content"
+                rows="15"
+            ><?= htmlspecialchars($editPost['content']) ?></textarea>
+
+            <br><br>
+
+            <button type="submit">
+                Save Changes
+            </button>
+
+            <a href="/dashboard?panel=posts" class="btn">
+                Back
+            </a>
+
+        </form>
+
+    <?php else: ?>
+
+        <?php if (empty($posts)): ?>
+
+            <p>You haven't written any posts yet.</p>
+
+        <?php else: ?>
+
+            <?php foreach ($posts as $post): ?>
+
+                <article>
+
+                    <h3><?= htmlspecialchars($post['title']) ?></h3>
+
+                    <p>
+                        Status:
+                        <?= htmlspecialchars(ucfirst($post['status'])) ?>
+                    </p>
+
+                    <a href="/dashboard?panel=posts&edit=<?= $post['id'] ?>">
+                        Edit
+                    </a>
+
+                </article>
+
+                <hr>
+
+            <?php endforeach; ?>
+
+        <?php endif; ?>
+
+    <?php endif; ?>
 
 </div>
+
 
 
 

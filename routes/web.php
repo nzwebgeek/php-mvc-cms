@@ -54,6 +54,11 @@ $router->post(
     '/dashboard/posts/update',
     [DashboardController::class, 'updatePost']
 );
+
+$router->post(
+    '/dashboard/posts/store',
+    [DashboardController::class, 'storePost']
+);
 /*
 |--------------------------------------------------------------------------
 | Authentication
