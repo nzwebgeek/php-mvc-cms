@@ -40,23 +40,20 @@ class DashboardController extends Controller
 /*--------------------------------------------------------------*/
 public function index(): void
 {
-    
     $user = $this->currentUser();
-
 
     // Only show this user's posts
     $posts = $this->posts->findByUser(
         (int)$user['id']
     );
 
-
     $panel = $_GET['panel'] ?? 'home';
 
-
+    // Which posts action are we performing?
+    $action = $_GET['action'] ?? null;
 
     // Inline post editor
     $editPost = null;
-
 
     if (isset($_GET['edit'])) {
 
@@ -67,20 +64,17 @@ public function index(): void
 
     }
 
-
-
-
     $this->view(
         'dashboard/index',
         [
-            'user' => $user,
-            'posts' => $posts,
-            'panel' => $panel,
-            'editPost' => $editPost
+            'user'      => $user,
+            'posts'     => $posts,
+            'panel'     => $panel,
+            'action'    => $action,      // <-- ADD THIS
+            'editPost'  => $editPost
         ],
         'dashboard'
     );
-
 }
     /*-------------New Color theme-----------------*/
     private function validColour(string $colour): bool
@@ -118,6 +112,20 @@ public function index(): void
         header('Location: /dashboard');
         exit;
     }
+/*-----------------------------*/
+/*-----------Slug Helper-------------------*/
+private function makeSlug(string $title): string
+{
+    $slug = strtolower($title);
+
+    // Replace anything that's not a letter or number with -
+    $slug = preg_replace('/[^a-z0-9]+/', '-', $slug);
+
+    // Remove leading/trailing hyphens
+    $slug = trim($slug, '-');
+
+    return $slug;
+}
 /*-----------------------------*/
     public function uploadImage(): void
     {
@@ -183,10 +191,16 @@ public function index(): void
 
         $id = (int)($_GET['id'] ?? 0);
 
+        $data = $_POST;
+
+        if (empty(trim($data['slug'] ?? ''))) {
+            $data['slug'] = $this->makeSlug($data['title']);
+        }
+
         $this->posts->update(
             $id,
             (int)$user['id'],
-            $_POST
+            $data
         );
 
         $_SESSION['message'] = "Post updated successfully.";
@@ -194,4 +208,27 @@ public function index(): void
         header('Location: /dashboard?panel=posts');
         exit;
     }
+
+   public function storePost(): void
+{   /*--changes My First Blog Post to my-first-blog-post */
+    $user = $this->currentUser();
+
+    $data = $_POST;
+
+    // Auto-generate slug if left empty
+    if (empty(trim($data['slug'] ?? ''))) {
+        $data['slug'] = $this->makeSlug($data['title']);
+    }
+
+    $this->posts->create(
+        (int)$user['id'],
+        $data
+    );
+
+    $_SESSION['message'] = "Post created successfully.";
+
+    header('Location: /dashboard?panel=posts');
+
+    exit;
+}
 }
