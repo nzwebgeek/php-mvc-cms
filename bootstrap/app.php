@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Controllers\AdminController;
 use App\Repositories\PageRepository;
 use App\Repositories\PostRepository;
 use App\Repositories\ImageRepository;
@@ -59,6 +60,10 @@ $authController = new AuthController(
 $verifyController = new VerifyController(
     $userRepository
 );
+
+$adminController = new AdminController(
+    $authService
+);
 // Bind services
 $container->set(
     UserRepository::class,
@@ -110,5 +115,9 @@ $container->set(
     $verifyController
 );
 
+$container->set(
+    AdminController::class,
+    $adminController
+);
 
 return $container;

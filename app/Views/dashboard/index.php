@@ -294,165 +294,118 @@ Upload Image
 
 
 
+
 <?php elseif ($panel === 'posts'): ?>
+<!-- POSTS PANEL -->
+
+<?php if ($action === 'create'): ?>
+
+<h2>
+    Create New Post
+</h2>
+
+
+<form
+action="/dashboard/posts/store"
+method="POST"
+>
+
+
+<label>
+Title
+</label>
+
+<br>
+
+<input
+type="text"
+name="title"
+required
+>
+
+<br><br>
+
+<label>
+Slug
+</label>
+
+<br>
+
+<input
+type="text"
+name="slug"
+>
+
+<br><br>
+
+<label>
+Status
+</label>
+<br>
+
+<select name="status">
+
+<option value="draft">
+Draft
+</option>
+
+<option value="published">
+Published
+</option>
+
+</select>
+
+
+<br><br>
+
+
+<label>
+Content
+</label>
+
+<br>
+
+<textarea
+name="content"
+rows="10"
+></textarea>
+
+
+<br><br>
+
+
+<button type="submit">
+Create Post
+</button>
+
+
+<a href="/dashboard?panel=posts">
+Cancel
+</a>
+
+
+</form>
+
+
+<?php endif; ?>
 
 <div class="card">
 
-    <div class="card-header">
 
-        <div>
-            <h2>My Posts</h2>
-            <p>Create and manage your blog posts.</p>
-        </div>
+<div class="card-header">
 
-        <a href="/dashboard?panel=posts&action=create" class="btn">
-            + New Post
-        </a>
 
-    </div>
+<h2>
+My Posts
+</h2>
 
-    <?php if ($action === 'create'): ?>
 
-        <h3>New Post</h3>
+<a href="/dashboard?panel=posts&action=create" class="btn">
+    + New Post
+</a>
 
-        <form action="/dashboard/posts/store" method="POST">
-
-            <label>Title</label><br>
-            <input type="text" name="title" required>
-
-            <br><br>
-
-            <label>Slug</label><br>
-            <input type="text" name="slug">
-
-            <br><br>
-
-            <label>Status</label><br>
-
-            <select name="status">
-                <option value="draft">Draft</option>
-                <option value="published">Published</option>
-            </select>
-
-            <br><br>
-
-            <label>Content</label><br>
-
-            <textarea name="content" rows="12"></textarea>
-
-            <br><br>
-
-            <button type="submit">Create Post</button>
-
-            <a href="/dashboard?panel=posts" class="btn">
-                Cancel
-            </a>
-
-        </form>
-
-    <?php elseif ($editPost !== null): ?>
-
-        <h3>Edit Post</h3>
-
-        <form action="/dashboard/posts/update?id=<?= $editPost['id'] ?>" method="POST">
-
-            <label>Title</label><br>
-
-            <input
-                type="text"
-                name="title"
-                value="<?= htmlspecialchars($editPost['title']) ?>"
-                required
-            >
-
-            <br><br>
-
-            <label>Slug</label><br>
-
-            <input
-                type="text"
-                name="slug"
-                value="<?= htmlspecialchars($editPost['slug']) ?>"
-            >
-
-            <br><br>
-
-            <label>Status</label><br>
-
-            <select name="status">
-
-                <option
-                    value="draft"
-                    <?= $editPost['status'] === 'draft' ? 'selected' : '' ?>
-                >
-                    Draft
-                </option>
-
-                <option
-                    value="published"
-                    <?= $editPost['status'] === 'published' ? 'selected' : '' ?>
-                >
-                    Published
-                </option>
-
-            </select>
-
-            <br><br>
-
-            <label>Content</label><br>
-
-            <textarea
-                name="content"
-                rows="15"
-            ><?= htmlspecialchars($editPost['content']) ?></textarea>
-
-            <br><br>
-
-            <button type="submit">
-                Save Changes
-            </button>
-
-            <a href="/dashboard?panel=posts" class="btn">
-                Back
-            </a>
-
-        </form>
-
-    <?php else: ?>
-
-        <?php if (empty($posts)): ?>
-
-            <p>You haven't written any posts yet.</p>
-
-        <?php else: ?>
-
-            <?php foreach ($posts as $post): ?>
-
-                <article>
-
-                    <h3><?= htmlspecialchars($post['title']) ?></h3>
-
-                    <p>
-                        Status:
-                        <?= htmlspecialchars(ucfirst($post['status'])) ?>
-                    </p>
-
-                    <a href="/dashboard?panel=posts&edit=<?= $post['id'] ?>">
-                        Edit
-                    </a>
-
-                </article>
-
-                <hr>
-
-            <?php endforeach; ?>
-
-        <?php endif; ?>
-
-    <?php endif; ?>
 
 </div>
-
 
 
 
@@ -515,6 +468,7 @@ Edit
 
 
 <?php endif; ?>
+
 <?php if ($editPost): ?>
 
 
@@ -648,7 +602,9 @@ rows="15"
 Save Changes
 
 </button>
-
+<a href="/dashboard?panel=posts">
+Cancel
+</a>
 
 
 </form>
@@ -661,16 +617,7 @@ Save Changes
 
 </div>
 
-
-
-
-
-
-
-
-
 <?php elseif ($panel === 'password'): ?>
-
 
 
 <div class="card">
@@ -681,21 +628,69 @@ Change Password
 </h2>
 
 
+<form
+action="/dashboard/change-password"
+method="POST"
+>
 
-<p>
-Password change form will go here.
-</p>
+
+<label>
+Current Password
+</label>
+
+<br>
+
+<input
+type="password"
+name="current_password"
+required
+>
+
+
+<br><br>
+
+
+<label>
+New Password
+</label>
+
+<br>
+
+<input
+type="password"
+name="new_password"
+required
+>
+
+
+<br><br>
+
+
+<label>
+Confirm New Password
+</label>
+
+<br>
+
+<input
+type="password"
+name="confirm_password"
+required
+>
+
+
+<br><br>
+
+
+<button type="submit">
+Update Password
+</button>
+
+
+</form>
 
 
 </div>
-
-
-
-
-
-
-
-
 
 <?php else: ?>
 

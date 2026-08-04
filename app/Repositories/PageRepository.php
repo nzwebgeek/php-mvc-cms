@@ -74,4 +74,19 @@ class PageRepository extends Repository
 
         return $page ?: null;
     }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Administration
+    |--------------------------------------------------------------------------
+    */
+    public function countPages(): int
+    {
+    $stmt = $this->db->query("
+        SELECT COUNT(*)
+        FROM pages
+    ");
+
+    return (int)$stmt->fetchColumn();
+    }
 }

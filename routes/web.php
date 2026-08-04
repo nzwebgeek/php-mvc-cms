@@ -8,6 +8,8 @@ use App\Controllers\PageController;
 use App\Controllers\VerifyController;
 use App\Controllers\ContactController;
 use App\Controllers\DashboardController;
+use App\Controllers\AdminController;
+use App\Controllers\AdminUserController;
 /*
 |--------------------------------------------------------------------------
 | Pages
@@ -34,6 +36,19 @@ $router->get(
     '/contact',
     [PageController::class, 'show']
 );
+
+/*
+|--------------------------------------------------------------------------
+| Admin
+|--------------------------------------------------------------------------
+*/
+$router->get(
+    '/admin',
+    [AdminController::class,'index']
+);
+
+
+
 /*
 |--------------------------------------------------------------------------
 |Dashboard
@@ -113,4 +128,12 @@ $router->post(
 $router->post(
     '/dashboard/save-theme',
     [DashboardController::class, 'saveTheme']
+);
+
+$router->post(
+    '/dashboard/change-password',
+    [
+        DashboardController::class,
+        'changePassword'
+    ]
 );

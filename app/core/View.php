@@ -18,6 +18,8 @@ class View
 
         $viewPath = "{$basePath}/{$view}.php";
 
+
+
         if (!file_exists($viewPath)) {
             throw new RuntimeException("View '{$view}' not found.");
         }
@@ -28,10 +30,25 @@ class View
         require $viewPath;
         $content = ob_get_clean();
 
-        require "{$basePath}/layouts/{$layout}/header.php";
-
-        echo $content;
-
-        require "{$basePath}/layouts/{$layout}/footer.php";
+        // Determine which layout folder to use
+    if ($layout === 'admin') {
+        $layoutPath = "{$basePath}/admin/layout";
+    } else {
+        $layoutPath = "{$basePath}/layouts/{$layout}";
     }
+
+    // Header
+    require "{$layoutPath}/header.php";
+
+    // Optional sidebar (only loaded if it exists)
+    if (file_exists("{$layoutPath}/sidebar.php")) {
+        require "{$layoutPath}/sidebar.php";
+    }
+
+    // Main page content
+    echo $content;
+
+    // Footer
+    require "{$layoutPath}/footer.php";
+        }
 }
