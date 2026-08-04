@@ -246,14 +246,57 @@ public function delete(
     |--------------------------------------------------------------------------
     */
 
-    public function countPosts(): int
-    {
-        $stmt = $this->db->query("
-            SELECT COUNT(*)
-            FROM posts
-        ");
+public function countPosts(): int
+{
+    $stmt = $this->db->query("
+        SELECT COUNT(*)
+        FROM posts
+    ");
 
-        return (int)$stmt->fetchColumn();
+    return (int)$stmt->fetchColumn();
+}
+
+public function adminAll(
+    ?string $status = null): array {
+
+    $sql = "
+        SELECT
+            p.id,
+            p.title,
+            p.status,
+            p.created_at,
+            u.username AS author,
+            i.filepath AS image_path
+
+        FROM posts p
+
+        LEFT JOIN users u
+            ON p.user_id = u.id
+
+        LEFT JOIN images i
+            ON p.featured_media_id = i.id
+    ";
+
+    $params = [];
+
+    if ($status) {
+        $sql .= "
+            WHERE p.status = :status
+        ";
+
+        $params['status'] = $status;
     }
+
+    $sql .= "
+        ORDER BY p.created_at DESC
+    ";
+
+    $stmt = $this->db->prepare($sql);
+
+    $stmt->execute($params);
+
+    return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    }
+    
     
 }

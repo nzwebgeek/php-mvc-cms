@@ -23,7 +23,66 @@ class UserRepository extends Repository
 
         return (int)$stmt->fetchColumn();
     }
-        /*
+  public function all(): array{
+    $stmt = $this->db->query("
+        SELECT
+            u.id,
+            u.username,
+            u.email,
+            u.email_verified,
+            r.name AS role
+
+        FROM users u
+
+        LEFT JOIN roles r
+            ON u.role_id = r.id
+
+        ORDER BY u.id DESC
+    ");
+
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+public function deleteUser(int $id): bool
+{
+    try {
+
+        $this->db->beginTransaction();
+
+
+        $stmt = $this->db->prepare("
+            DELETE FROM comments
+            WHERE user_id = :id
+        ");
+
+        $stmt->execute([
+            'id' => $id
+        ]);
+
+
+        $stmt = $this->db->prepare("
+            DELETE FROM users
+            WHERE id = :id
+        ");
+
+        $result = $stmt->execute([
+            'id' => $id
+        ]);
+
+
+        $this->db->commit();
+
+        return $result;
+
+
+    } catch (\Exception $e) {
+
+        $this->db->rollBack();
+
+        throw $e;
+    }
+}
+    /*
     |--------------------------------------------------------------------------
     | Authentication
     |--------------------------------------------------------------------------

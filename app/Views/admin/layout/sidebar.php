@@ -4,42 +4,37 @@
 <nav>
 
 <a href="/admin">
-    Dashboard
+Dashboard
 </a>
 
 
 <a href="/admin/users">
-    Users
-</a>
-
-
-<a href="/admin/roles">
-    Roles
-</a>
-
-
-<a href="/admin/pages">
-    Pages
+Users
 </a>
 
 
 <a href="/admin/posts">
-    Posts
+Posts
+</a>
+
+
+<a href="/admin/pages">
+Pages
 </a>
 
 
 <a href="/admin/comments">
-    Comments
+Comments
 </a>
 
 
 <a href="/admin/media">
-    Media
+Media
 </a>
 
 
 <a href="/admin/settings">
-    Settings
+Settings
 </a>
 
 

@@ -116,19 +116,23 @@ class AuthService
         return isset($_SESSION['user_id']);
     }
 
-public function isAdmin(): bool
-{
-    $role = strtolower($_SESSION['role'] ?? '');
+    public function isSuperAdmin(): bool{
+    return ($_SESSION['role'] ?? '') === 'super admin';
+    }
 
-    return in_array(
-        $role,
-        [
-            'admin',
-            'super admin'
-        ],
-        true
-    );
-}
+    public function isAdmin(): bool
+    {
+        $role = strtolower($_SESSION['role'] ?? '');
+
+        return in_array(
+            $role,
+            [
+                'admin',
+                'super admin'
+            ],
+            true
+        );
+    }
     public function currentUserId(): ?int
     {
         return $_SESSION['user_id'] ?? null;

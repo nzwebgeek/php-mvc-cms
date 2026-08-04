@@ -10,6 +10,7 @@ use App\Controllers\ContactController;
 use App\Controllers\DashboardController;
 use App\Controllers\AdminController;
 use App\Controllers\AdminUserController;
+use App\Controllers\Admin\PostController;
 /*
 |--------------------------------------------------------------------------
 | Pages
@@ -47,6 +48,37 @@ $router->get(
     [AdminController::class,'index']
 );
 
+$router->get(
+    '/admin/users',
+    [AdminController::class,'users']
+);
+
+$router->get(
+    '/admin/users/create',
+    [AdminController::class, 'createUser']
+);
+
+$router->post(
+    '/admin/users/create',
+    [AdminController::class, 'storeUser']
+);
+
+$router->get(
+    '/admin/users/edit',
+    [AdminController::class, 'editUser']
+);
+
+
+$router->post(
+    '/admin/users/update',
+    [AdminController::class, 'updateUser']
+);
+
+
+$router->post(
+    '/admin/users/delete',
+    [AdminController::class, 'deleteUser']
+);
 
 
 /*
@@ -64,6 +96,10 @@ $router->get(
     [DashboardController::class, 'editPost']
 );
 
+$router->get(
+    '/admin/posts',
+    [PostController::class, 'index']
+);
 
 $router->post(
     '/dashboard/posts/update',
