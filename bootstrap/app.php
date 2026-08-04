@@ -16,6 +16,7 @@ use App\Core\Database;
 use App\Repositories\UserRepository;
 use App\Services\AuthService;
 use App\Services\Mailer;
+use App\Repositories\AdminRepository;
 
 
 
@@ -36,6 +37,9 @@ $imageRepository = new ImageRepository($db);
 $settingsRepository = new SettingsRepository($db);
 $pageRepository = new PageRepository($db);
 $blogSettingsRepository = new BlogSettingsRepository($db);
+$adminRepository = new AdminRepository($db); // add here 1st
+$postRepository = new PostRepository($db);
+// 2nd; Update AdminController
 
 // Models
 
@@ -62,8 +66,16 @@ $verifyController = new VerifyController(
 );
 
 $adminController = new AdminController(
-    $authService
+    $authService,
+    $adminRepository,
+    $userRepository
 );
+
+$postController = new \App\Controllers\Admin\PostController(
+    $authService,
+    $postRepository
+);
+
 // Bind services
 $container->set(
     UserRepository::class,
@@ -114,10 +126,20 @@ $container->set(
     VerifyController::class,
     $verifyController
 );
-
+/*------Admin----------------*/
 $container->set(
     AdminController::class,
     $adminController
+);
+
+$container->set(
+    AdminRepository::class,
+    $adminRepository
+);
+
+$container->set(
+    \App\Controllers\Admin\PostController::class,
+    $postController
 );
 
 return $container;
