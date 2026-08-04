@@ -12,6 +12,9 @@ Dashboard
 Users
 </a>
 
+<a href="/admin/roles">
+    Roles
+</a>
 
 <a href="/admin/posts">
 Posts
