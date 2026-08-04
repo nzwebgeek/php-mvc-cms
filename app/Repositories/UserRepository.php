@@ -14,14 +14,13 @@ class UserRepository extends Repository
     | Administration
     |--------------------------------------------------------------------------
     */
-        public function countUsers(): int
-    {
-        $stmt = $this->db->query("
-            SELECT COUNT(*) 
-            FROM users
-        ");
+    public function countUsers(): int{
+    $stmt = $this->db->query("
+        SELECT COUNT(*) 
+        FROM users
+    ");
 
-        return (int)$stmt->fetchColumn();
+    return (int)$stmt->fetchColumn();
     }
   public function all(): array{
     $stmt = $this->db->query("
@@ -146,7 +145,36 @@ public function deleteUser(int $id): bool
     | Registration
     |--------------------------------------------------------------------------
     */
+    public function usernameExists(string $username): bool{
+    $stmt = $this->db->prepare("
+        SELECT COUNT(*) 
+        FROM users 
+        WHERE username = :username
+    ");
 
+    $stmt->execute([
+        'username' => $username
+    ]);
+
+    return $stmt->fetchColumn() > 0;
+}
+
+
+
+    public function emailExists(string $email): bool
+    {
+        $stmt = $this->db->prepare("
+            SELECT COUNT(*) 
+            FROM users 
+            WHERE email = :email
+        ");
+
+        $stmt->execute([
+            'email' => $email
+        ]);
+
+        return $stmt->fetchColumn() > 0;
+    }
 
     public function usernameOrEmailExists(
         string $username,
@@ -429,6 +457,31 @@ public function updateTheme(
             'id' => $userId
         ]);
     }
+
+    public function updateUser(
+    int $id,
+    string $username,
+    string $email,
+    int $roleId
+): bool {
+
+    $stmt = $this->db->prepare("
+        UPDATE users
+        SET 
+            username = :username,
+            email = :email,
+            role_id = :role_id
+        WHERE id = :id
+    ");
+
+
+    return $stmt->execute([
+        'id' => $id,
+        'username' => $username,
+        'email' => $email,
+        'role_id' => $roleId
+    ]);
+}
     
 
 }

@@ -11,6 +11,7 @@ use App\Controllers\DashboardController;
 use App\Controllers\AdminController;
 use App\Controllers\AdminUserController;
 use App\Controllers\Admin\PostController;
+use App\Controllers\RoleController;
 /*
 |--------------------------------------------------------------------------
 | Pages
@@ -80,7 +81,41 @@ $router->post(
     [AdminController::class, 'deleteUser']
 );
 
+$router->get(
+    '/admin/roles',
+    [RoleController::class, 'index']
+);
 
+$router->get(
+    '/admin/roles/create',
+    [RoleController::class,'create']
+);
+
+
+$router->post(
+    '/admin/roles/create',
+    [RoleController::class,'store']
+);
+
+//------------------Roles
+
+$router->get(
+    '/admin/roles/edit',
+    [RoleController::class,'edit']
+);
+
+
+$router->post(
+    '/admin/roles/update',
+    [RoleController::class,'update']
+);
+
+
+
+$router->post(
+    '/admin/roles/delete',
+    [RoleController::class,'delete']
+);
 /*
 |--------------------------------------------------------------------------
 |Dashboard

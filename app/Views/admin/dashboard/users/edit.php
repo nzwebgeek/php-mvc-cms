@@ -1,3 +1,6 @@
+<?php
+/** @var array $user */
+?>
 <div class="admin-card">
 
 <h1>
@@ -5,14 +8,13 @@ Edit User
 </h1>
 
 
-<form method="POST" action="/admin/users/edit">
+<form method="POST" action="/admin/users/update">
 
 
 <input 
 type="hidden"
 name="id"
-value="<?= $user['id'] ?>"
->
+value="<?= $user['id'] ?>">
 
 
 <label>
@@ -56,21 +58,26 @@ Role
 <select name="role">
 
 
-<option
+<option 
+value="User"
 <?= $user['role'] === 'User' ? 'selected' : '' ?>
 >
 User
 </option>
 
 
-<option
+
+<option 
+value="Admin"
 <?= $user['role'] === 'Admin' ? 'selected' : '' ?>
 >
 Admin
 </option>
 
 
-<option
+
+<option 
+value="Super Admin"
 <?= $user['role'] === 'Super Admin' ? 'selected' : '' ?>
 >
 Super Admin

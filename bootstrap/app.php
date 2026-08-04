@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Repositories\RoleRepository;
 use App\Controllers\AdminController;
 use App\Repositories\PageRepository;
 use App\Repositories\PostRepository;
@@ -17,6 +18,7 @@ use App\Repositories\UserRepository;
 use App\Services\AuthService;
 use App\Services\Mailer;
 use App\Repositories\AdminRepository;
+use App\Controllers\RoleController;
 
 
 
@@ -37,8 +39,8 @@ $imageRepository = new ImageRepository($db);
 $settingsRepository = new SettingsRepository($db);
 $pageRepository = new PageRepository($db);
 $blogSettingsRepository = new BlogSettingsRepository($db);
-$adminRepository = new AdminRepository($db); // add here 1st
-$postRepository = new PostRepository($db);
+$adminRepository = new AdminRepository($db);
+$roleRepository = new RoleRepository($db);
 // 2nd; Update AdminController
 
 // Models
@@ -69,6 +71,11 @@ $adminController = new AdminController(
     $authService,
     $adminRepository,
     $userRepository
+);
+
+$roleController = new RoleController(
+    $authService,
+    $roleRepository
 );
 
 $postController = new \App\Controllers\Admin\PostController(
@@ -133,6 +140,11 @@ $container->set(
 );
 
 $container->set(
+    RoleController::class,
+    $roleController
+);
+
+$container->set(
     AdminRepository::class,
     $adminRepository
 );
@@ -141,5 +153,11 @@ $container->set(
     \App\Controllers\Admin\PostController::class,
     $postController
 );
+
+$container->set(
+    RoleRepository::class,
+    $roleRepository
+);
+
 
 return $container;

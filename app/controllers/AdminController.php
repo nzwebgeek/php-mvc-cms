@@ -104,11 +104,30 @@ class AdminController extends Controller
         exit;
     }
 
+    $username = trim($_POST['username'] ?? '');
+    $email = trim($_POST['email'] ?? '');
+    $password = $_POST['password'] ?? '';
+    $role = $_POST['role'] ?? 'User';
 
-    $username = $_POST['username'];
-    $email = $_POST['email'];
-    $password = $_POST['password'];
-    $role = $_POST['role'];
+    /*--------------Use Exists--------------------------*/
+    if ($this->userRepository->usernameExists($username)) {
+
+    $_SESSION['error'] = 'Username already exists. Please choose another.';
+
+    header('Location: /admin/users/create');
+    exit;
+    }
+
+
+
+    if ($this->userRepository->emailExists($email)) {
+
+    $_SESSION['error'] = 'Email address already exists.';
+
+    header('Location: /admin/users/create');
+    exit;
+    }
+    /*--------------------------------------------------*/
 
 
     $roleId = $this->userRepository
@@ -174,10 +193,15 @@ class AdminController extends Controller
         exit;
     }
 
-    $id = (int) $_POST['id'];
+    $id = (int) ($_POST['id'] ?? 0);
 
-    $roleId = $this->userRepository
-        ->findRoleIdByName($_POST['role']);
+    $username = trim($_POST['username'] ?? '');
+
+    $email = trim($_POST['email'] ?? '');
+
+    $role = $_POST['role'] ?? 'User';
+
+    $roleId = $this->userRepository->findRoleIdByName($_POST['role']);
 
     $this->userRepository->updateUser(
         $id,
@@ -185,6 +209,10 @@ class AdminController extends Controller
         $_POST['email'],
         $roleId
     );
+
+
+    $_SESSION['success'] = 'User updated successfully.';
+
 
     header('Location: /admin/users');
     exit;
