@@ -30,18 +30,7 @@
             <?= htmlspecialchars($user['username']) ?>
         </h3>
 
-
-
-        <p>
-            <?= htmlspecialchars($user['role'] ?? 'User') ?>
-        </p>
-
-
     </div>
-
-
-
-
 
     <nav class="dashboard-menu">
 
@@ -68,23 +57,19 @@
             🎨 Theme Colours
         </a>
 
+          <?php if (
+            in_array(
+                strtolower($user['role'] ?? ''),
+                ['admin','super admin'],
+                true
+            )
+        ): ?>
 
+        <a href="/admin">
+            ⚙ Admin Panel
+        </a>
 
-
-
-        <?php if (($user['role'] ?? '') === 'Admin'): ?>
-
-
-            <a href="/admin">
-                ⚙ Admin Panel
-            </a>
-
-
-        <?php endif; ?>
-
-
-
-
+<?php endif; ?>
         <a href="/logout">
             🚪 Logout
         </a>

@@ -1,7 +1,7 @@
 <?php
 
 declare(strict_types=1);
-
+/*UserRepository handles database queries*/
 namespace App\Repositories;
 
 use App\Core\Repository;
@@ -9,8 +9,21 @@ use PDO;
 
 class UserRepository extends Repository
 {
+      /*
+    |--------------------------------------------------------------------------
+    | Administration
+    |--------------------------------------------------------------------------
+    */
+        public function countUsers(): int
+    {
+        $stmt = $this->db->query("
+            SELECT COUNT(*) 
+            FROM users
+        ");
 
-    /*
+        return (int)$stmt->fetchColumn();
+    }
+        /*
     |--------------------------------------------------------------------------
     | Authentication
     |--------------------------------------------------------------------------
@@ -177,7 +190,24 @@ class UserRepository extends Repository
     | Password Reset
     |--------------------------------------------------------------------------
     */
+    public function findPasswordHashById(
+        int $userId
+    ): ?string {
 
+        $stmt = $this->db->prepare("
+            SELECT password
+            FROM users
+            WHERE id = :id
+        ");
+
+        $stmt->execute([
+            'id' => $userId
+        ]);
+
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return $result['password'] ?? null;
+    }
 
     public function findByResetToken(
         string $tokenHash

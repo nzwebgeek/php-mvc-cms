@@ -239,5 +239,21 @@ public function delete(
         'user_id' => $userId
     ]);
 }
-  
+
+    /*
+    |--------------------------------------------------------------------------
+    | Administration
+    |--------------------------------------------------------------------------
+    */
+
+    public function countPosts(): int
+    {
+        $stmt = $this->db->query("
+            SELECT COUNT(*)
+            FROM posts
+        ");
+
+        return (int)$stmt->fetchColumn();
+    }
+    
 }

@@ -1,7 +1,7 @@
 <?php
 
 declare(strict_types=1);
-
+/*AuthController handles requests*/
 namespace App\Controllers;
 
 use App\Core\Controller;

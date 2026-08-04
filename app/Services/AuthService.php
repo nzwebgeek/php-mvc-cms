@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
-
+/*AuthService handles authentication/session logic*/
 namespace App\Services;
 
 use App\Repositories\UserRepository;
-
+/*--Add Authentication Functions heree--*/
 class AuthService
 {
     public function __construct(
@@ -14,6 +14,7 @@ class AuthService
     }
 
    public function login(
+    
     string $username,
     string $password
 ): ServiceResult {
@@ -42,8 +43,8 @@ class AuthService
 
     $_SESSION['user_id'] = $user['id'];
     $_SESSION['username'] = $user['username'];
-    $_SESSION['role'] = $user['role'];
-
+    $_SESSION['role'] = strtolower($user['role']);
+    
     return ServiceResult::success(
         'Login successful.'
     );
@@ -107,6 +108,42 @@ class AuthService
         'Registration successful. Please check your email to verify your account.'
     );
         }
+
+      // Existing methods...
+
+    public function isLoggedIn(): bool
+    {
+        return isset($_SESSION['user_id']);
+    }
+
+public function isAdmin(): bool
+{
+    $role = strtolower($_SESSION['role'] ?? '');
+
+    return in_array(
+        $role,
+        [
+            'admin',
+            'super admin'
+        ],
+        true
+    );
+}
+    public function currentUserId(): ?int
+    {
+        return $_SESSION['user_id'] ?? null;
+    }
+
+    public function currentUsername(): ?string
+    {
+        return $_SESSION['username'] ?? null;
+    }
+
+    public function currentRole(): ?string
+    {
+        return $_SESSION['role'] ?? null;
+    }
+
 
     
 }

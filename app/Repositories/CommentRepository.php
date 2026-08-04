@@ -82,7 +82,7 @@ class CommentRepository extends Repository
         ]);
     }
 
-
+/*-------------Admins-------------------------*/
     public function findApprovedByPost(
         int $postId
     ): array {
@@ -90,7 +90,7 @@ class CommentRepository extends Repository
         $stmt = $this->db->prepare("
             SELECT
                 c.*,
-                c.username
+                u.username
             FROM comments c
             JOIN users u
                 ON c.user_id = u.id
@@ -106,5 +106,68 @@ class CommentRepository extends Repository
 
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function countPending(): int{
+    $stmt = $this->db->query("
+        SELECT COUNT(*)
+        FROM comments
+        WHERE status = 'pending'
+    ");
+
+    return (int)$stmt->fetchColumn();
+    }
+
+    public function allForAdmin(): array{
+    $stmt = $this->db->query("
+        SELECT
+            c.id,
+            c.comment,
+            c.status,
+            c.created_at,
+
+            u.username,
+
+            p.title AS post_title
+
+        FROM comments c
+
+        LEFT JOIN users u
+            ON c.user_id = u.id
+
+        LEFT JOIN posts p
+            ON c.post_id = p.id
+
+        ORDER BY c.created_at DESC
+    ");
+
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function approve(
+    int $id): bool {
+
+    $stmt = $this->db->prepare("
+        UPDATE comments
+        SET status = 'approved'
+        WHERE id = :id
+    ");
+
+    return $stmt->execute([
+        'id'=>$id
+    ]);
+    }
+
+    public function deleteByAdmin(
+    int $id): bool {
+
+    $stmt = $this->db->prepare("
+        DELETE FROM comments
+        WHERE id = :id
+    ");
+
+    return $stmt->execute([
+        'id'=>$id
+    ]);
     }
 }
