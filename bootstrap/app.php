@@ -19,6 +19,8 @@ use App\Services\AuthService;
 use App\Services\Mailer;
 use App\Repositories\AdminRepository;
 use App\Controllers\RoleController;
+use App\Controllers\AdminPostsController;
+use App\Controllers\AdminPagesController;
 
 
 
@@ -73,15 +75,12 @@ $adminController = new AdminController(
     $userRepository
 );
 
+
 $roleController = new RoleController(
     $authService,
     $roleRepository
 );
 
-$postController = new \App\Controllers\Admin\PostController(
-    $authService,
-    $postRepository
-);
 
 // Bind services
 $container->set(
@@ -97,6 +96,18 @@ $container->set(
 $container->set(
     ImageRepository::class,
     $imageRepository
+);
+
+$adminPostsController = new AdminPostsController(
+    $authService,
+    $postRepository,
+    $userRepository,
+     $imageRepository
+);
+
+$adminPagesController = new AdminPagesController(
+    $authService,
+    $pageRepository
 );
 
 $container->set(
@@ -149,14 +160,20 @@ $container->set(
     $adminRepository
 );
 
-$container->set(
-    \App\Controllers\Admin\PostController::class,
-    $postController
-);
 
 $container->set(
     RoleRepository::class,
     $roleRepository
+);
+
+$container->set(
+    AdminPostsController::class,
+     $adminPostsController
+);
+
+$container->set(
+    AdminPagesController::class,
+    $adminPagesController
 );
 
 

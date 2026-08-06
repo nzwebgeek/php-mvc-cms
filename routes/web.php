@@ -9,9 +9,9 @@ use App\Controllers\VerifyController;
 use App\Controllers\ContactController;
 use App\Controllers\DashboardController;
 use App\Controllers\AdminController;
-use App\Controllers\AdminUserController;
-use App\Controllers\Admin\PostController;
 use App\Controllers\RoleController;
+use App\Controllers\AdminPostsController;
+use App\Controllers\AdminPagesController;
 /*
 |--------------------------------------------------------------------------
 | Pages
@@ -59,15 +59,22 @@ $router->get(
     [AdminController::class, 'createUser']
 );
 
-$router->post(
-    '/admin/users/create',
-    [AdminController::class, 'storeUser']
+$router->get(
+    '/admin/roles',
+    [RoleController::class, 'index']
 );
+
 
 $router->get(
     '/admin/users/edit',
     [AdminController::class, 'editUser']
 );
+
+$router->post(
+    '/admin/users/create',
+    [AdminController::class, 'storeUser']
+);
+
 
 
 $router->post(
@@ -81,23 +88,89 @@ $router->post(
     [AdminController::class, 'deleteUser']
 );
 
+/*
+|--------------------------------------------------------------------------
+| Admin Posts
+|--------------------------------------------------------------------------
+*/
+
 $router->get(
-    '/admin/roles',
-    [RoleController::class, 'index']
+    '/admin/posts',
+    [AdminPostsController::class, 'index']
+);
+
+
+$router->get(
+    '/admin/posts/create',
+    [AdminPostsController::class, 'create']
+);
+
+
+$router->post(
+    '/admin/posts/store',
+    [AdminPostsController::class, 'store']
+);
+
+
+$router->get(
+    '/admin/posts/edit',
+    [AdminPostsController::class, 'edit']
+);
+
+
+$router->post(
+    '/admin/posts/update',
+    [AdminPostsController::class, 'update']
+);
+
+
+$router->post(
+    '/admin/posts/delete',
+    [AdminPostsController::class, 'delete']
+);
+/******************************
+ * Admin Pages
+ ******************************/
+
+$router->get(
+    '/admin/pages',
+    [AdminPagesController::class, 'index']
 );
 
 $router->get(
-    '/admin/roles/create',
-    [RoleController::class,'create']
+    '/admin/pages/create',
+    [AdminPagesController::class,'create']
 );
 
+
+$router->post(
+    '/admin/pages/store',
+    [AdminPagesController::class,'store']
+);
+
+
+$router->get(
+    '/admin/pages/edit',
+    [AdminPagesController::class,'edit']
+);
+
+
+$router->post(
+    '/admin/pages/update',
+    [AdminPagesController::class,'update']
+);
+
+
+$router->post(
+    '/admin/pages/delete',
+    [AdminPagesController::class,'delete']
+);
+//------------------Roles
 
 $router->post(
     '/admin/roles/create',
     [RoleController::class,'store']
 );
-
-//------------------Roles
 
 $router->get(
     '/admin/roles/edit',
@@ -131,10 +204,6 @@ $router->get(
     [DashboardController::class, 'editPost']
 );
 
-$router->get(
-    '/admin/posts',
-    [PostController::class, 'index']
-);
 
 $router->post(
     '/dashboard/posts/update',

@@ -3,7 +3,7 @@
 
 <nav>
 
-<a href="/admin">
+<a href="/">
 Dashboard
 </a>
 

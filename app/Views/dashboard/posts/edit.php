@@ -3,10 +3,7 @@
 <h2>Edit Post</h2>
 
 
-<form 
-    action="/dashboard/posts/update?id=<?= $post['id'] ?>"
-    method="POST"
->
+<form action="/dashboard/posts/update?id=<?= $post['id'] ?>"method="POST">
 
 
     <label>

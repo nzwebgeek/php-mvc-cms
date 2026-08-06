@@ -5,7 +5,8 @@ namespace App\Controllers;
 
 use App\Core\Controller;
 use App\Services\AuthService;
-
+class AdminDashboardController extends Controller
+{
 public function index(): void
 {
     if (!$this->auth->isLoggedIn()) {
@@ -32,4 +33,5 @@ public function index(): void
         ],
         'admin'
     );
+}
 }

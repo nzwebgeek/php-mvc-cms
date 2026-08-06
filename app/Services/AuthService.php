@@ -50,32 +50,53 @@ class AuthService
     );
 }
 
-    public function register(
-        string $username,
-        string $email,
-        string $password,
-        string $confirmPassword
-    ): ServiceResult {
+public function logout(): void
+{
+    $_SESSION = [];
 
-        if ($password !== $confirmPassword) {
-            return ServiceResult::error(
-                'Passwords do not match.'
-            );
-        }
+    if (ini_get('session.use_cookies')) {
+        $params = session_get_cookie_params();
 
-        if ($this->users->usernameOrEmailExists($username, $email)) {
-            return ServiceResult::error(
-                'That username or email is already registered.'
-            );
-        }
+        setcookie(
+            session_name(),
+            '',
+            time() - 42000,
+            $params['path'],
+            $params['domain'],
+            $params['secure'],
+            $params['httponly']
+        );
+    }
 
-        $roleId = $this->users->findRoleIdByName('User');
+    session_destroy();
+}
 
-        if (!$roleId) {
-            return ServiceResult::error(
-                'Default role not found.'
-            );
-        }
+public function register(
+    string $username,
+    string $email,
+    string $password,
+    string $confirmPassword
+): ServiceResult {
+
+    if ($password !== $confirmPassword) {
+        return ServiceResult::error(
+            'Passwords do not match.'
+        );
+    }
+
+    if ($this->users->usernameOrEmailExists($username, $email)) {
+        return ServiceResult::error(
+            'That username or email is already registered.'
+        );
+    }
+
+    $roleId = $this->users->findRoleIdByName('User');
+
+    if (!$roleId) {
+        return ServiceResult::error(
+            'Default role not found.'
+        );
+    }
 
         $token = bin2hex(random_bytes(32));
 
@@ -98,16 +119,16 @@ class AuthService
     );
 }
 
-    $this->mailer->sendVerificationEmail(
-        $email,
-        $username,
-        $token
-    );
+        $this->mailer->sendVerificationEmail(
+            $email,
+            $username,
+            $token
+        );
 
-    return ServiceResult::success(
-        'Registration successful. Please check your email to verify your account.'
-    );
-        }
+        return ServiceResult::success(
+            'Registration successful. Please check your email to verify your account.'
+        );
+    }
 
       // Existing methods...
 
@@ -133,6 +154,33 @@ class AuthService
             true
         );
     }
+
+    public function requireLogin(): void{
+        if (!$this->isLoggedIn()) {
+            header('Location: /login');
+            exit;
+        }
+    }
+
+    public function requireAdmin(): void
+    {
+        $this->requireLogin();
+
+        if (!$this->isAdmin()) {
+            header('Location: /dashboard');
+            exit;
+        }
+    }
+
+    public function requireSuperAdmin(): void{
+        $this->requireAdmin();
+
+        if (!$this->isSuperAdmin()) {
+            header('Location: /admin/users');
+            exit;
+        }
+    }
+
     public function currentUserId(): ?int
     {
         return $_SESSION['user_id'] ?? null;
