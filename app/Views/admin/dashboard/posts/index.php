@@ -98,11 +98,28 @@ style="width:80px;height:60px;object-fit:cover;"
 
 <td>
 
-<a href="#">
+<a href="/admin/posts/edit?id=<?= $post['id']; ?>">
 Edit</a>
 
-<a href="#">
-Delete</a>
+<form
+    method="POST"
+    action="/admin/posts/delete"
+    style="display:inline;">
+
+    <input
+        type="hidden"
+        name="id"
+        value="<?= $post['id']; ?>">
+
+    <button
+        type="submit"
+        onclick="return confirm('Delete this post?');">
+
+        Delete
+
+    </button>
+
+</form>
 
 </td>
 

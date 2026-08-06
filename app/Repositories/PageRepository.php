@@ -89,4 +89,75 @@ class PageRepository extends Repository
 
     return (int)$stmt->fetchColumn();
     }
+
+    public function create(array $data): bool
+{
+    $stmt = $this->db->prepare("
+        INSERT INTO pages
+        (
+            title,
+            slug,
+            hero_title,
+            hero_subtitle,
+            main_heading,
+            main_content,
+            status,
+            seo_title,
+            seo_description
+        )
+        VALUES
+        (
+            :title,
+            :slug,
+            :hero_title,
+            :hero_subtitle,
+            :main_heading,
+            :main_content,
+            :status,
+            :seo_title,
+            :seo_description
+        )
+    ");
+
+
+    return $stmt->execute([
+
+        'title' => $data['title'],
+
+        'slug' => $data['slug'],
+
+        'hero_title' => $data['hero_title'],
+
+        'hero_subtitle' => $data['hero_subtitle'],
+
+        'main_heading' => $data['main_heading'],
+
+        'main_content' => $data['main_content'],
+
+        'status' => $data['status'],
+
+        'seo_title' => $data['seo_title'],
+
+        'seo_description' => $data['seo_description']
+
+    ]);
+}
+
+    public function adminAll(): array{
+    $stmt = $this->db->query("
+        SELECT
+            id,
+            title,
+            slug,
+            status,
+            seo_title,
+            display_order
+
+        FROM pages
+
+        ORDER BY display_order ASC, id ASC
+    ");
+
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }

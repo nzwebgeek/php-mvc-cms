@@ -297,6 +297,113 @@ public function adminAll(
 
     return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
-    
+
+public function adminCreate(array $data): bool
+{
+    $stmt = $this->db->prepare("
+        INSERT INTO posts (
+
+            user_id,
+            title,
+            slug,
+            content,
+            status,
+            featured_media_id,
+            created_at,
+            updated_at
+
+        ) VALUES (
+
+            :user_id,
+            :title,
+            :slug,
+            :content,
+            :status,
+            :featured_media_id,
+            NOW(),
+            NOW()
+
+        )
+    ");
+
+
+    return $stmt->execute([
+
+        'user_id' => $data['user_id'],
+        'title' => $data['title'],
+        'slug' => $data['slug'],
+        'content' => $data['content'],
+        'status' => $data['status'],
+        'featured_media_id' => $data['featured_media_id'] ?? null
+
+    ]);
+}
+
+public function adminFindById(int $id): ?array
+{
+    $stmt = $this->db->prepare("
+        SELECT
+            posts.*,
+            images.filename AS image_filename,
+            images.filepath AS image_path
+
+        FROM posts
+
+        LEFT JOIN images
+            ON posts.featured_media_id = images.id
+
+        WHERE posts.id = :id
+
+        LIMIT 1
+    ");
+
+    $stmt->execute([
+        'id' => $id
+    ]);
+
+    return $stmt->fetch(\PDO::FETCH_ASSOC) ?: null;
+}
+public function adminUpdate(array $data): bool
+{
+    $stmt = $this->db->prepare("
+        UPDATE posts
+        SET
+            user_id = :user_id,
+            title = :title,
+            slug = :slug,
+            content = :content,
+            status = :status,
+            featured_media_id = :featured_media_id,
+            updated_at = NOW()
+
+        WHERE id = :id
+    ");
+
+
+    return $stmt->execute([
+
+        'id' => $data['id'],
+        'user_id' => $data['user_id'],
+        'title' => $data['title'],
+        'slug' => $data['slug'],
+        'content' => $data['content'],
+        'status' => $data['status'],
+        'featured_media_id' => $data['featured_media_id']
+
+    ]);
+}
+
+public function adminDelete(int $id): bool
+{
+    $stmt = $this->db->prepare("
+        DELETE FROM posts
+        WHERE id = :id
+    ");
+
+
+    return $stmt->execute([
+        'id' => $id
+    ]);
+}
     
 }
