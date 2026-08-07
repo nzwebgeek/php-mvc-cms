@@ -1,172 +1,342 @@
-<h1>
-Create New Page
-</h1>
+<h1>Create New Page</h1>
 
+<div class="admin-card">
 
 <form method="POST" action="/admin/pages/store">
 
+    <h2>General</h2>
 
-<div class="mb-3">
+    <div class="form-group">
 
-<label>
-Title
-</label>
+        <label>
+            Title
+        </label>
 
-<input 
-class="form-control"
-type="text"
-name="title"
-required>
+        <input
+            type="text"
+            name="title"
+            required>
 
-</div>
+    </div>
 
+    <div class="form-group">
 
+        <label>
+            Slug
+        </label>
 
-<div class="mb-3">
+        <input
+            type="text"
+            name="slug"
+            placeholder="about">
 
-<label>
-Slug
-</label>
+    </div>
 
-<input 
-class="form-control"
-type="text"
-name="slug"
-placeholder="about">
+    <div class="form-group">
 
-</div>
+        <label>
+            Status
+        </label>
 
+        <select name="status">
 
+            <option value="published">
+                Published
+            </option>
 
-<div class="mb-3">
+            <option value="draft">
+                Draft
+            </option>
 
-<label>
-Hero Title
-</label>
+        </select>
 
-<input 
-class="form-control"
-type="text"
-name="hero_title">
+    </div>
 
-</div>
+    <hr>
 
+    <h2>Hero Section</h2>
 
+    <div class="form-group">
 
-<div class="mb-3">
+        <label>
+            Hero Title
+        </label>
 
-<label>
-Hero Subtitle
-</label>
+        <input
+            type="text"
+            name="hero_title">
 
-<input 
-class="form-control"
-type="text"
-name="hero_subtitle">
+    </div>
 
-</div>
+    <div class="form-group">
 
+        <label>
+            Hero Subtitle
+        </label>
 
+        <textarea
+            name="hero_subtitle"
+            rows="3"></textarea>
 
-<div class="mb-3">
+    </div>
+<div class="form-group">
 
-<label>
-Main Heading
-</label>
+    <label>Hero Image</label>
 
-<input 
-class="form-control"
-type="text"
-name="main_heading">
+    <select name="hero_media_id" onchange="priviewHero(this)">
 
-</div>
+        <option value="">
+            -- Select Hero Image --
+        </option>
 
+        <?php foreach ($images as $image): ?>
 
+            <option
+        value="<?= $image['id']; ?>"
+        data-image="<?= htmlspecialchars($image['filepath']); ?>">
 
-<div class="mb-3">
+    <?= htmlspecialchars($image['filename']); ?>
 
-<label>
-Content
-</label>
+    </option>
+    <div class="form-group">
 
-<textarea
-class="form-control"
-name="main_content"
-rows="8"></textarea>
-
-</div>
-
-
-
-<div class="mb-3">
-
-<label>
-SEO Title
-</label>
-
-<input
-class="form-control"
-type="text"
-name="seo_title">
+    <img
+        id="hero-preview"
+        src=""
+        style="display:none;max-width:250px;">
 
 </div>
 
+        <?php endforeach; ?>
 
-
-<div class="mb-3">
-
-<label>
-SEO Description
-</label>
-
-<textarea
-class="form-control"
-name="seo_description"></textarea>
+    </select>
 
 </div>
 
+    <div class="form-group">
 
+        <label>
+            Hero Image Alt Text
+        </label>
 
-<div class="mb-3">
+        <input
+            type="text"
+            name="hero_image_alt">
 
-<label>
-Status
-</label>
+    </div>
 
-<select
-class="form-control"
-name="status">
+    <hr>
 
+    <h2>Main Content</h2>
 
-<option value="published">
-Published
-</option>
+    <div class="form-group">
 
+        <label>
+            Main Heading
+        </label>
 
-<option value="draft">
-Draft
-</option>
+        <input
+            type="text"
+            name="main_heading">
 
+    </div>
 
-</select>
+    <div class="form-group">
 
-</div>
+        <label>
+            Main Content
+        </label>
 
+        <textarea
+            name="main_content"
+            rows="8"></textarea>
 
+    </div>
 
-<button class="btn btn-success">
+    <hr>
 
-Create Page
+    <h2>Content Section 1</h2>
 
-</button>
+    <div class="form-group">
 
+        <label>
+            Section 1 Heading
+        </label>
 
-<a href="/admin/pages"
-class="btn btn-secondary">
+        <input
+            type="text"
+            name="column1_title">
 
-Cancel
+    </div>
 
-</a>
+    <div class="form-group">
 
+        <label>
+            Section 1 Content
+        </label>
+
+        <textarea
+            name="column1_content"
+            rows="5"></textarea>
+
+    </div>
+
+    <hr>
+
+    <h2>Content Section 2</h2>
+
+    <div class="form-group">
+
+        <label>
+            Section 2 Heading
+        </label>
+
+        <input
+            type="text"
+            name="column2_title">
+
+    </div>
+
+    <div class="form-group">
+
+        <label>
+            Section 2 Content
+        </label>
+
+        <textarea
+            name="column2_content"
+            rows="5"></textarea>
+
+    </div>
+
+    <hr>
+
+    <h2>Content Section 3</h2>
+
+    <div class="form-group">
+
+        <label>
+            Section 3 Heading
+        </label>
+
+        <input
+            type="text"
+            name="column3_title">
+
+    </div>
+
+    <div class="form-group">
+
+        <label>
+            Section 3 Content
+        </label>
+
+        <textarea
+            name="column3_content"
+            rows="5"></textarea>
+
+    </div>
+
+    <hr>
+
+    <h2>Content Section 4</h2>
+
+    <div class="form-group">
+
+        <label>
+            Section 4 Heading
+        </label>
+
+        <input
+            type="text"
+            name="column4_title">
+
+    </div>
+
+    <div class="form-group">
+
+        <label>
+            Section 4 Content
+        </label>
+
+        <textarea
+            name="column4_content"
+            rows="5"></textarea>
+
+    </div>
+
+    <hr>
+
+    <h2>Content Section 5</h2>
+
+    <div class="form-group">
+
+        <label>
+            Section 5 Heading
+        </label>
+
+        <input
+            type="text"
+            name="column5_title">
+
+    </div>
+
+    <div class="form-group">
+
+        <label>
+            Section 5 Content
+        </label>
+
+        <textarea
+            name="column5_content"
+            rows="5"></textarea>
+
+    </div>
+
+    <hr>
+
+    <h2>SEO</h2>
+
+    <div class="form-group">
+
+        <label>
+            SEO Title
+        </label>
+
+        <input
+            type="text"
+            name="seo_title">
+
+    </div>
+
+    <div class="form-group">
+
+        <label>
+            SEO Description
+        </label>
+
+        <textarea
+            name="seo_description"
+            rows="3"></textarea>
+
+    </div>
+
+    <button
+        class="green-button"
+        type="submit">
+
+        Create Page
+
+    </button>
+
+    <a
+        href="/admin/pages"
+        class="red-button">
+
+        Cancel
+
+    </a>
 
 </form>
+
+</div>

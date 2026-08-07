@@ -5,7 +5,8 @@
  * @var string $title
  */
 ?>
-<h1>Create Post</h1>
+<div class="admin-card">
+    <h1>Create Post</h1>
 
 
 <form method="POST" action="/admin/posts/store">
@@ -125,3 +126,4 @@ Create Post
 
 
 </form>
+</div>
