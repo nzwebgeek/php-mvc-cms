@@ -1,10 +1,61 @@
-<h1>
+<div class="admin-card">
+    <h1>
     Manage Pages
 </h1>
 
 
+<?php if(isset($_GET['success'])): ?>
+
+<div class="alert alert-success">
+
+<?php
+
+switch($_GET['success']) {
+
+case 'created':
+echo "Page created successfully.";
+break;
+
+case 'updated':
+echo "Page updated successfully.";
+break;
+
+case 'deleted':
+echo "Page deleted successfully.";
+break;
+
+}
+
+?>
+
+</div>
+
+<?php endif; ?>
+
+
+<?php if(isset($_GET['error'])): ?>
+
+<div class="alert alert-danger">
+
+<?php
+
+switch($_GET['error']) {
+
+case 'protected':
+echo "This page cannot be deleted because it is a core website page.";
+break;
+
+}
+
+?>
+
+</div>
+
+<?php endif; ?>
+
+
 <a href="/admin/pages/create"
-class="btn btn-primary mb-3">
+class="green-button">
 
 Create New Page
 
@@ -23,7 +74,7 @@ No pages found.
 <?php else: ?>
 
 
-<table class="table table-bordered">
+<table class="admin-table">
 
 
 <thead>
@@ -84,7 +135,7 @@ Actions
 
 
 <a href="/admin/pages/edit?id=<?= $page['id']; ?>"
-class="btn btn-warning btn-sm">
+class="blue-button">
 
 Edit
 
@@ -105,7 +156,8 @@ value="<?= $page['id']; ?>">
 
 
 <button 
-class="btn btn-danger btn-sm">
+class="red-button"
+onclick="return confirm('Are you sure you want to delete this page?');">
 
 Delete
 
@@ -131,3 +183,4 @@ Delete
 
 
 <?php endif; ?>
+</div>

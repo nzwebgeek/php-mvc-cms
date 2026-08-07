@@ -107,7 +107,8 @@ $adminPostsController = new AdminPostsController(
 
 $adminPagesController = new AdminPagesController(
     $authService,
-    $pageRepository
+    $pageRepository,
+    $imageRepository
 );
 
 $container->set(

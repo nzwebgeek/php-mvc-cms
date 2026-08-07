@@ -1,324 +1,223 @@
 <?php
-/**
- * @var array $post
- * @var array $users
- * @var array $images
- * @var string $title
- */
+/** @var array $post */
+/** @var array $users */
+/** @var array $images */
 ?>
 
+<div class="admin-card">
 
-<h1>
-    <?= htmlspecialchars($title) ?>
-</h1>
+    <a href="/admin/posts" class="blue-button">
+        ← Back to Posts
+    </a>
 
-<a href="/admin/posts" class="btn btn-secondary">
-    ← Back to Posts
-</a>
+    <h1>Edit Post</h1>
 
-<br>
-<br>
+    <form method="POST" action="/admin/posts/update">
 
-<form method="POST" action="/admin/posts/update">
+        <input
+            type="hidden"
+            name="id"
+            value="<?= $post['id']; ?>">
 
+        <div class="form-group">
 
-<input
-    type="hidden"
-    name="id"
-    value="<?= $post['id']; ?>"
->
+            <label>
+                Title
+            </label>
 
+            <input
+                type="text"
+                name="title"
+                value="<?= htmlspecialchars($post['title']); ?>"
+                required>
 
+        </div>
 
-<label>
-    Title
-</label>
+        <div class="form-group">
 
-<br>
+            <label>
+                Slug
+            </label>
 
-<input
-    type="text"
-    name="title"
-    value="<?= htmlspecialchars($post['title']); ?>"
-    required
->
+            <input
+                type="text"
+                name="slug"
+                value="<?= htmlspecialchars($post['slug']); ?>"
+                required>
 
+        </div>
 
-<br>
-<br>
+        <div class="form-group">
 
+            <label>
+                Content
+            </label>
 
+            <textarea
+                name="content"
+                rows="10"
+                required><?= htmlspecialchars($post['content']); ?></textarea>
 
-<label>
-    Slug
-</label>
+        </div>
 
-<br>
+        <div class="form-group">
 
-<input
-    type="text"
-    name="slug"
-    value="<?= htmlspecialchars($post['slug']); ?>"
-    required
->
+            <label>
+                Author
+            </label>
 
+            <select name="user_id">
 
-<br>
-<br>
+                <?php foreach ($users as $user): ?>
 
+                    <option
+                        value="<?= $user['id']; ?>"
+                        <?= $user['id'] == $post['user_id'] ? 'selected' : ''; ?>>
 
+                        <?= htmlspecialchars($user['username']); ?>
 
-<label>
-    Content
-</label>
+                    </option>
 
-<br>
+                <?php endforeach; ?>
 
-<textarea
-    name="content"
-    rows="10"
-    required><?= htmlspecialchars($post['content']); ?></textarea>
+            </select>
 
+        </div>
 
-<br>
-<br>
+        <div class="form-group">
 
+            <label>
+                Current Featured Image
+            </label>
 
+            <?php if (!empty($post['image_path'])): ?>
 
-<label>
-    Current Featured Image
-</label>
+                <p>
 
-<br>
+                    <img
+                        src="<?= htmlspecialchars($post['image_path']); ?>"
+                        alt=""
+                        width="180"
+                        style="border-radius:6px;">
 
+                </p>
 
-<?php if(!empty($post['image_path'])): ?>
+                <p>
+                    <?= htmlspecialchars($post['image_filename']); ?>
+                </p>
 
+            <?php else: ?>
 
-<img
-    src="<?= htmlspecialchars($post['image_path']); ?>"
-    width="150"
-    style="object-fit:cover;"
->
+                <p>No featured image selected.</p>
 
+            <?php endif; ?>
 
-<p>
-<?= htmlspecialchars($post['image_filename']); ?>
-</p>
+        </div>
 
+        <div class="form-group">
 
-<?php else: ?>
+            <label>
+                Select Featured Image
+            </label>
 
+            <select
+                name="featured_media_id"
+                id="featured_media_id"
+                onchange="previewImage(this)">
 
-<p>
-No image selected
-</p>
+                <option value="">
+                    -- No Image --
+                </option>
 
+                <?php foreach ($images as $image): ?>
 
-<?php endif; ?>
+                    <option
+                        value="<?= $image['id']; ?>"
+                        data-image="<?= htmlspecialchars($image['filepath']); ?>"
+                        <?= $image['id'] == $post['featured_media_id'] ? 'selected' : ''; ?>>
 
+                        <?= htmlspecialchars($image['filename']); ?>
 
-<br>
+                    </option>
 
+                <?php endforeach; ?>
 
+            </select>
 
-<label>
-    Change Featured Image
-</label>
+        </div>
 
-<br>
+        <div class="form-group">
 
+            <label>
+                New Image Preview
+            </label>
 
-<select 
-    name="featured_media_id"
-    id="featured_media_id"
-    onchange="previewImage(this)"
->
+            <img
+                id="image-preview"
+                src=""
+                alt=""
+                width="180"
+                style="display:none;border-radius:6px;">
 
+        </div>
 
-<option value="">
-No Image
-</option>
+        <div class="form-group">
 
+            <label>
+                Status
+            </label>
 
+            <select name="status">
 
-<?php foreach($images as $image): ?>
+                <option
+                    value="draft"
+                    <?= $post['status'] === 'draft' ? 'selected' : ''; ?>>
 
+                    Draft
 
-<option
+                </option>
 
-value="<?= $image['id']; ?>"
+                <option
+                    value="published"
+                    <?= $post['status'] === 'published' ? 'selected' : ''; ?>>
 
-data-image="<?= htmlspecialchars($image['filepath']); ?>"
+                    Published
 
-<?= 
-($image['id'] == $post['featured_media_id']) 
-? 'selected' 
-: ''; 
-?>
+                </option>
 
->
+            </select>
 
-<?= htmlspecialchars($image['filename']); ?>
+        </div>
 
+        <button
+            class="green-button"
+            type="submit">
 
-</option>
+            Update Post
 
+        </button>
 
-<?php endforeach; ?>
+        <a
+            href="/admin/posts"
+            class="red-button">
 
+            Cancel
 
-</select>
+        </a>
 
+    </form>
 
-<br>
-<br>
-
-
-<label>
-    New Image Preview
-</label>
-
-<br>
-
-
-<img
-    id="image-preview"
-    src=""
-    width="150"
-    style="
-        object-fit:cover;
-        display:none;
-    "
->
-
-
-<br>
-<br>
-
-
-
-
-<label>
-    Author
-</label>
-
-<br>
-
-
-<select name="user_id">
-
-
-<?php foreach($users as $user): ?>
-
-
-<option
-
-value="<?= $user['id']; ?>"
-
-<?= 
-($user['id'] == $post['user_id']) 
-? 'selected' 
-: ''; 
-?>
-
->
-
-<?= htmlspecialchars($user['username']); ?>
-
-
-</option>
-
-
-<?php endforeach; ?>
-
-
-</select>
-
-
-<br>
-<br>
-
-
-
-
-<label>
-    Status
-</label>
-
-<br>
-
-
-<select name="status">
-
-
-<option
-
-value="draft"
-
-<?= 
-$post['status'] === 'draft'
-? 'selected'
-: '';
-?>
-
->
-
-Draft
-
-</option>
-
-
-
-<option
-
-value="published"
-
-<?= 
-$post['status'] === 'published'
-? 'selected'
-: '';
-?>
-
->
-
-Published
-
-</option>
-
-
-</select>
-
-
-
-<br>
-<br>
-
-
-
-
-<button type="submit">
-
-Update Post
-
-</button>
-
-
-
-</form>
-
-
+</div>
 
 <script>
 
 function previewImage(select)
 {
-    let option = select.options[select.selectedIndex];
+    const option = select.options[select.selectedIndex];
 
-    let image = option.getAttribute('data-image');
+    const image = option.getAttribute('data-image');
 
-    let preview = document.getElementById('image-preview');
-
+    const preview = document.getElementById('image-preview');
 
     if(image)
     {

@@ -6,7 +6,9 @@
  * @var string $title
  */
 ?>
-<h1><?= htmlspecialchars($title) ?></h1>
+
+<div class="admin-card">
+    <h1><?= htmlspecialchars($title) ?></h1>
 
 <?php if(isset($_GET['success'])): ?>
 
@@ -29,9 +31,11 @@ Post deleted successfully.
 </div>
 
 <?php endif; ?>
+
 <div class="admin-actions">
 
-    <a href="/admin/posts/create" class="btn btn-primary">
+    <a class="post-create-btn"
+    href="/admin/posts/create" >
         New Post
     </a>
 
@@ -40,15 +44,15 @@ Post deleted successfully.
 
 <div class="post-filters">
 
-    <a href="/admin/posts">
+    <a href="/admin/posts" class="post-create-btn">
         All Posts
     </a>
 
-    <a href="/admin/posts?status=published">
+    <a href="/admin/posts?status=published" class="post-create-btn">
         Published
     </a>
 
-    <a href="/admin/posts?status=draft">
+    <a href="/admin/posts?status=draft" class="post-create-btn">
         Drafts
     </a>
 
@@ -134,10 +138,12 @@ No Image
 
 <td>
 
-<a href="/admin/posts/edit?id=<?= $post['id'] ?>">
-    Edit
-</a>
+<a class="green-button"
+href="/admin/posts/edit?id=<?= $post['id']; ?>">
 
+Edit
+
+</a>
 <form
     method="POST"
     action="/admin/posts/delete"
@@ -148,13 +154,13 @@ No Image
         name="id"
         value="<?= $post['id'] ?>">
 
-    <button
-        type="submit"
-        onclick="return confirm('Delete this post?')">
+ <button class="red-button"
+type="submit"
+onclick="return confirm('Delete this post?');">
 
-        Delete
+Delete
 
-    </button>
+</button>
 
 </form>
 
@@ -174,3 +180,4 @@ No Image
 </tbody>
 
 </table>
+</div>
