@@ -62,13 +62,59 @@ public function store(): void
     $data = [
 
         'user_id' => $_POST['user_id'],
+
         'title' => $_POST['title'],
+
         'slug' => $_POST['slug'],
+
         'content' => $_POST['content'],
+
         'status' => $_POST['status'],
+
+
         'featured_media_id' => !empty($_POST['featured_media_id'])
-        ? $_POST['featured_media_id']
-        : null
+            ? $_POST['featured_media_id']
+            : null,
+
+
+        'hero_title' => $_POST['hero_title'] ?? null,
+
+        'hero_subtitle' => $_POST['hero_subtitle'] ?? null,
+
+
+        'main_heading' => $_POST['main_heading'] ?? null,
+
+        'main_content' => $_POST['main_content'] ?? null,
+
+
+        'column1_title' => $_POST['column1_title'] ?? null,
+
+        'column1_content' => $_POST['column1_content'] ?? null,
+
+
+        'column2_title' => $_POST['column2_title'] ?? null,
+
+        'column2_content' => $_POST['column2_content'] ?? null,
+
+
+        'column3_title' => $_POST['column3_title'] ?? null,
+
+        'column3_content' => $_POST['column3_content'] ?? null,
+
+
+        'column4_title' => $_POST['column4_title'] ?? null,
+
+        'column4_content' => $_POST['column4_content'] ?? null,
+
+
+        'column5_title' => $_POST['column5_title'] ?? null,
+
+        'column5_content' => $_POST['column5_content'] ?? null,
+
+
+        'seo_title' => $_POST['seo_title'] ?? null,
+
+        'seo_description' => $_POST['seo_description'] ?? null
 
     ];
 
@@ -79,7 +125,7 @@ public function store(): void
     header('Location: /admin/posts?success=created');
 
     exit;
-    }
+}
 
     public function edit(): void
 {
@@ -121,14 +167,61 @@ public function update(): void
     $data = [
 
         'id' => $_POST['id'],
+
         'user_id' => $_POST['user_id'],
+
         'title' => $_POST['title'],
+
         'slug' => $_POST['slug'],
+
         'content' => $_POST['content'],
+
         'status' => $_POST['status'],
-       'featured_media_id' => !empty($_POST['featured_media_id'])
-    ? $_POST['featured_media_id']
-    : null
+
+
+        'featured_media_id' => !empty($_POST['featured_media_id'])
+            ? $_POST['featured_media_id']
+            : null,
+
+
+        'hero_title' => $_POST['hero_title'] ?? null,
+
+        'hero_subtitle' => $_POST['hero_subtitle'] ?? null,
+
+
+        'main_heading' => $_POST['main_heading'] ?? null,
+
+        'main_content' => $_POST['main_content'] ?? null,
+
+
+        'column1_title' => $_POST['column1_title'] ?? null,
+
+        'column1_content' => $_POST['column1_content'] ?? null,
+
+
+        'column2_title' => $_POST['column2_title'] ?? null,
+
+        'column2_content' => $_POST['column2_content'] ?? null,
+
+
+        'column3_title' => $_POST['column3_title'] ?? null,
+
+        'column3_content' => $_POST['column3_content'] ?? null,
+
+
+        'column4_title' => $_POST['column4_title'] ?? null,
+
+        'column4_content' => $_POST['column4_content'] ?? null,
+
+
+        'column5_title' => $_POST['column5_title'] ?? null,
+
+        'column5_content' => $_POST['column5_content'] ?? null,
+
+
+        'seo_title' => $_POST['seo_title'] ?? null,
+
+        'seo_description' => $_POST['seo_description'] ?? null
 
     ];
 

@@ -21,6 +21,8 @@ use App\Repositories\AdminRepository;
 use App\Controllers\RoleController;
 use App\Controllers\AdminPostsController;
 use App\Controllers\AdminPagesController;
+use App\Repositories\CommentRepository;
+use App\Controllers\CommentController;
 
 
 
@@ -37,6 +39,7 @@ $db = Database::connect(
 // Repositories
 $userRepository = new UserRepository($db);
 $postRepository = new PostRepository($db);
+$commentRepository = new CommentRepository($db);
 $imageRepository = new ImageRepository($db);
 $settingsRepository = new SettingsRepository($db);
 $pageRepository = new PageRepository($db);
@@ -111,6 +114,12 @@ $adminPagesController = new AdminPagesController(
     $imageRepository
 );
 
+
+$commentController = new CommentController(
+    $authService,
+    $commentRepository
+);
+
 $container->set(
     SettingsRepository::class,
     $settingsRepository
@@ -177,5 +186,14 @@ $container->set(
     $adminPagesController
 );
 
+$container->set(
+    CommentRepository::class,
+    $commentRepository
+);
+
+$container->set(
+    CommentController::class,
+    $commentController
+);
 
 return $container;

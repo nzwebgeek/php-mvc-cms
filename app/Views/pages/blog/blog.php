@@ -10,23 +10,17 @@
 <!-- TOP TWO FEATURED IMAGES -->
 <section class="comment-content-box">
 
-    <div class="comment-content-img">
+   <?php foreach ($featuredImages as $image): ?>
 
-        <img
-            src="/uploads/laravel.png"
-            alt="Laravel blog image">
+<div class="comment-content-img">
 
-    </div>
+    <img
+        src="<?= htmlspecialchars($image['filepath']); ?>"
+        alt="<?= htmlspecialchars($image['filename']); ?>">
 
+</div>
 
-    <div class="comment-content-img">
-
-        <img
-            src="/uploads/php.jpg"
-            alt="PHP blog image">
-
-    </div>
-
+<?php endforeach; ?>
 </section>
 
 
