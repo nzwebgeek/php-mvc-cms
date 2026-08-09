@@ -4,6 +4,7 @@ namespace App\Services;
 
 class ServiceResult
 {
+    // Dealing with messages and settings
     public function __construct(
         public readonly bool $success,
         public readonly string $type,

@@ -348,47 +348,117 @@ body {
 .admin-table {
     width: 100%;
     border-collapse: collapse;
+     table-layout: fixed;
 }
+
 
 .admin-table th,
 .admin-table td {
-    padding: 12px 14px;
-    text-align: left;
-    vertical-align: middle;
+    padding: 12px;
+    vertical-align: top;
 }
 
 .admin-table th {
     white-space: nowrap;
 }
 
-.admin-table td:nth-child(1) {
-    width: 120px;
-}
-
-.admin-table td:nth-child(2) {
-    min-width: 180px;
-}
-
-.admin-table td:nth-child(3) {
-    min-width: 300px;
-    max-width: 450px;
+.admin-table .comment-content {
+    width: 30%;
+    max-width: 350px;
+    vertical-align: top;
+    white-space: normal;
+    overflow-wrap: anywhere;
     word-break: break-word;
+    line-height: 1.5;
 }
 
+.admin-table th:nth-child(1),
+.admin-table td:nth-child(1) {
+    width: 5%;
+}
+
+.admin-table th:nth-child(2),
+.admin-table td:nth-child(2) {
+    width: 10%;
+}
+
+.admin-table th:nth-child(3),
+.admin-table td:nth-child(3) {
+    width: 15%;
+}
+
+.admin-table th:nth-child(4),
 .admin-table td:nth-child(4) {
-    white-space: nowrap;
+    width: 30%;
 }
 
+.admin-table th:nth-child(5),
 .admin-table td:nth-child(5) {
-    white-space: nowrap;
+    width: 10%;
 }
 
+.admin-table th:nth-child(6),
 .admin-table td:nth-child(6) {
-    white-space: nowrap;
+    width: 15%;
 }
 
+.admin-table th:nth-child(7),
 .admin-table td:nth-child(7) {
-    white-space: nowrap;
+    width: 15%;
+}
+
+.admin-table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.comment-expand {
+    width: 100%;
+}
+
+.comment-expand summary {
+    cursor: pointer;
+    color: #2563eb;
+    font-weight: 600;
+    list-style: none;
+}
+
+.comment-expand summary:hover {
+    color: #1d4ed8;
+}
+
+.comment-full-text {
+    margin-top: 10px;
+    max-width: 350px;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+    line-height: 1.5;
+}
+
+/* Remove the default triangle */
+.comment-expand summary::-webkit-details-marker {
+    display: none;
+}
+
+.comment-expand summary::before {
+    content: "+ ";
+}
+
+/* Change + to - when expanded */
+.comment-expand[open] summary::before {
+    content: "− ";
+}
+
+
+/* The actual comment */
+.comment-full-text {
+    margin-top: 10px;
+    max-width: 350px;
+
+    white-space: normal;
+    overflow-wrap: anywhere;
+    word-break: break-word;
 }
 
 .status {
@@ -436,8 +506,56 @@ body {
     color: #1e293b;
 }
 
-.comment-content {
-    max-width: 350px;
-    white-space: normal;
+/* =========================
+   ADMIN MEDIA LIBRARY
+   ========================= */
+
+.media-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.media-card {
+    background: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.media-image {
+    width: 100%;
+    height: 180px;
+    background: #f3f4f6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.media-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.media-info {
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.media-info strong {
+    font-size: 14px;
+    color: #222;
     word-break: break-word;
+}
+
+.media-info small {
+    color: #777;
+    font-size: 12px;
 }

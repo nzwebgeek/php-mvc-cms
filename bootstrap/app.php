@@ -80,7 +80,9 @@ $verifyController = new VerifyController(
 $adminController = new AdminController(
     $authService,
     $adminRepository,
-    $userRepository
+    $userRepository,
+    $imageRepository,
+    $csrfService
 );
 
 

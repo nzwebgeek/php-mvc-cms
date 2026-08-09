@@ -10,6 +10,15 @@ Edit User
 
 <form method="POST" action="/admin/users/update">
 
+<input
+    type="hidden"
+    name="csrf_token"
+    value="<?= htmlspecialchars(
+        $csrfToken ?? '',
+        ENT_QUOTES,
+        'UTF-8'
+    ) ?>"
+>
 
 <input 
 type="hidden"
@@ -23,10 +32,14 @@ Username
 
 <br>
 
-<input 
-type="text"
-name="username"
-value="<?= htmlspecialchars($user['username']) ?>"
+<input
+    type="text"
+    name="username"
+    value="<?= htmlspecialchars(
+        $user['username'] ?? '',
+        ENT_QUOTES,
+        'UTF-8'
+    ) ?>"
 >
 
 
@@ -39,10 +52,14 @@ Email
 
 <br>
 
-<input 
-type="email"
-name="email"
-value="<?= htmlspecialchars($user['email']) ?>"
+<input
+    type="email"
+    name="email"
+    value="<?= htmlspecialchars(
+        $user['email'] ?? '',
+        ENT_QUOTES,
+        'UTF-8'
+    ) ?>"
 >
 
 

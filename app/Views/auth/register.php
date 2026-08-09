@@ -6,7 +6,7 @@
 
 <?php if (!empty($message)): ?>
     <p>
-        <?= htmlspecialchars($message, ENT_QUOTES, 'UTF-8') ?>
+        <?= htmlspecialchars($message ?? '', ENT_QUOTES, 'UTF-8') ?>
     </p>
 <?php endif; ?>
 
@@ -19,28 +19,34 @@
             type="hidden"
             name="csrf_token"
             value="<?= htmlspecialchars(
-                $csrfToken,
+                $csrfToken ?? '',
                 ENT_QUOTES,
                 'UTF-8'
             ) ?>"
         >
                 
-
-<input 
-    type="text" 
-    id="username" 
+<input
+    type="text"
+    id="username"
     name="username"
-    value="<?= htmlspecialchars($username ?? '') ?>"
+    value="<?= htmlspecialchars(
+        $username ?? '',
+        ENT_QUOTES,
+        'UTF-8'
+    ) ?>"
     required
 >
 
 
-<label for="email">Email</label>
-<input 
-    type="email" 
-    id="email" 
+<input
+    type="email"
+    id="email"
     name="email"
-    value="<?= htmlspecialchars($email ?? '') ?>"
+    value="<?= htmlspecialchars(
+        $email ?? '',
+        ENT_QUOTES,
+        'UTF-8'
+    ) ?>"
     required
 >
 
