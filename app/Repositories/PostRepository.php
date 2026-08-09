@@ -40,13 +40,18 @@ public function findById(int $id): ?array
         SELECT
             posts.*,
 
+            users.username,
+
             images.filename AS image_filename,
             images.filepath AS image_path
 
         FROM posts
 
+        LEFT JOIN users
+            ON posts.user_id = users.id
+
         LEFT JOIN images
-        ON posts.featured_media_id = images.id
+            ON posts.featured_media_id = images.id
 
         WHERE posts.id = :id
 
@@ -62,7 +67,7 @@ public function findById(int $id): ?array
 
 
     return $stmt->fetch(\PDO::FETCH_ASSOC) ?: null;
-}     
+} 
 public function getBlogImages(): array
     {
     $stmt = $this->db->query("
@@ -75,18 +80,16 @@ public function getBlogImages(): array
 }
 
 public function getBlogFeaturedImages(): array
-    {
-        $stmt = $this->db->prepare("
-            SELECT *
-            FROM images
-            WHERE featured_location = 'blog_top'
-            LIMIT 2
-        ");
+{
+    $stmt = $this->db->query("
+        SELECT *
+        FROM images
+        ORDER BY id DESC
+        LIMIT 2
+    ");
 
-        $stmt->execute();
-
-       return $stmt->fetchAll(\PDO::FETCH_ASSOC);
-    }
+    return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+}
 
 
 // Dashboard
@@ -301,28 +304,82 @@ public function adminAll(
 public function adminCreate(array $data): bool
 {
     $stmt = $this->db->prepare("
-        INSERT INTO posts (
-
+        INSERT INTO posts
+        (
             user_id,
             title,
             slug,
             content,
             status,
+
             featured_media_id,
+
+            hero_title,
+            hero_subtitle,
+            hero_image_alt,
+
+            main_heading,
+            main_content,
+
+            column1_title,
+            column1_content,
+
+            column2_title,
+            column2_content,
+
+            column3_title,
+            column3_content,
+
+            column4_title,
+            column4_content,
+
+            column5_title,
+            column5_content,
+
+            seo_title,
+            seo_description,
+
             created_at,
             updated_at
+        )
 
-        ) VALUES (
-
+        VALUES
+        (
             :user_id,
             :title,
             :slug,
             :content,
             :status,
+
             :featured_media_id,
+
+            :hero_title,
+            :hero_subtitle,
+            :hero_image_alt,
+
+            :main_heading,
+            :main_content,
+
+            :column1_title,
+            :column1_content,
+
+            :column2_title,
+            :column2_content,
+
+            :column3_title,
+            :column3_content,
+
+            :column4_title,
+            :column4_content,
+
+            :column5_title,
+            :column5_content,
+
+            :seo_title,
+            :seo_description,
+
             NOW(),
             NOW()
-
         )
     ");
 
@@ -330,11 +387,59 @@ public function adminCreate(array $data): bool
     return $stmt->execute([
 
         'user_id' => $data['user_id'],
+
         'title' => $data['title'],
+
         'slug' => $data['slug'],
+
         'content' => $data['content'],
-        'status' => $data['status'],
-        'featured_media_id' => $data['featured_media_id'] ?? null
+
+        'status' => $data['status'] ?? 'draft',
+
+
+        'featured_media_id' => $data['hero_media_id'] ?? null,
+
+
+        'hero_title' => $data['hero_title'] ?? null,
+
+        'hero_subtitle' => $data['hero_subtitle'] ?? null,
+
+        'hero_image_alt' => $data['hero_image_alt'] ?? null,
+
+
+        'main_heading' => $data['main_heading'] ?? null,
+
+        'main_content' => $data['main_content'] ?? null,
+
+
+        'column1_title' => $data['column1_title'] ?? null,
+
+        'column1_content' => $data['column1_content'] ?? null,
+
+
+        'column2_title' => $data['column2_title'] ?? null,
+
+        'column2_content' => $data['column2_content'] ?? null,
+
+
+        'column3_title' => $data['column3_title'] ?? null,
+
+        'column3_content' => $data['column3_content'] ?? null,
+
+
+        'column4_title' => $data['column4_title'] ?? null,
+
+        'column4_content' => $data['column4_content'] ?? null,
+
+
+        'column5_title' => $data['column5_title'] ?? null,
+
+        'column5_content' => $data['column5_content'] ?? null,
+
+
+        'seo_title' => $data['seo_title'] ?? null,
+
+        'seo_description' => $data['seo_description'] ?? null
 
     ]);
 }

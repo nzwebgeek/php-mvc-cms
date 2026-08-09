@@ -12,6 +12,8 @@ use App\Controllers\AdminController;
 use App\Controllers\RoleController;
 use App\Controllers\AdminPostsController;
 use App\Controllers\AdminPagesController;
+use App\Controllers\CommentController;
+
 /*
 |--------------------------------------------------------------------------
 | Pages
@@ -23,7 +25,6 @@ $router->get(
     [PageController::class, 'home']
 );
 
-
 $router->get(
     '/blog',
     [BlogController::class, 'index']
@@ -32,6 +33,11 @@ $router->get(
 $router->get(
     '/blog/post',
     [BlogController::class, 'show']
+);
+
+$router->post(
+    '/blog/comment/store',
+    [CommentController::class, 'store']
 );
 
 $router->get(
@@ -44,14 +50,15 @@ $router->get(
 | Admin
 |--------------------------------------------------------------------------
 */
+
 $router->get(
     '/admin',
-    [AdminController::class,'index']
+    [AdminController::class, 'index']
 );
 
 $router->get(
     '/admin/users',
-    [AdminController::class,'users']
+    [AdminController::class, 'users']
 );
 
 $router->get(
@@ -64,7 +71,6 @@ $router->get(
     [RoleController::class, 'index']
 );
 
-
 $router->get(
     '/admin/users/edit',
     [AdminController::class, 'editUser']
@@ -75,13 +81,10 @@ $router->post(
     [AdminController::class, 'storeUser']
 );
 
-
-
 $router->post(
     '/admin/users/update',
     [AdminController::class, 'updateUser']
 );
-
 
 $router->post(
     '/admin/users/delete',
@@ -99,38 +102,36 @@ $router->get(
     [AdminPostsController::class, 'index']
 );
 
-
 $router->get(
     '/admin/posts/create',
     [AdminPostsController::class, 'create']
 );
-
 
 $router->post(
     '/admin/posts/store',
     [AdminPostsController::class, 'store']
 );
 
-
 $router->get(
     '/admin/posts/edit',
     [AdminPostsController::class, 'edit']
 );
-
 
 $router->post(
     '/admin/posts/update',
     [AdminPostsController::class, 'update']
 );
 
-
 $router->post(
     '/admin/posts/delete',
     [AdminPostsController::class, 'delete']
 );
-/******************************
- * Admin Pages
- ******************************/
+
+/*
+|--------------------------------------------------------------------------
+| Admin Pages
+|--------------------------------------------------------------------------
+*/
 
 $router->get(
     '/admin/pages',
@@ -139,61 +140,82 @@ $router->get(
 
 $router->get(
     '/admin/pages/create',
-    [AdminPagesController::class,'create']
+    [AdminPagesController::class, 'create']
 );
-
 
 $router->post(
     '/admin/pages/store',
-    [AdminPagesController::class,'store']
+    [AdminPagesController::class, 'store']
 );
-
 
 $router->get(
     '/admin/pages/edit',
-    [AdminPagesController::class,'edit']
+    [AdminPagesController::class, 'edit']
 );
-
 
 $router->post(
     '/admin/pages/update',
-    [AdminPagesController::class,'update']
+    [AdminPagesController::class, 'update']
 );
-
 
 $router->post(
     '/admin/pages/delete',
-    [AdminPagesController::class,'delete']
+    [AdminPagesController::class, 'delete']
 );
-//------------------Roles
+
+/*
+|--------------------------------------------------------------------------
+| Admin Comments
+|--------------------------------------------------------------------------
+*/
+
+$router->get(
+    '/admin/comments',
+    [CommentController::class, 'index']
+);
+
+$router->post(
+    '/admin/comments/approve',
+    [CommentController::class, 'approve']
+);
+
+$router->post(
+    '/admin/comments/delete',
+    [CommentController::class, 'delete']
+);
+
+/*
+|--------------------------------------------------------------------------
+| Roles
+|--------------------------------------------------------------------------
+*/
 
 $router->post(
     '/admin/roles/create',
-    [RoleController::class,'store']
+    [RoleController::class, 'store']
 );
 
 $router->get(
     '/admin/roles/edit',
-    [RoleController::class,'edit']
+    [RoleController::class, 'edit']
 );
-
 
 $router->post(
     '/admin/roles/update',
-    [RoleController::class,'update']
+    [RoleController::class, 'update']
 );
-
-
 
 $router->post(
     '/admin/roles/delete',
-    [RoleController::class,'delete']
+    [RoleController::class, 'delete']
 );
+
 /*
 |--------------------------------------------------------------------------
-|Dashboard
-|-------------------------------------------------------------------------
+| Dashboard
+|--------------------------------------------------------------------------
 */
+
 $router->get(
     '/dashboard',
     [DashboardController::class, 'index']
@@ -204,7 +226,6 @@ $router->get(
     [DashboardController::class, 'editPost']
 );
 
-
 $router->post(
     '/dashboard/posts/update',
     [DashboardController::class, 'updatePost']
@@ -214,6 +235,7 @@ $router->post(
     '/dashboard/posts/store',
     [DashboardController::class, 'storePost']
 );
+
 /*
 |--------------------------------------------------------------------------
 | Authentication

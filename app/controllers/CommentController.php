@@ -1,43 +1,144 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controllers;
 
-use App\Models\Comment;
+use App\Core\Controller;
+use App\Repositories\CommentRepository;
+use App\Services\AuthService;
 
-class CommentController
+class CommentController extends Controller
 {
     public function __construct(
-        private Comment $commentModel
-    ){}
-
-    public function index($postId)
-    {
-        return $this->commentModel->approvedByPost($postId);
+        private AuthService $authService,
+        private CommentRepository $commentRepository
+    ) {
     }
 
-    public function store($postId,$userId,$comment)
+    /**
+     * Store a new comment from a logged-in user.
+     *
+     * New comments are saved as "pending"
+     * until approved by an administrator.
+     */
+    public function store(): void
     {
-        return $this->commentModel->create(
+        $this->authService->requireLogin();
+
+        $postId = (int) ($_POST['post_id'] ?? 0);
+        $comment = trim($_POST['comment'] ?? '');
+
+        $userId = $this->authService->currentUserId();
+
+        if (!$userId) {
+            header('Location: /login');
+            exit;
+        }
+
+        if ($postId <= 0 || $comment === '') {
+            header(
+                'Location: /blog/post?id=' . $postId . '&error=comment'
+            );
+            exit;
+        }
+
+        $success = $this->commentRepository->create(
             $postId,
             $userId,
-            trim($comment)
+            $comment
+        );
+
+        if ($success) {
+            header(
+                'Location: /blog/post?id=' . $postId . '&success=comment'
+            );
+            exit;
+        }
+
+        header(
+            'Location: /blog/post?id=' . $postId . '&error=comment'
+        );
+        exit;
+    }
+
+    /**
+     * Display all comments in the admin dashboard.
+     */
+    public function index(): void
+    {
+        $this->authService->requireAdmin();
+
+        $comments = $this->commentRepository->allForAdmin();
+
+        $this->view(
+            'admin/dashboard/comments/index',
+            [
+                'title' => 'Manage Comments',
+                'comments' => $comments,
+                'pendingCount' => $this->commentRepository->countPending(),
+            ],
+            'admin'
         );
     }
 
-    public function update($id,$userId,$comment)
+    /**
+     * Approve a pending comment.
+     */
+    public function approve(): void
     {
-        return $this->commentModel->update(
-            $id,
-            $userId,
-            trim($comment)
+        $this->authService->requireAdmin();
+
+        $id = (int) ($_POST['id'] ?? 0);
+
+        if ($id <= 0) {
+            header('Location: /admin/comments?error=comment');
+            exit;
+        }
+
+        $success = $this->commentRepository->approve($id);
+
+        if ($success) {
+            header(
+                'Location: /admin/comments?success=approved'
+            );
+            exit;
+        }
+
+        header(
+            'Location: /admin/comments?error=approve'
         );
+        exit;
     }
 
-    public function delete($id,$userId)
+    /**
+     * Delete a comment from the admin dashboard.
+     */
+    public function delete(): void
     {
-        return $this->commentModel->delete(
-            $id,
-            $userId
+        $this->authService->requireAdmin();
+
+        $id = (int) ($_POST['id'] ?? 0);
+
+        if ($id <= 0) {
+            header(
+                'Location: /admin/comments?error=comment'
+            );
+            exit;
+        }
+
+        $success = $this->commentRepository->deleteByAdmin($id);
+
+        if ($success) {
+            header(
+                'Location: /admin/comments?success=deleted'
+            );
+            exit;
+        }
+
+        header(
+            'Location: /admin/comments?error=delete'
         );
+        exit;
     }
 }

@@ -1,13 +1,19 @@
 <?php
 
 declare(strict_types=1);
-/*responsibility is to display blog posts to visitors*/
+
+/*
+ * Responsibility:
+ * Display blog posts to visitors.
+ */
+
 namespace App\Controllers;
 
 use App\Core\Controller;
 use App\Repositories\PostRepository;
 use App\Repositories\SettingsRepository;
 use App\Repositories\PageRepository;
+use App\Repositories\CommentRepository;
 
 class BlogController extends Controller
 {
@@ -15,40 +21,41 @@ class BlogController extends Controller
         private PostRepository $posts,
         private SettingsRepository $settings,
         private PageRepository $pages,
+        private CommentRepository $comments
     ) {
     }
 
-
-public function index(): void
-{
-    $this->view('pages/blog/blog', [
-
-        'posts' => $this->posts->all(),
-
-        'featuredImages' => [
-        ],
-
-        'settings' => $this->settings->get(),
-
-        'pages' => $this->pages->getAll()
-
-    ]);
-}
-  public function show(): void
+    public function index(): void
     {
-        $id = (int)($_GET['id'] ?? 0);
+        $this->view('pages/blog/blog', [
+
+            'posts' => $this->posts->all(),
+
+            'featuredImages' => $this->posts->getBlogImages(),
+
+            'settings' => $this->settings->get(),
+
+            'pages' => $this->pages->getAll()
+
+        ]);
+    }
+
+    public function show(): void
+    {
+        $id = (int) ($_GET['id'] ?? 0);
 
         $post = $this->posts->findById($id);
-
 
         if (!$post) {
             $this->view('errors/404');
             return;
         }
 
+        $comments = $this->comments->findApprovedByPost($id);
 
         $this->view('pages/blog/post', [
             'post' => $post,
+            'comments' => $comments,
             'settings' => $this->settings->get(),
             'pages' => $this->pages->getAll(),
         ]);

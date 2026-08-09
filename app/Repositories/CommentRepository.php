@@ -96,7 +96,7 @@ class CommentRepository extends Repository
                 ON c.user_id = u.id
             WHERE c.post_id = :post_id
             AND c.status = 'approved'
-            ORDER BY created_at DESC
+            ORDER BY c.created_at DESC
         ");
 
 

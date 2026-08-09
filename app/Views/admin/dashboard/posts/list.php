@@ -1,4 +1,5 @@
-<?php
+<div class="admin-card">
+    <?php
 /**
  * @var array $post
  * @var array $users
@@ -7,8 +8,8 @@
  */
 ?>
 
-<div class="admin-card">
-    <h1><?= htmlspecialchars($title) ?></h1>
+
+<h1><?= htmlspecialchars($title) ?></h1>
 
 <?php if(isset($_GET['success'])): ?>
 
@@ -180,4 +181,5 @@ Delete
 </tbody>
 
 </table>
+
 </div>
