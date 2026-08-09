@@ -8,17 +8,20 @@ use App\Core\Controller;
 use App\Services\AuthService;
 use App\Repositories\PageRepository;
 use App\Repositories\SettingsRepository;
+use App\Services\CsrfService;
 
 class AuthController extends Controller
 {
     public function __construct(
         private readonly AuthService $auth,
         private readonly PageRepository $pages,
-        private readonly SettingsRepository $settings
+        private readonly SettingsRepository $settings,
+         private readonly CsrfService $csrf
     ) {
     }
-    public function authenticate(): void
-{
+    public function authenticate(): void{
+
+    $this->csrf->requireValidToken();
     $username = trim($_POST['username'] ?? '');
     $password = $_POST['password'] ?? '';
 
@@ -43,8 +46,10 @@ class AuthController extends Controller
 
     public function logout(): void
 {
-    session_unset();
-    session_destroy();
+    $this->csrf->requireValidToken();
+
+    $this->auth->logout();
+
 
     header('Location: /login');
     exit;
@@ -68,13 +73,15 @@ class AuthController extends Controller
             'messageType' => '',
             'username' => '',
             'pages' => $this->pages->getAll(),
-            'settings' => $this->settings->get()
+            'settings' => $this->settings->get(),
+            'csrfToken' => $this->csrf->token(),
         ]);
     }
 
 
-    public function store(): void
-    {
+    public function store(): void{
+
+        $this->csrf->requireValidToken();
         $username = trim($_POST['username'] ?? '');
         $email = trim($_POST['email'] ?? '');
 

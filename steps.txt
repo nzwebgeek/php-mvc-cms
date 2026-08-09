@@ -130,3 +130,4 @@ Views
 │──layouts/dashboard/footer.php,header.php
 │         /front/footer.php, form.php, header.php, my-header.php, my-footer.php, settings.php
 │         /partials/dashboard-sidebar.php
+CSRF validation
