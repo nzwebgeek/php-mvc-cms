@@ -1,7 +1,9 @@
 <?php
 
 declare(strict_types=1);
-/*AuthController handles requests*/
+
+/* AuthController handles requests */
+
 namespace App\Controllers;
 
 use App\Core\Controller;
@@ -16,44 +18,47 @@ class AuthController extends Controller
         private readonly AuthService $auth,
         private readonly PageRepository $pages,
         private readonly SettingsRepository $settings,
-         private readonly CsrfService $csrf
+        private readonly CsrfService $csrf
     ) {
     }
-    public function authenticate(): void{
 
-    $this->csrf->requireValidToken();
-    $username = trim($_POST['username'] ?? '');
-    $password = $_POST['password'] ?? '';
+    public function authenticate(): void
+    {
+        $this->csrf->requireValidToken();
 
-    $result = $this->auth->login(
-        $username,
-        $password
-    );
+        $username = trim($_POST['username'] ?? '');
+        $password = $_POST['password'] ?? '';
 
-    if ($result->success) {
-        header('Location: /dashboard');
+        $result = $this->auth->login(
+            $username,
+            $password
+        );
+
+        if ($result->success) {
+            header('Location: /dashboard');
+            exit;
+        }
+
+        $this->view('auth/login', [
+            'message' => $result->message,
+            'messageType' => $result->type,
+            'username' => $username,
+            'pages' => $this->pages->getAll(),
+            'settings' => $this->settings->get(),
+            'csrfToken' => $this->csrf->token(),
+        ]);
+    }
+
+    public function logout(): void
+    {
+        $this->csrf->requireValidToken();
+
+        $this->auth->logout();
+
+        header('Location: /login');
         exit;
     }
 
-    $this->view('auth/login', [
-        'message' => $result->message,
-        'messageType' => $result->type,
-        'username' => $username,
-        'pages' => $this->pages->getAll(),
-        'settings' => $this->settings->get()
-    ]);
-}
-
-    public function logout(): void
-{
-    $this->csrf->requireValidToken();
-
-    $this->auth->logout();
-
-
-    header('Location: /login');
-    exit;
-}
     public function register(): void
     {
         $this->view('auth/register', [
@@ -62,7 +67,8 @@ class AuthController extends Controller
             'username' => '',
             'email' => '',
             'pages' => $this->pages->getAll(),
-            'settings' => $this->settings->get()
+            'settings' => $this->settings->get(),
+            'csrfToken' => $this->csrf->token(),
         ]);
     }
 
@@ -78,10 +84,10 @@ class AuthController extends Controller
         ]);
     }
 
-
-    public function store(): void{
-
+    public function store(): void
+    {
         $this->csrf->requireValidToken();
+
         $username = trim($_POST['username'] ?? '');
         $email = trim($_POST['email'] ?? '');
 
@@ -98,7 +104,8 @@ class AuthController extends Controller
             'username' => $username,
             'email' => $email,
             'pages' => $this->pages->getAll(),
-            'settings' => $this->settings->get()
+            'settings' => $this->settings->get(),
+            'csrfToken' => $this->csrf->token(),
         ]);
     }
 }

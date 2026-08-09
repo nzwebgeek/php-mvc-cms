@@ -129,17 +129,29 @@ declare(strict_types=1);
                         </td>
 
 
-                        <td class="comment-content">
+<td class="comment-content">
 
-                            <?= nl2br(
-                                htmlspecialchars(
-                                    $comment['comment'] ?? '',
-                                    ENT_QUOTES,
-                                    'UTF-8'
-                                )
-                            ) ?>
+    <details class="comment-expand">
 
-                        </td>
+        <summary>
+            View comment
+        </summary>
+
+        <div class="comment-full-text">
+
+            <?= nl2br(
+                htmlspecialchars(
+                    $comment['comment'] ?? '',
+                    ENT_QUOTES,
+                    'UTF-8'
+                )
+            ) ?>
+
+        </div>
+
+    </details>
+
+</td>
 
 
                         <td>

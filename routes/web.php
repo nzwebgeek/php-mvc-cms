@@ -91,6 +91,11 @@ $router->post(
     [AdminController::class, 'deleteUser']
 );
 
+$router->get(
+    '/admin/media',
+    [AdminController::class, 'media']
+);
+
 /*
 |--------------------------------------------------------------------------
 | Admin Posts
@@ -252,7 +257,7 @@ $router->post(
     [AuthController::class, 'authenticate']
 );
 
-$router->get(
+$router->post(
     '/logout',
     [AuthController::class, 'logout']
 );

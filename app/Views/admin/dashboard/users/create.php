@@ -1,128 +1,95 @@
 <div class="admin-card">
 
-
     <h1>
         Create User
     </h1>
-
 
     <a class="blue-button" href="/admin/users">
         ← Back to Users
     </a>
 
+    <form method="POST" action="/admin/users/create">
 
-</div>
+        <div class="form-group">
 
+            <label for="username">
+                Username
+            </label>
 
+            <input
+                type="text"
+                id="username"
+                name="username"
+                required
+            >
 
-
-
-<div class="admin-card">
-
-
-<form method="POST" action="/admin/users/create">
-
-
-
-    <div class="form-group">
-
-        <label>
-            Username
-        </label>
+        </div>
 
 
-        <input 
-        type="text"
-        name="username"
-        required>
+        <div class="form-group">
 
-    </div>
+            <label for="email">
+                Email
+            </label>
 
+            <input
+                type="email"
+                id="email"
+                name="email"
+                required
+            >
 
-
-
-
-    <div class="form-group">
-
-        <label>
-            Email
-        </label>
+        </div>
 
 
-        <input 
-        type="email"
-        name="email"
-        required>
+        <div class="form-group">
 
-    </div>
+            <label for="password">
+                Password
+            </label>
 
+            <input
+                type="password"
+                id="password"
+                name="password"
+                required
+            >
 
-
-
-
-    <div class="form-group">
-
-        <label>
-            Password
-        </label>
+        </div>
 
 
-        <input 
-        type="password"
-        name="password"
-        required>
+        <div class="form-group">
 
-    </div>
+            <label for="role">
+                Role
+            </label>
 
+            <select id="role" name="role">
 
+                <option value="User">
+                    User
+                </option>
 
+                <option value="Admin">
+                    Admin
+                </option>
 
+                <option value="Super Admin">
+                    Super Admin
+                </option>
 
-    <div class="form-group">
+            </select>
 
-        <label>
-            Role
-        </label>
-
-
-        <select name="role">
-
-
-            <option value="User">
-                User
-            </option>
-
-
-            <option value="Admin">
-                Admin
-            </option>
+        </div>
 
 
-            <option value="Super Admin">
-                Super Admin
-            </option>
+        <button
+            class="green-button"
+            type="submit"
+        >
+            Create User
+        </button>
 
-
-        </select>
-
-
-    </div>
-
-
-
-
-
-    <button 
-    class="green-button"
-    type="submit">
-
-        Create User
-
-    </button>
-
-
-
-</form>
-
+    </form>
 
 </div>

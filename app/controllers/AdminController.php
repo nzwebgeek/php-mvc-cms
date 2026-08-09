@@ -6,18 +6,22 @@ namespace App\Controllers;
 
 use App\Core\Controller;
 use App\Services\AuthService;
+use App\Services\CsrfService;
 use App\Repositories\AdminRepository;
 use App\Repositories\UserRepository;
+use App\Repositories\ImageRepository;
+
 
 class AdminController extends Controller
 {
     public function __construct(
-        private readonly AuthService $auth,
-        private readonly AdminRepository $adminRepository,
-        private readonly UserRepository $userRepository
-    ) {
-    }
-
+    private readonly AuthService $auth,
+    private readonly AdminRepository $adminRepository,
+    private readonly UserRepository $userRepository,
+    private readonly ImageRepository $imageRepository,
+    private readonly CsrfService $csrf
+) {
+}
   public function index(): void
 {
     if (!$this->auth->isLoggedIn()) {
@@ -78,6 +82,7 @@ class AdminController extends Controller
     }
 
     public function createUser(): void{
+
     if (!$this->auth->isLoggedIn()) {
         header('Location: /login');
         exit;
@@ -92,13 +97,17 @@ class AdminController extends Controller
     $this->view(
         'admin/dashboard/users/create',
         [
-            'title' => 'Create User'
+            'title' => 'Create User',
+            'csrfToken' => $this->csrf->token()
         ],
         'admin'
     );
     }
 
     public function storeUser(): void{
+    
+    $this->csrf->requireValidToken();
+    
     if (!$this->auth->isAdmin()) {
         header('Location: /dashboard');
         exit;
@@ -175,7 +184,8 @@ class AdminController extends Controller
         'admin/dashboard/users/edit',
         [
             'title' => 'Edit User',
-            'user' => $user
+            'user' => $user,
+            'csrfToken' => $this->csrf->token()
         ],
         'admin'
     );
@@ -183,6 +193,8 @@ class AdminController extends Controller
 
   public function updateUser(): void
 {
+    $this->csrf->requireValidToken();
+
     if (!$this->auth->isLoggedIn()) {
         header('Location: /login');
         exit;
@@ -196,17 +208,15 @@ class AdminController extends Controller
     $id = (int) ($_POST['id'] ?? 0);
 
     $username = trim($_POST['username'] ?? '');
-
     $email = trim($_POST['email'] ?? '');
-
     $role = $_POST['role'] ?? 'User';
 
     $roleId = $this->userRepository->findRoleIdByName($_POST['role']);
 
     $this->userRepository->updateUser(
         $id,
-        $_POST['username'],
-        $_POST['email'],
+        $username,
+        $email,
         $roleId
     );
 
@@ -219,6 +229,9 @@ class AdminController extends Controller
     }
 
     public function deleteUser(): void{
+
+     $this->csrf->requireValidToken();
+
     if (!$this->auth->isLoggedIn()) {
         header('Location: /login');
         exit;
@@ -238,8 +251,100 @@ class AdminController extends Controller
     }
 
     $this->userRepository->deleteUser($id);
+
     $_SESSION['success'] = 'User deleted successfully.';
+
     header('Location: /admin/users');
     exit;
+   
     }
+
+    public function media(): void
+{
+    if (!$this->auth->isLoggedIn()) {
+        header('Location: /login');
+        exit;
+    }
+
+    if (!$this->auth->isAdmin()) {
+        header('Location: /dashboard');
+        exit;
+    }
+
+    $images = $this->imageRepository->all();
+
+    $this->view(
+        'admin/dashboard/media/index',
+        [
+            'title' => 'Media Library',
+            'images' => $images,
+            'csrfToken' => $this->csrf->token()
+        ],
+        'admin'
+    );
+}
+
+public function uploadMedia(): void
+{
+    $this->csrf->requireValidToken();
+
+    if (!$this->auth->isLoggedIn()) {
+        header('Location: /login');
+        exit;
+    }
+
+    if (!$this->auth->isAdmin()) {
+        header('Location: /dashboard');
+        exit;
+    }
+
+    if (
+        !isset($_FILES['image']) ||
+        $_FILES['image']['error'] !== UPLOAD_ERR_OK
+    ) {
+        $_SESSION['error'] = 'Please select a valid image.';
+        header('Location: /admin/media');
+        exit;
+    }
+
+    try {
+
+        $this->imageRepository->upload(
+            $_FILES['image']
+        );
+
+        $_SESSION['success'] =
+            'Image uploaded successfully.';
+
+    } catch (\Throwable $e) {
+
+        $_SESSION['error'] =
+            'Image upload failed.';
+    }
+
+    header('Location: /admin/media');
+    exit;
+}
+public function createMedia(): void
+{
+    if (!$this->auth->isLoggedIn()) {
+        header('Location: /login');
+        exit;
+    }
+
+    if (!$this->auth->isAdmin()) {
+        header('Location: /dashboard');
+        exit;
+    }
+
+    $this->view(
+        'admin/dashboard/media/upload',
+        [
+            'title' => 'Upload Image',
+            'csrfToken' => $this->csrf->token()
+        ],
+        'admin'
+    );
+}
+
 }

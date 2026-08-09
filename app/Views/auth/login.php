@@ -1,37 +1,60 @@
 <main>
+
     <section>
+
         <h1>Login</h1>
 
         <?php if (!empty($message)): ?>
-            <div class="alert <?= htmlspecialchars($messageType) ?>">
-                <?= htmlspecialchars($message) ?>
+
+            <div class="alert <?= htmlspecialchars(
+                $messageType ?? '',
+                ENT_QUOTES,
+                'UTF-8'
+            ) ?>">
+                <?= htmlspecialchars(
+                    $message,
+                    ENT_QUOTES,
+                    'UTF-8'
+                ) ?>
             </div>
+
         <?php endif; ?>
+
 
         <form action="/login" method="post">
 
-            <label for="username">Username</label>
+            <input
+                type="hidden"
+                name="csrf_token"
+                value="<?= htmlspecialchars(
+                    $csrfToken ?? '',
+                    ENT_QUOTES,
+                    'UTF-8'
+                ) ?>"
+            >
 
-        <input
-            type="hidden"
-            name="csrf_token"
-            value="<?= htmlspecialchars(
-                $csrfToken,
-                ENT_QUOTES,
-                'UTF-8'
-            ) ?>"
-        >
-                
-         <input
+            <label for="username">
+                Username
+            </label>
+
+            <input
                 type="text"
                 id="username"
                 name="username"
-                value="<?= htmlspecialchars($username ?? '') ?>"
+                value="<?= htmlspecialchars(
+                    $username ?? '',
+                    ENT_QUOTES,
+                    'UTF-8'
+                ) ?>"
                 placeholder="Your username..."
                 required
             >
 
-            <label for="password">Password</label>
+
+            <label for="password">
+                Password
+            </label>
+
             <input
                 type="password"
                 id="password"
@@ -40,7 +63,12 @@
                 required
             >
 
-            <input type="submit" value="Login">
+
+            <input
+                type="submit"
+                value="Login"
+            >
+
 
             <p>
                 <a href="/forgot-password">
@@ -51,4 +79,5 @@
         </form>
 
     </section>
+
 </main>
