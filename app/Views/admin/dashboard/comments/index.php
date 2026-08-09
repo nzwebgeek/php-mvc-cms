@@ -188,9 +188,17 @@ declare(strict_types=1);
 
                                     <input
                                         type="hidden"
-                                        name="id"
-                                        value="<?= (int) $comment['id'] ?>"
-                                    >
+                                        name="csrf_token"
+                                        value="<?= htmlspecialchars(
+                                            $csrfToken ?? '',
+                                            ENT_QUOTES,
+                                            'UTF-8'
+                                              ) ?>"
+                                            >
+                                        <input type="hidden"
+                                               name="id" 
+                                               value="<?= (int) $comment['id'] ?>" 
+                                            >
 
                                     <button
                                         type="submit"
@@ -211,7 +219,9 @@ declare(strict_types=1);
                                 onsubmit="return confirm('Delete this comment?');"
                             >
 
-                                <input
+                            <input type="hidden" name="csrf_token" value="<?= htmlspecialchars( $csrfToken ?? '', ENT_QUOTES, 'UTF-8' ) ?>" >
+                               
+                            <input
                                     type="hidden"
                                     name="id"
                                     value="<?= (int) $comment['id'] ?>"

@@ -7,12 +7,14 @@ namespace App\Controllers;
 use App\Core\Controller;
 use App\Repositories\CommentRepository;
 use App\Services\AuthService;
+use App\Services\CsrfService;
 
 class CommentController extends Controller
 {
     public function __construct(
         private AuthService $authService,
-        private CommentRepository $commentRepository
+        private CommentRepository $commentRepository,
+         private CsrfService $csrf
     ) {
     }
 
@@ -25,6 +27,9 @@ class CommentController extends Controller
     public function store(): void
     {
         $this->authService->requireLogin();
+
+        // Protect this state-changing POST request against CSRF.
+        $this->csrf->requireValidToken();
 
         $postId = (int) ($_POST['post_id'] ?? 0);
         $comment = trim($_POST['comment'] ?? '');
@@ -77,6 +82,7 @@ class CommentController extends Controller
                 'title' => 'Manage Comments',
                 'comments' => $comments,
                 'pendingCount' => $this->commentRepository->countPending(),
+                'csrfToken' => $this->csrf->token()
             ],
             'admin'
         );
@@ -88,6 +94,9 @@ class CommentController extends Controller
     public function approve(): void
     {
         $this->authService->requireAdmin();
+
+        // Protect this state-changing POST request against CSRF.
+        $this->csrf->requireValidToken();
 
         $id = (int) ($_POST['id'] ?? 0);
 
@@ -117,6 +126,9 @@ class CommentController extends Controller
     public function delete(): void
     {
         $this->authService->requireAdmin();
+
+        // Protect this state-changing POST request against CSRF.
+        $this->csrf->requireValidToken();
 
         $id = (int) ($_POST['id'] ?? 0);
 

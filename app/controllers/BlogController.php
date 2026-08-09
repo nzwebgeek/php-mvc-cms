@@ -14,6 +14,7 @@ use App\Repositories\PostRepository;
 use App\Repositories\SettingsRepository;
 use App\Repositories\PageRepository;
 use App\Repositories\CommentRepository;
+use App\Services\CsrfService;
 
 class BlogController extends Controller
 {
@@ -21,7 +22,8 @@ class BlogController extends Controller
         private PostRepository $posts,
         private SettingsRepository $settings,
         private PageRepository $pages,
-        private CommentRepository $comments
+        private CommentRepository $comments,
+         private CsrfService $csrf
     ) {
     }
 
@@ -58,6 +60,7 @@ class BlogController extends Controller
             'comments' => $comments,
             'settings' => $this->settings->get(),
             'pages' => $this->pages->getAll(),
+             'csrfToken' => $this->csrf->token(),
         ]);
     }
 }

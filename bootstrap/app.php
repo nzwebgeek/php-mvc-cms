@@ -11,12 +11,14 @@ use App\Repositories\SettingsRepository;
 use App\Repositories\BlogSettingsRepository;
 use App\Controllers\AuthController;
 use App\Controllers\VerifyController;
+use App\Controllers\BlogController;
 
 use App\Core\Container;
 use App\Core\Database;
 use App\Repositories\UserRepository;
 use App\Services\AuthService;
 use App\Services\Mailer;
+use App\Services\CsrfService;
 use App\Repositories\AdminRepository;
 use App\Controllers\RoleController;
 use App\Controllers\AdminPostsController;
@@ -57,6 +59,8 @@ $mailer = new Mailer(
     $config['mail']['from']
 );
 
+$csrfService = new CsrfService();
+
 $authService = new AuthService(
     $userRepository,
     $mailer
@@ -65,7 +69,8 @@ $authService = new AuthService(
 $authController = new AuthController(
     $authService,
     $pageRepository,
-    $settingsRepository
+    $settingsRepository,
+    $csrfService
 );
 
 $verifyController = new VerifyController(
@@ -84,7 +89,13 @@ $roleController = new RoleController(
     $roleRepository
 );
 
-
+$blogController = new BlogController(
+    $postRepository,
+    $settingsRepository,
+    $pageRepository,
+    $commentRepository,
+    $csrfService
+);
 // Bind services
 $container->set(
     UserRepository::class,
@@ -117,7 +128,8 @@ $adminPagesController = new AdminPagesController(
 
 $commentController = new CommentController(
     $authService,
-    $commentRepository
+    $commentRepository,
+    $csrfService
 );
 
 $container->set(
@@ -138,6 +150,11 @@ $container->set(
 $container->set(
     AuthService::class,
     $authService
+);
+
+$container->set(
+    CsrfService::class,
+    $csrfService
 );
 
 $container->set(
@@ -194,6 +211,11 @@ $container->set(
 $container->set(
     CommentController::class,
     $commentController
+);
+
+$container->set(
+    BlogController::class,
+    $blogController
 );
 
 return $container;
