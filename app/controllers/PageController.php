@@ -7,12 +7,14 @@ namespace App\Controllers;
 use App\Core\Controller;
 use App\Repositories\PageRepository;
 use App\Repositories\SettingsRepository;
+use App\Services\CsrfService;
 
 class PageController extends Controller
 {
     public function __construct(
         private PageRepository $pages,
-        private SettingsRepository $settings
+        private SettingsRepository $settings,
+         private CsrfService $csrf
     ) {
     }
 
@@ -24,7 +26,8 @@ public function home(): void
 
     $this->view('pages/home', [
         'pages' => $pages,
-        'settings' => $settings
+        'settings' => $settings,
+        'csrfToken' => $this->csrf->token()
     ]);
 }
    public function show(string $slug): void
@@ -43,7 +46,8 @@ public function home(): void
     $this->view('pages/page', [
         'page' => $page,
         'pages' => $pages,
-        'settings' => $settings
+        'settings' => $settings,
+        'csrfToken' => $this->csrf->token()
     ]);
 }
 }

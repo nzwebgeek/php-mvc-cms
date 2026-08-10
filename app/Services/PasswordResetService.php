@@ -9,7 +9,8 @@ class PasswordResetService
 {
     public function __construct(
         private UserRepository $users,
-        private Mailer $mailer
+        private Mailer $mailer,
+         private PasswordService $passwords
     ) {
     }
 
@@ -96,6 +97,12 @@ class PasswordResetService
             );
         }
 
+        $passwordError = $this->passwords->validate($password);
+
+        if ($passwordError !== null) {
+            return ServiceResult::error($passwordError);
+        }
+
 
         $tokenHash = hash(
             'sha256',
@@ -114,12 +121,7 @@ class PasswordResetService
             );
         }
 
-
-        $hashedPassword = password_hash(
-            $password,
-            PASSWORD_DEFAULT
-        );
-
+        $hashedPassword = $this->passwords->hash($password);
 
         $updated = $this->users->updatePassword(
             $user['id'],

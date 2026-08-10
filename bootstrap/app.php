@@ -12,13 +12,17 @@ use App\Repositories\BlogSettingsRepository;
 use App\Controllers\AuthController;
 use App\Controllers\VerifyController;
 use App\Controllers\BlogController;
+use App\Controllers\SettingsController;
 
 use App\Core\Container;
 use App\Core\Database;
 use App\Repositories\UserRepository;
+
 use App\Services\AuthService;
-use App\Services\Mailer;
 use App\Services\CsrfService;
+use App\Services\Mailer;
+use App\Services\PasswordService;
+
 use App\Repositories\AdminRepository;
 use App\Controllers\RoleController;
 use App\Controllers\AdminPostsController;
@@ -54,18 +58,22 @@ $roleRepository = new RoleRepository($db);
 
 
 // Services
+
+$csrfService = new CsrfService();
+
+$passwordService = new PasswordService();
+
 $mailer = new Mailer(
     $config['app']['url'],
     $config['mail']['from']
 );
 
-$csrfService = new CsrfService();
 
 $authService = new AuthService(
     $userRepository,
-    $mailer
+    $mailer,
+    $passwordService
 );
-
 $authController = new AuthController(
     $authService,
     $pageRepository,
@@ -82,7 +90,8 @@ $adminController = new AdminController(
     $adminRepository,
     $userRepository,
     $imageRepository,
-    $csrfService
+    $csrfService,
+    $passwordService
 );
 
 
@@ -131,6 +140,13 @@ $adminPagesController = new AdminPagesController(
 $commentController = new CommentController(
     $authService,
     $commentRepository,
+    $csrfService
+);
+
+$settingsController = new SettingsController(
+    $authService,
+    $settingsRepository,
+    $blogSettingsRepository,
     $csrfService
 );
 
@@ -220,4 +236,8 @@ $container->set(
     $blogController
 );
 
+$container->set(
+    SettingsController::class,
+    $settingsController
+);
 return $container;

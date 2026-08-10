@@ -4,12 +4,13 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Repositories\UserRepository;
-/*--Add Authentication Functions heree--*/
+/*--Add Authentication Functions here, AuthService handles registration/authentication logic--*/
 class AuthService
 {
     public function __construct(
     private UserRepository $users,
-    private Mailer $mailer
+    private Mailer $mailer,
+    private PasswordService $passwords
     ) {
     }
 
@@ -83,6 +84,13 @@ public function register(
             'Passwords do not match.'
         );
     }
+    
+    $passwordError = $this->passwords->validate($password);
+
+    if ($passwordError !== null) {
+        return ServiceResult::error($passwordError);
+    }
+
 
     if ($this->users->usernameOrEmailExists($username, $email)) {
         return ServiceResult::error(
@@ -100,10 +108,7 @@ public function register(
 
         $token = bin2hex(random_bytes(32));
 
-        $hashedPassword = password_hash(
-            $password,
-            PASSWORD_DEFAULT
-        );
+       $hashedPassword = $this->passwords->hash($password);
 
         $success = $this->users->createUser(
             $username,

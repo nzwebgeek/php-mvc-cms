@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-/* AuthController handles requests */
+/* AuthController handles HTTP requests */
 
 namespace App\Controllers;
 

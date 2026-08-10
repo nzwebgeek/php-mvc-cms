@@ -11,6 +11,184 @@ body {
 
 
 }
+
+/* =========================================
+   SETTINGS PAGE
+   ========================================= */
+
+.settings-page {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.settings-header {
+    margin-bottom: 25px;
+}
+
+.settings-header h1 {
+    margin: 0 0 8px;
+    font-size: 28px;
+}
+
+.settings-header p {
+    margin: 0;
+    color: #777;
+}
+
+
+/* Main settings card */
+
+.settings-card {
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    border-radius: 10px;
+    padding: 25px;
+    margin-bottom: 25px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.settings-card h2 {
+    margin: 0 0 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #eee;
+    font-size: 20px;
+}
+
+
+/* Form layout */
+
+.settings-form {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.settings-form label {
+    font-weight: 600;
+    margin-top: 10px;
+    color: #333;
+}
+
+.settings-form input[type="text"],
+.settings-form input[type="email"],
+.settings-form textarea,
+.settings-form select {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px 12px;
+    border: 1px solid #d6d6d6;
+    border-radius: 6px;
+    background: #fff;
+    font-size: 14px;
+}
+
+.settings-form textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.settings-form input:focus,
+.settings-form textarea:focus,
+.settings-form select:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.1);
+}
+
+
+/* Maintenance mode */
+
+.settings-checkbox {
+    display: flex !important;
+    align-items: center;
+    gap: 8px;
+    margin-top: 18px !important;
+}
+
+.settings-checkbox input {
+    width: 16px;
+    height: 16px;
+}
+
+
+/* Save button */
+
+.settings-save {
+    margin-top: 20px;
+}
+
+.settings-save button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    background: #28a745;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.settings-save button:hover {
+    background: #218838;
+}
+
+
+/* Blog settings */
+
+.blog-settings {
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    border-radius: 10px;
+    padding: 25px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.blog-settings h2 {
+    margin: 0 0 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #eee;
+}
+
+.blog-setting-row {
+    padding: 12px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.blog-setting-row:last-child {
+    border-bottom: none;
+}
+
+.blog-setting-label {
+    font-weight: 600;
+    color: #333;
+}
+
+.blog-setting-value {
+    margin-top: 5px;
+    color: #666;
+}
+
+
+/* Alerts */
+
+.alert-success,
+.alert-error {
+    padding: 12px 15px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+}
+
+.alert-success {
+    background: #d4edda;
+    border: 1px solid #c3e6cb;
+    color: #155724;
+}
+
+.alert-error {
+    background: #f8d7da;
+    border: 1px solid #f5c6cb;
+    color: #721c24;
+}
 /*--------Components----------*/
 .red-button {
   background-color: red;
@@ -558,4 +736,152 @@ body {
 .media-info small {
     color: #777;
     font-size: 12px;
+}
+
+.media-detail-image {
+    max-width: 750px;
+    padding: 20px;
+    background: #f5f5f5;
+    border-radius: 8px;
+}
+
+.media-detail-image img {
+    display: block;
+    max-width: 100%;
+    max-height: 500px;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+}
+
+/* =========================================================
+   SETTINGS PAGE
+   ========================================================= */
+
+.settings-card {
+    max-width: 900px;
+    background: #fff;
+    border: 1px solid #e2e2e2;
+    border-radius: 10px;
+    padding: 28px;
+    margin: 0 0 25px 0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.settings-card h2 {
+    margin: 0 0 25px 0;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #eee;
+    font-size: 20px;
+}
+
+.settings-field {
+    margin-bottom: 20px;
+}
+
+.settings-field label {
+    display: block;
+    margin-bottom: 7px;
+    font-weight: 600;
+    color: #333;
+}
+
+.settings-field input,
+.settings-field select,
+.settings-field textarea {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 11px 13px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background: #fff;
+    color: #333;
+    font-size: 14px;
+    transition: border-color 0.2s;
+}
+
+.settings-field input:focus,
+.settings-field select:focus,
+.settings-field textarea:focus {
+    outline: none;
+    border-color: #198754;
+}
+
+.settings-field textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+.settings-checkbox {
+    background: #f7f7f7;
+    border: 1px solid #e5e5e5;
+    border-radius: 6px;
+    padding: 14px;
+    margin: 25px 0;
+}
+
+.settings-checkbox label {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.settings-checkbox input {
+    width: 17px;
+    height: 17px;
+}
+
+.blog-setting {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.blog-setting:last-child {
+    border-bottom: none;
+}
+
+.blog-setting strong {
+    color: #333;
+}
+
+.blog-setting span {
+    color: #666;
+}
+
+.alert-success,
+.alert-error {
+    max-width: 900px;
+    padding: 13px 16px;
+    margin-bottom: 20px;
+    border-radius: 6px;
+}
+
+.alert-success {
+    background: #e8f7ed;
+    border: 1px solid #b8e3c5;
+    color: #216b32;
+}
+
+.alert-error {
+    background: #fdeaea;
+    border: 1px solid #efb5b5;
+    color: #8a1f1f;
+}
+
+.page-header {
+    margin-bottom: 25px;
+}
+
+.page-header h1 {
+    margin: 0 0 6px 0;
+}
+
+.page-header p {
+    margin: 0;
+    color: #777;
 }

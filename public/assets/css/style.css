@@ -617,7 +617,24 @@ input[type=submit] {
     color: #664d03;
 }
 
+.logout-form {
+    margin: 0;
+    padding: 0;
+    background: transparent;
+    width: auto;
+}
 
+nav a,
+nav .logout-link {
+    color: white;
+    text-decoration: none;
+    padding: .8rem;
+}
+
+nav a:hover,
+nav .logout-link:hover {
+    background: blueviolet;
+}
 
 /* TABLETS */
 /* TABLETS */

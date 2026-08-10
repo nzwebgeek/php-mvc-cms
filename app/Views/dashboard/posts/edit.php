@@ -5,86 +5,84 @@
 
 <form action="/dashboard/posts/update?id=<?= $post['id'] ?>"method="POST">
 
+<label>
+    Title
+</label>
 
-    <label>
-        Title
-    </label>
+<br>
 
-    <br>
+<input
+    type="text"
+    name="title"
+    value="<?= htmlspecialchars($post['title'], ENT_QUOTES, 'UTF-8') ?>"
+    required
+>
 
-    <input
-        type="text"
-        name="title"
-        value="<?= htmlspecialchars($post['title']) ?>"
-        required
+<br><br>
+
+<label>
+    Slug
+</label>
+
+<br>
+
+<input
+    type="text"
+    name="slug"
+    value="<?= htmlspecialchars($post['slug'], ENT_QUOTES, 'UTF-8') ?>"
+>
+
+<br><br>
+
+<label>
+    Status
+</label>
+
+<br>
+
+<select name="status">
+
+    <option
+        value="draft"
+        <?= $post['status'] === 'draft' ? 'selected' : '' ?>
     >
+        Draft
+    </option>
 
-
-    <br><br>
-
-
-    <label>
-        Slug
-    </label>
-
-    <br>
-
-    <input
-        type="text"
-        name="slug"
-        value="<?= htmlspecialchars($post['slug']) ?>"
+    <option
+        value="published"
+        <?= $post['status'] === 'published' ? 'selected' : '' ?>
     >
+        Published
+    </option>
 
+</select>
 
-    <br><br>
+<br><br>
 
+<label>
+    Content
+</label>
 
-    <label>
-        Status
-    </label>
+<br>
 
-    <br>
+<textarea
+    name="content"
+    rows="15"
+><?= htmlspecialchars($post['content'], ENT_QUOTES, 'UTF-8') ?></textarea>
 
+<br><br>
 
-    <select name="status">
+<input
+    type="hidden"
+    name="csrf_token"
+    value="<?= htmlspecialchars($csrfToken, ENT_QUOTES, 'UTF-8') ?>"
+>
 
-        <option value="draft"
-            <?= $post['status'] === 'draft' ? 'selected' : '' ?>>
-            Draft
-        </option>
+<button type="submit">
+    Save Changes
+</button>
 
-
-        <option value="published"
-            <?= $post['status'] === 'published' ? 'selected' : '' ?>>
-            Published
-        </option>
-
-
-    </select>
-
-
-    <br><br>
-
-
-    <label>
-        Content
-    </label>
-
-    <br>
-
-
-    <textarea
-        name="content"
-        rows="15"
-    ><?= htmlspecialchars($post['content']) ?></textarea>
-
-
-    <br><br>
-
-
-    <button type="submit">
-        Save Changes
-    </button>
 
 
 </form>

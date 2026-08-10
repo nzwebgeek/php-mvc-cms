@@ -69,7 +69,20 @@ $theme = strtolower($settings['theme'] ?? 'light');
         <li><a href="/">Home</a></li> 
         <li><a href="/blog">Blog</a></li> 
         <li><a href="/dashboard">Dashboard</a></li> 
-        <li><a href="/logout">Logout</a> </li>
+            
+        <li>
+            <form method="POST" action="/logout" class="logout-form">
+                <input
+                    type="hidden"
+                    name="csrf_token"
+                    value="<?= htmlspecialchars($csrfToken, ENT_QUOTES, 'UTF-8') ?>"
+                >
+                <button type="submit" class="logout-link">Logout</button>
+            </form>
+        </li>
+
+
+
         <?php else : ?>
         <li><a href="/">Home</a></li> 
         <li><a href="/blog">Blog</a></li> 
