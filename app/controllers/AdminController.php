@@ -87,6 +87,7 @@ class AdminController extends Controller
             [
                 'title' => 'Manage Users',
                 'users' => $users,
+                'csrfToken' => $this->csrf->token(),
             ],
             'admin'
         );
