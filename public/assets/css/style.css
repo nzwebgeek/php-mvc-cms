@@ -617,18 +617,97 @@ input[type=submit] {
     color: #664d03;
 }
 
-.logout-form {
+/* =========================================================
+   PUBLIC NAVIGATION
+   ========================================================= */
+
+nav {
+    padding: 2rem;
+}
+
+nav ul {
+    list-style: none;
+    display: grid;
+    grid-auto-flow: column;
+    justify-content: end;
+    align-items: center;
+    gap: 4px;
     margin: 0;
     padding: 0;
-    background: transparent;
-    width: auto;
 }
 
 nav a,
 nav .logout-link {
+    display: block;
+
     color: white;
     text-decoration: none;
+
     padding: .8rem;
+
+    font-family: inherit;
+    font-size: inherit;
+
+    border-radius: 6px;
+
+    transition:
+        background-color 0.2s ease,
+        color 0.2s ease;
+}
+
+nav a:hover,
+nav .logout-link:hover {
+    background: blueviolet;
+    color: white;
+}
+
+
+/* =========================================================
+   LOGOUT FORM
+   ========================================================= */
+
+.logout-form {
+    display: block;
+
+    margin: 0;
+    padding: 0;
+
+    width: auto;
+
+    background: transparent;
+    border: none;
+    border-radius: 0;
+}
+
+.logout-form button {
+    display: block;
+
+    margin: 0;
+    padding: .8rem;
+
+    width: auto;
+
+    background: transparent;
+    color: white;
+
+    border: none;
+    border-radius: 6px;
+
+    font-family: inherit;
+    font-size: inherit;
+
+    line-height: inherit;
+
+    cursor: pointer;
+
+    transition:
+        background-color 0.2s ease,
+        color 0.2s ease;
+}
+
+.logout-form button:hover {
+    background: blueviolet;
+    color: white;
 }
 
 nav a:hover,

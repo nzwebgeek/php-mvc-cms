@@ -1,11 +1,12 @@
-<aside class="admin-sidebar">
+```php
+<aside class="admin-sidebar" id="adminSidebar">
 
     <nav>
 
-
         <a href="/">
-             ← View Public Site
+            ← View Public Site
         </a>
+
 
         <a href="/admin">
             Dashboard
@@ -46,21 +47,22 @@
             Settings
         </a>
 
-      <form method="POST" action="/logout" style="display:inline;">
+
+    <form method="POST" action="/logout" class="admin-logout-form">
     <input
         type="hidden"
         name="csrf_token"
         value="<?= htmlspecialchars($csrfToken, ENT_QUOTES, 'UTF-8') ?>"
     >
 
-    <button type="submit">
+    <button type="submit" class="admin-logout-button">
         Logout
     </button>
 </form>
-
     </nav>
 
 </aside>
 
 
 <main class="admin-content">
+```
