@@ -675,10 +675,6 @@ Status
 Created
 </th>
 
-<th>
-Actions
-</th>
-
 </tr>
 
 </thead>
@@ -707,15 +703,6 @@ Actions
 
 </td>
 
-<td>
-
-<a href="/dashboard?panel=posts&edit=<?= $post['id'] ?>">
-
-Edit
-
-</a>
-
-</td>
 
 </tr>
 
