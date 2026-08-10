@@ -1,11 +1,5 @@
 <main>
 
-    <div class="page-header">
-        <h1>Settings</h1>
-        <p>Manage your website configuration.</p>
-    </div>
-
-
     <?php if (!empty($_SESSION['success'])): ?>
 
         <div class="alert-success">
@@ -32,7 +26,7 @@
 
         <div class="admin-card">
 
-            <h2>Site Settings</h2>
+            <h1>Site Settings</h1>
 
 
             <form

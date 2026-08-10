@@ -19,8 +19,8 @@
 
 <?php endif; ?>
 
-
-<h1>
+<div class="admin-card">
+    <h1>
     Media Library
 </h1>
 
@@ -123,3 +123,4 @@
     </div>
 
 <?php endif; ?>
+</div>

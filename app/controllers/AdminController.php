@@ -57,6 +57,7 @@ class AdminController extends Controller
                 'title' => 'Admin Dashboard',
                 'stats' => $stats,
                 'activity' => $activity,
+                 'csrfToken' => $this->csrf->token(),
             ],
             'admin'
         );
