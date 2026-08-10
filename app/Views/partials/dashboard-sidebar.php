@@ -70,9 +70,19 @@
         </a>
 
 <?php endif; ?>
-        <a href="/logout">
-            🚪 Logout
-        </a>
+        <form method="POST" action="/logout">
+
+    <input
+        type="hidden"
+        name="csrf_token"
+        value="<?= htmlspecialchars($csrfToken) ?>"
+    >
+
+    <button type="submit">
+      🚪  Logout
+    </button>
+
+</form>
 
 
     </nav>

@@ -6,7 +6,7 @@ namespace App\Repositories;
 
 use App\Core\Repository;
 use PDO;
-
+// UserRepository handles database persistence
 class UserRepository extends Repository
 {
       /*

@@ -19,62 +19,107 @@
 
 <?php endif; ?>
 
-<div class="admin-card">
 
-    <h1>
-        Media Library
-    </h1>
-
-    <a class="green-button" href="/admin/media/upload">
-        + Upload Image
-    </a>
-
-</div>
+<h1>
+    Media Library
+</h1>
 
 
-<div class="admin-card">
+<a
+    class="green-button"
+    href="/admin/media/upload"
+>
+    + Upload Image
+</a>
 
-    <?php if (empty($images)): ?>
 
-        <p>
-            No images have been uploaded yet.
-        </p>
+<?php if (empty($images)): ?>
 
-    <?php else: ?>
+    <p>
+        No images have been uploaded yet.
+    </p>
 
-        <div class="media-grid">
+<?php else: ?>
 
-            <?php foreach ($images as $image): ?>
+    <div class="media-grid">
 
-                <div class="media-card">
+        <?php foreach ($images as $image): ?>
 
-                    <div class="media-image">
+            <div class="media-card">
 
-                        <img
-                            src="<?= htmlspecialchars($image['filepath']) ?>"
-                            alt="<?= htmlspecialchars($image['filename']) ?>"
+                <div class="media-image">
+
+                    <img
+                        src="<?= htmlspecialchars($image['filepath']) ?>"
+                        alt="<?= htmlspecialchars($image['filename']) ?>"
+                    >
+
+                </div>
+
+
+                <div class="media-info">
+
+                    <strong>
+                        <?= htmlspecialchars($image['filename']) ?>
+                    </strong>
+
+
+                    <small>
+                        ID: <?= (int)$image['id'] ?>
+                    </small>
+
+
+                    <div class="media-actions">
+
+                        <!-- View -->
+                        <a
+                            href="<?= htmlspecialchars($image['filepath']) ?>"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="blue-button"
+                        >
+                            View
+                        </a>
+
+
+                        <!-- Delete -->
+                        <form
+                            method="POST"
+                            action="/admin/media/delete"
+                            onsubmit="return confirm('Delete this image?');"
                         >
 
-                    </div>
+                            <input
+                                type="hidden"
+                                name="csrf_token"
+                                value="<?= htmlspecialchars($csrfToken) ?>"
+                            >
 
-                    <div class="media-info">
 
-                        <strong>
-                            <?= htmlspecialchars($image['filename']) ?>
-                        </strong>
+                            <input
+                                type="hidden"
+                                name="id"
+                                value="<?= (int)$image['id'] ?>"
+                            >
 
-                        <small>
-                            ID: <?= (int)$image['id'] ?>
-                        </small>
+
+                            <button
+                                type="submit"
+                                class="red-button"
+                            >
+                                Delete
+                            </button>
+
+                        </form>
 
                     </div>
 
                 </div>
 
-            <?php endforeach; ?>
+            </div>
 
-        </div>
+        <?php endforeach; ?>
 
-    <?php endif; ?>
+    </div>
 
-</div>
+<?php endif; ?>

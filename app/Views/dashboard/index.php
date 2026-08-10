@@ -1,5 +1,4 @@
 <style>
-
 :root {
 
     --theme-color:
@@ -13,7 +12,6 @@
 
 }
 
-
 .dashboard-page {
 
     background-color: var(--background-color);
@@ -21,13 +19,11 @@
 
 }
 
-
 .card h2 {
 
     color: var(--theme-color);
 
 }
-
 
 button {
 
@@ -46,14 +42,9 @@ button {
 }
 </style>
 
-
-
 <main class="dashboard-page">
 
-
-
 <?php if(isset($_SESSION['message'])): ?>
-
 
 <div class="message">
 
@@ -64,29 +55,24 @@ button {
 
 <?php unset($_SESSION['message']); ?>
 
-
+<!--Nothing Showing here-->
 <?php endif; ?>
-
-
-
-
 
 <header class="dashboard-header">
 
+<div>
 
-    <div>
-
-        <h1>
-            Dashboard
-        </h1>
-
-
-        <p>
-            Manage your account settings and profile
-        </p>
+    <h1>
+        Dashboard
+    </h1>
 
 
-    </div>
+    <p>
+        Manage your account settings and profile
+    </p>
+
+
+</div>
 
 <div>
 
@@ -96,203 +82,159 @@ button {
 
 </div>
 
+<div class="welcome">
 
-    <div class="welcome">
+    <h2>
+        Welcome,
+        <?= htmlspecialchars($user['username']) ?>
+        👋
+    </h2>
 
+    <p>
+        <?= date('l, F j, Y') ?>
+    </p>
 
-        <h2>
-
-            Welcome,
-            <?= htmlspecialchars($user['username']) ?>
-
-            👋
-
-        </h2>
-
-
-
-        <p>
-
-            <?= date('l, F j, Y') ?>
-
-        </p>
-
-
-    </div>
-
+</div>
 
 </header>
 
-
-
-
-
-
-
 <div class="dashboard-grid">
-
 
 <?php include __DIR__ . '/../partials/dashboard-sidebar.php'; ?>
 
-
-
-
-
 <section class="dashboard-content">
-
-
-
-
 
 <?php if ($panel === 'theme'): ?>
 
-
-
 <div class="card">
-
 
 <h2>
     Theme Colours
 </h2>
 
-
 <p>
     Customize your dashboard colours.
 </p>
-
-
-
-<form action="/dashboard/save-theme" method="POST">
-
-
-<label>
-Theme Colour
-</label>
-
-
-<br>
-
-
-<input
-type="color"
-name="theme_color"
-value="<?= htmlspecialchars($user['theme_color'] ?? '#007bff') ?>"
+<form
+    action="/dashboard/save-theme"
+    method="POST"
 >
 
+    <input
+        type="hidden"
+        name="csrf_token"
+        value="<?= htmlspecialchars(
+            $csrfToken,
+            ENT_QUOTES,
+            'UTF-8'
+        ) ?>"
+    >
 
-<br><br>
+    <h3>
+        Theme Colours
+    </h3>
 
+    <label for="theme_color">
+        Theme Colour
+    </label>
 
+    <input
+        type="color"
+        id="theme_color"
+        name="theme_color"
+        value="<?= htmlspecialchars(
+            $user['theme_color'] ?? '#007bff',
+            ENT_QUOTES,
+            'UTF-8'
+        ) ?>"
+    >
 
-<label>
-Background Colour
-</label>
+    <br><br>
 
+    <label for="background_color">
+        Background Colour
+    </label>
 
-<br>
+    <input
+        type="color"
+        id="background_color"
+        name="background_color"
+        value="<?= htmlspecialchars(
+            $user['background_color'] ?? '#ffffff',
+            ENT_QUOTES,
+            'UTF-8'
+        ) ?>"
+    >
 
+    <br><br>
 
-<input
-type="color"
-name="background_color"
-value="<?= htmlspecialchars($user['background_color'] ?? '#ffffff') ?>"
->
+    <label for="text_color">
+        Text Colour
+    </label>
 
+    <input
+        type="color"
+        id="text_color"
+        name="text_color"
+        value="<?= htmlspecialchars(
+            $user['text_color'] ?? '#000000',
+            ENT_QUOTES,
+            'UTF-8'
+        ) ?>"
+    >
 
-<br><br>
+    <br><br>
 
-
-
-<label>
-Text Colour
-</label>
-
-
-<br>
-
-
-<input
-type="color"
-name="text_color"
-value="<?= htmlspecialchars($user['text_color'] ?? '#000000') ?>"
->
-
-
-<br><br>
-
-
-<button type="submit">
-
-Save Colours
-
-</button>
-
+    <button type="submit">
+        Save Colours
+    </button>
 
 </form>
 
-
 </div>
-
-
-
-
-
-
-
 
 <?php elseif ($panel === 'upload'): ?>
 
-
-
 <div class="card">
-
 
 <h2>
 Upload Profile Image
 </h2>
 
-
 <p>
 Choose a new profile picture.
 </p>
 
-
-
-<form 
-action="/dashboard/upload-image"
-method="POST"
-enctype="multipart/form-data"
+<form
+    action="/dashboard/upload-image"
+    method="POST"
+    enctype="multipart/form-data"
 >
 
+    <input
+        type="hidden"
+        name="csrf_token"
+        value="<?= htmlspecialchars(
+            $csrfToken,
+            ENT_QUOTES,
+            'UTF-8'
+        ) ?>"
+    >
 
-<input
-type="file"
-name="image"
-accept="image/*"
-required
->
+    <input
+        type="file"
+        name="image"
+        accept="image/*"
+        required
+    >
 
-
-<br><br>
-
-
-<button type="submit">
-
-Upload Image
-
-</button>
-
+    <button type="submit">
+        Upload Image
+    </button>
 
 </form>
 
-
 </div>
-
-
-
-
-
-
 
 
 <?php elseif ($panel === 'posts'): ?>
@@ -310,6 +252,11 @@ action="/dashboard/posts/store"
 method="POST"
 >
 
+ <input
+        type="hidden"
+        name="csrf_token"
+        value="<?= htmlspecialchars($csrfToken, ENT_QUOTES, 'UTF-8') ?>"
+    >
 
 <label>
 Title
@@ -335,7 +282,22 @@ Slug
 type="text"
 name="slug"
 >
+<input
+    type="hidden"
+    name="csrf_token"
+    value="<?= htmlspecialchars($csrfToken, ENT_QUOTES, 'UTF-8') ?>"
+>
 
+<input
+    type="text"
+    name="title"
+    required
+>
+
+<input
+    type="text"
+    name="slug"
+>
 <br><br>
 
 <label>
@@ -404,39 +366,25 @@ My Posts
     + New Post
 </a>
 
-
 </div>
 
-
-
-
-
 <?php if(empty($posts)): ?>
-
 
 <p>
 You haven't written any posts yet.
 </p>
 
-
-
 <?php else: ?>
-
-
 
 <?php foreach($posts as $post): ?>
 
-
 <article>
-
 
 <h3>
 
 <?= htmlspecialchars($post['title']) ?>
 
 </h3>
-
-
 
 <p>
 
@@ -446,56 +394,42 @@ Status:
 
 </p>
 
-
-
 <a href="/dashboard?panel=posts&edit=<?= $post['id'] ?>">
 
 Edit
 
 </a>
 
-
-
 </article>
-
 
 <hr>
 
-
-
 <?php endforeach; ?>
-
-
 
 <?php endif; ?>
 
 <?php if ($editPost): ?>
 
-
 <hr>
-
 
 <h2>
     Edit Post
 </h2>
 
-
-
-
 <form
 action="/dashboard/posts/update?id=<?= $editPost['id'] ?>"
 method="POST"
 >
-
-
-
+ <input
+        type="hidden"
+        name="csrf_token"
+        value="<?= htmlspecialchars($csrfToken, ENT_QUOTES, 'UTF-8') ?>"
+    >
 <label>
 Title
 </label>
 
-
 <br>
-
 
 <input
 type="text"
@@ -504,20 +438,13 @@ value="<?= htmlspecialchars($editPost['title']) ?>"
 required
 >
 
-
-
 <br><br>
-
-
-
 
 <label>
 Slug
 </label>
 
-
 <br>
-
 
 <input
 type="text"
@@ -525,32 +452,20 @@ name="slug"
 value="<?= htmlspecialchars($editPost['slug']) ?>"
 >
 
-
-
 <br><br>
-
-
-
 
 <label>
 Status
 </label>
 
-
 <br>
 
-
-
 <select name="status">
-
-
 
 <option value="draft"
 <?= $editPost['status'] === 'draft' ? 'selected' : '' ?>
 >
-
 Draft
-
 </option>
 
 
@@ -632,7 +547,11 @@ Change Password
 action="/dashboard/change-password"
 method="POST"
 >
-
+ <input
+        type="hidden"
+        name="csrf_token"
+        value="<?= htmlspecialchars($csrfToken, ENT_QUOTES, 'UTF-8') ?>"
+    >
 
 <label>
 Current Password
@@ -677,123 +596,70 @@ type="password"
 name="confirm_password"
 required
 >
-
-
 <br><br>
-
-
 <button type="submit">
 Update Password
 </button>
 
 
 </form>
-
-
 </div>
-
 <?php else: ?>
-
-
-
 <!-- DEFAULT DASHBOARD -->
-
-
-
 <div class="card">
-
 
 <h2>
 Profile Overview
 </h2>
 
-
-
 <p>
 This is your personal dashboard where you can:
 </p>
 
-
-
 <ul>
-
 
 <li>
 ✔ Change your password
 </li>
 
-
 <li>
 ✔ Upload a profile picture
 </li>
-
 
 <li>
 ✔ Customise your colours
 </li>
 
-
 <li>
 ✔ Edit homepage posts
 </li>
-
-
 </ul>
 
-
-
 </div>
-
-
-
-
-
-
-
 
 <div class="card">
 
-
 <div class="card-header">
-
-
 <h2>
 Recent Posts
 </h2>
-
-
 <a href="/dashboard?panel=posts" class="btn">
-
 Manage Posts
-
 </a>
-
 
 </div>
 
-
-
-
-
 <?php if(empty($posts)): ?>
-
 
 <p>
 You haven't written any posts yet.
 </p>
 
-
-
-
 <?php else: ?>
-
-
 
 <table class="dashboard-table">
 
-
 <thead>
-
 
 <tr>
 
@@ -801,41 +667,27 @@ You haven't written any posts yet.
 Title
 </th>
 
-
 <th>
 Status
 </th>
-
 
 <th>
 Created
 </th>
 
-
 <th>
 Actions
 </th>
 
-
 </tr>
-
 
 </thead>
 
-
-
-
 <tbody>
-
-
 
 <?php foreach($posts as $post): ?>
 
-
-
-<tr>
-
-
+    <tr>
 
 <td>
 
@@ -843,17 +695,11 @@ Actions
 
 </td>
 
-
-
-
 <td>
 
 <?= htmlspecialchars(ucfirst($post['status'])) ?>
 
 </td>
-
-
-
 
 <td>
 
@@ -861,11 +707,7 @@ Actions
 
 </td>
 
-
-
-
 <td>
-
 
 <a href="/dashboard?panel=posts&edit=<?= $post['id'] ?>">
 
@@ -873,48 +715,24 @@ Edit
 
 </a>
 
-
-
 </td>
-
-
 
 </tr>
 
-
-
 <?php endforeach; ?>
-
-
 
 </tbody>
 
-
-
 </table>
 
-
-
 <?php endif; ?>
-
-
 
 </div>
 
-
-
-
-
 <?php endif; ?>
-
-
 
 </section>
 
-
-
 </div>
-
-
 
 </main>

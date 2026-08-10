@@ -13,7 +13,7 @@ use App\Controllers\RoleController;
 use App\Controllers\AdminPostsController;
 use App\Controllers\AdminPagesController;
 use App\Controllers\CommentController;
-
+use App\Controllers\SettingsController;
 /*
 |--------------------------------------------------------------------------
 | Pages
@@ -92,10 +92,43 @@ $router->post(
 );
 
 $router->get(
+    '/admin/settings',
+    [SettingsController::class, 'index']
+);
+
+$router->post(
+    '/admin/settings/update',
+    [SettingsController::class, 'update']
+);
+/*
+|--------------------------------------------------------------------------
+| Admin Media
+|--------------------------------------------------------------------------
+*/
+$router->get(
     '/admin/media',
     [AdminController::class, 'media']
 );
 
+$router->get(
+    '/admin/media/view',
+    [AdminController::class, 'viewMedia']
+);
+
+$router->get(
+    '/admin/media/upload',
+    [AdminController::class, 'uploadMedia']
+);
+
+$router->post(
+    '/admin/media/upload',
+    [AdminController::class, 'storeMedia']
+);
+
+$router->post(
+    '/admin/media/delete',
+    [AdminController::class, 'deleteMedia']
+);
 /*
 |--------------------------------------------------------------------------
 | Admin Posts
@@ -304,3 +337,4 @@ $router->post(
         'changePassword'
     ]
 );
+

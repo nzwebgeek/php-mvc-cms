@@ -85,19 +85,26 @@ action="/admin/posts/delete"
 style="display:inline"
 >
 
-<input 
-type="hidden"
-name="id"
-value="<?= $post['id'] ?>"
+<input
+    type="hidden"
+    name="id"
+    value="<?= (int)$post['id'] ?>"
 >
 
-
-<button 
-type="submit"
-onclick="return confirm('Delete this post?')"
+<input
+    type="hidden"
+    name="csrf_token"
+    value="<?= htmlspecialchars($csrfToken, ENT_QUOTES, 'UTF-8') ?>"
 >
-Delete
+
+<button
+    type="submit"
+    onclick="return confirm('Delete this post?')"
+>
+    Delete
 </button>
+
+
 
 
 </form>
