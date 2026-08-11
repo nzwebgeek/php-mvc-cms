@@ -11,30 +11,28 @@ return [
     */
 
     'app' => [
-        'name' => 'Stage Three MVC CMS',
-        'url'  => 'http://stage-three-mvc.test',
-        'env'  => 'development',
+        'name' => getenv('APP_NAME') ?: 'Stage Three MVC CMS',
+        'url'  => getenv('APP_URL') ?: 'http://stage-three-mvc.test',
+        'env'  => getenv('APP_ENV') ?: 'development',
+        'debug' => filter_var(
+            getenv('APP_DEBUG') ?: 'false',
+            FILTER_VALIDATE_BOOLEAN
+        ),
     ],
-
     /*
     |--------------------------------------------------------------------------
     | Database
     |--------------------------------------------------------------------------
     */
 
-'database' => [
+    'database' => [
+        'host' => getenv('DB_HOST') ?: 'localhost',
+        'dbname' => getenv('DB_NAME') ?: 'test4_db',
+        'username' => getenv('DB_USER') ?: 'root',
+        'password' => getenv('DB_PASSWORD') ?: '',
+        'charset' => 'utf8mb4',
+    ],
 
-    'host' => 'localhost',
-
-    'dbname' => 'test4_db',
-
-    'username' => 'root',
-
-    'password' => '',
-
-    'charset' => 'utf8mb4',
-
-],
     /*
     |--------------------------------------------------------------------------
     | Mail
@@ -42,7 +40,8 @@ return [
     */
 
     'mail' => [
-        'from' => 'noreply@stage-three-mvc.test',
+        'from' => getenv('MAIL_FROM')
+            ?: 'noreply@stage-three-mvc.test',
     ],
 
 ];

@@ -19,11 +19,19 @@ session_set_cookie_params([
 session_start();
 
 
+use App\Core\ErrorHandler;
 use App\Core\Router;
+
 
 require dirname(__DIR__) . '/vendor/autoload.php';
 
 $container = require dirname(__DIR__) . '/bootstrap/app.php';
+
+$config = require dirname(__DIR__) . '/config/config.php';
+
+$errorHandler = new ErrorHandler($config);
+
+$errorHandler->register();
 
 $router = new Router($container);
 

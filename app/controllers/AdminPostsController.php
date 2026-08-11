@@ -9,6 +9,8 @@ use App\Repositories\PostRepository;
 use App\Services\AuthService;
 use App\Repositories\UserRepository;
 use App\Repositories\ImageRepository;
+use App\Services\CsrfService;
+
 
 class AdminPostsController extends Controller
 {
@@ -16,7 +18,9 @@ class AdminPostsController extends Controller
         private AuthService $authService,
         private PostRepository $postRepository,
         private UserRepository $userRepository,
-        private ImageRepository $imageRepository
+        private ImageRepository $imageRepository,
+        private readonly CsrfService $csrf
+        
     ) {
     }
 
@@ -31,7 +35,9 @@ class AdminPostsController extends Controller
         $this->view('admin/dashboard/posts/list', [
             'title'  => 'Posts',
             'posts'  => $posts,
-            'status' => $status
+            'status' => $status,
+            'csrfToken' => $this->csrf->token(),
+
         ], 'admin');
     }
 
@@ -48,7 +54,9 @@ public function create(): void
         [
             'title' => 'Create Post',
             'users' => $users,
-            'images' => $images
+            'images' => $images,
+            'csrfToken' => $this->csrf->token(),
+
         ],
         'admin'
     );
@@ -154,7 +162,9 @@ public function store(): void
             'title' => 'Edit Post',
             'post' => $post,
             'users' => $users,
-            'images' => $images
+            'images' => $images,
+            'csrfToken' => $this->csrf->token(),
+
         ],
         'admin'
     );
