@@ -30,11 +30,15 @@ use App\Controllers\AdminPostsController;
 use App\Controllers\AdminPagesController;
 use App\Repositories\CommentRepository;
 use App\Controllers\CommentController;
+use App\Core\Environment;
 
 
+
+Environment::load(
+    dirname(__DIR__) . '/.env'
+);
 
 $config = require dirname(__DIR__) . '/config/config.php';
-
 $container = new Container();
 
 
@@ -97,7 +101,8 @@ $adminController = new AdminController(
 
 $roleController = new RoleController(
     $authService,
-    $roleRepository
+    $roleRepository,
+     $csrfService
 );
 
 $blogController = new BlogController(
@@ -138,13 +143,15 @@ $adminPostsController = new AdminPostsController(
     $authService,
     $postRepository,
     $userRepository,
-     $imageRepository
+     $imageRepository,
+      $csrfService
 );
 
 $adminPagesController = new AdminPagesController(
     $authService,
     $pageRepository,
-    $imageRepository
+    $imageRepository,
+    $csrfService
 );
 
 

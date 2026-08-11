@@ -8,6 +8,8 @@ use App\Core\Controller;
 use App\Services\AuthService;
 use App\Repositories\PageRepository;
 use App\Repositories\ImageRepository;
+use App\Services\CsrfService;
+
 
 
 class AdminPagesController extends Controller
@@ -15,7 +17,8 @@ class AdminPagesController extends Controller
     public function __construct(
         private readonly AuthService $auth,
         private readonly PageRepository $pageRepository,
-        private readonly ImageRepository $imageRepository
+        private readonly ImageRepository $imageRepository,
+         private readonly CsrfService $csrf
     ) {
     }
 
@@ -32,7 +35,9 @@ class AdminPagesController extends Controller
             'admin/dashboard/pages/index',
             [
                 'title' => 'Manage Pages',
-                'pages' => $pages
+                'pages' => $pages,
+                'csrfToken' => $this->csrf->token(),
+
             ],
             'admin'
         );
@@ -49,7 +54,9 @@ class AdminPagesController extends Controller
             'admin/dashboard/pages/create',
             [
                 'title' => 'Create Page',
-                'images' => $images
+                'images' => $images,
+                'csrfToken' => $this->csrf->token(),
+
             ],
             'admin'
         );
@@ -155,7 +162,9 @@ class AdminPagesController extends Controller
             [
                 'title' => 'Edit Page',
                 'page' => $page,
-                'images' => $images
+                'images' => $images,
+                'csrfToken' => $this->csrf->token(),
+
             ],
             'admin'
         );

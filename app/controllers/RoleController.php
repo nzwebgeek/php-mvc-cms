@@ -7,6 +7,8 @@ namespace App\Controllers;
 use App\Core\Controller;
 use App\Services\AuthService;
 use App\Repositories\RoleRepository;
+use App\Services\CsrfService;
+
 
 
 class RoleController extends Controller
@@ -14,7 +16,8 @@ class RoleController extends Controller
 
     public function __construct(
         private readonly AuthService $auth,
-        private readonly RoleRepository $roleRepository
+        private readonly RoleRepository $roleRepository,
+        private readonly CsrfService $csrf
     ) {
     }
 
@@ -34,7 +37,9 @@ class RoleController extends Controller
             'admin/dashboard/roles/index',
             [
                 'title' => 'Manage Roles',
-                'roles' => $roles
+                'roles' => $roles,
+                'csrfToken' => $this->csrf->token(),
+                
             ],
             'admin'
         );
@@ -47,7 +52,8 @@ class RoleController extends Controller
     $this->view(
         'admin/dashboard/roles/create',
         [
-            'title' => 'Create Role'
+            'title' => 'Create Role',
+            'csrfToken' => $this->csrf->token(),
         ],
         'admin'
     );
@@ -110,7 +116,8 @@ public function edit(): void
         'admin/dashboard/roles/edit',
         [
             'title' => 'Edit Role',
-            'role' => $role
+            'role' => $role,
+            'csrfToken' => $this->csrf->token(),
         ],
         'admin'
     );

@@ -37,7 +37,10 @@ class BlogController extends Controller
 
             'settings' => $this->settings->get(),
 
-            'pages' => $this->pages->getAll()
+            'pages' => $this->pages->getAll(),
+
+            'csrfToken' => $this->csrf->token(),
+
 
         ]);
     }

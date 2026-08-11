@@ -26,6 +26,14 @@ class View
 
         extract($data, EXTR_SKIP);
 
+        if (!isset($data['csrfToken'])) {
+
+            $csrfService = new \App\Services\CsrfService();
+
+            $csrfToken = $csrfService->token();
+        }
+
+
         ob_start();
         require $viewPath;
         $content = ob_get_clean();
