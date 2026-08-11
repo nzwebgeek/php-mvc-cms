@@ -13,6 +13,7 @@ use App\Controllers\AuthController;
 use App\Controllers\VerifyController;
 use App\Controllers\BlogController;
 use App\Controllers\SettingsController;
+use App\Controllers\ErrorController;
 
 use App\Core\Container;
 use App\Core\Database;
@@ -52,7 +53,6 @@ $pageRepository = new PageRepository($db);
 $blogSettingsRepository = new BlogSettingsRepository($db);
 $adminRepository = new AdminRepository($db);
 $roleRepository = new RoleRepository($db);
-// 2nd; Update AdminController
 
 // Models
 
@@ -107,6 +107,12 @@ $blogController = new BlogController(
     $commentRepository,
     $csrfService
 );
+
+$errorController = new ErrorController(
+    $pageRepository,
+    $settingsRepository,
+    $csrfService
+);
 // Bind services
 $container->set(
     UserRepository::class,
@@ -121,6 +127,11 @@ $container->set(
 $container->set(
     ImageRepository::class,
     $imageRepository
+);
+
+$container->set(
+    ErrorController::class,
+    $errorController
 );
 
 $adminPostsController = new AdminPostsController(

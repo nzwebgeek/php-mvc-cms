@@ -56,10 +56,13 @@ class Router
 
     if ($route === null) {
 
-        throw new RuntimeException(
-            "Route '{$uri}' not found for {$method} request."
+        $errorController = $this->container->get(
+            \App\Controllers\ErrorController::class
         );
 
+        $errorController->notFound();
+
+        return;
     }
 
 
