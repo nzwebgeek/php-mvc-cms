@@ -383,67 +383,41 @@ public function adminCreate(array $data): bool
         )
     ");
 
-
     return $stmt->execute([
-
         'user_id' => $data['user_id'],
-
         'title' => $data['title'],
-
         'slug' => $data['slug'],
-
         'content' => $data['content'],
-
         'status' => $data['status'] ?? 'draft',
 
-
-        'featured_media_id' => $data['hero_media_id'] ?? null,
-
+        'featured_media_id' => $data['featured_media_id'] ?? null,
 
         'hero_title' => $data['hero_title'] ?? null,
-
         'hero_subtitle' => $data['hero_subtitle'] ?? null,
-
         'hero_image_alt' => $data['hero_image_alt'] ?? null,
 
-
         'main_heading' => $data['main_heading'] ?? null,
-
         'main_content' => $data['main_content'] ?? null,
 
-
         'column1_title' => $data['column1_title'] ?? null,
-
         'column1_content' => $data['column1_content'] ?? null,
 
-
         'column2_title' => $data['column2_title'] ?? null,
-
         'column2_content' => $data['column2_content'] ?? null,
 
-
         'column3_title' => $data['column3_title'] ?? null,
-
         'column3_content' => $data['column3_content'] ?? null,
 
-
         'column4_title' => $data['column4_title'] ?? null,
-
         'column4_content' => $data['column4_content'] ?? null,
 
-
         'column5_title' => $data['column5_title'] ?? null,
-
         'column5_content' => $data['column5_content'] ?? null,
 
-
         'seo_title' => $data['seo_title'] ?? null,
-
-        'seo_description' => $data['seo_description'] ?? null
-
+        'seo_description' => $data['seo_description'] ?? null,
     ]);
 }
-
 public function adminFindById(int $id): ?array
 {
     $stmt = $this->db->prepare("
@@ -478,26 +452,76 @@ public function adminUpdate(array $data): bool
             slug = :slug,
             content = :content,
             status = :status,
+
             featured_media_id = :featured_media_id,
+
+            hero_title = :hero_title,
+            hero_subtitle = :hero_subtitle,
+            hero_image_alt = :hero_image_alt,
+
+            main_heading = :main_heading,
+            main_content = :main_content,
+
+            column1_title = :column1_title,
+            column1_content = :column1_content,
+
+            column2_title = :column2_title,
+            column2_content = :column2_content,
+
+            column3_title = :column3_title,
+            column3_content = :column3_content,
+
+            column4_title = :column4_title,
+            column4_content = :column4_content,
+
+            column5_title = :column5_title,
+            column5_content = :column5_content,
+
+            seo_title = :seo_title,
+            seo_description = :seo_description,
+
             updated_at = NOW()
 
         WHERE id = :id
     ");
 
-
     return $stmt->execute([
-
         'id' => $data['id'],
+
         'user_id' => $data['user_id'],
         'title' => $data['title'],
         'slug' => $data['slug'],
         'content' => $data['content'],
         'status' => $data['status'],
-        'featured_media_id' => $data['featured_media_id']
 
+        'featured_media_id' => $data['featured_media_id'] ?? null,
+
+        'hero_title' => $data['hero_title'] ?? null,
+        'hero_subtitle' => $data['hero_subtitle'] ?? null,
+        'hero_image_alt' => $data['hero_image_alt'] ?? null,
+
+        'main_heading' => $data['main_heading'] ?? null,
+        'main_content' => $data['main_content'] ?? null,
+
+        'column1_title' => $data['column1_title'] ?? null,
+        'column1_content' => $data['column1_content'] ?? null,
+
+        'column2_title' => $data['column2_title'] ?? null,
+        'column2_content' => $data['column2_content'] ?? null,
+
+        'column3_title' => $data['column3_title'] ?? null,
+        'column3_content' => $data['column3_content'] ?? null,
+
+        'column4_title' => $data['column4_title'] ?? null,
+        'column4_content' => $data['column4_content'] ?? null,
+
+        'column5_title' => $data['column5_title'] ?? null,
+        'column5_content' => $data['column5_content'] ?? null,
+
+        'seo_title' => $data['seo_title'] ?? null,
+        'seo_description' => $data['seo_description'] ?? null,
     ]);
 }
-
 public function adminDelete(int $id): bool
 {
     $stmt = $this->db->prepare("

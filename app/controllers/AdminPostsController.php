@@ -66,75 +66,219 @@ public function store(): void
 {
     $this->authService->requireAdmin();
 
+    $this->csrf->requireValidToken();
 
-    $data = [
+    $userId = (int) ($_POST['user_id'] ?? 0);
+    $title = trim($_POST['title'] ?? '');
+    $slug = trim($_POST['slug'] ?? '');
+    $content = $_POST['content'] ?? '';
+    $status = $_POST['status'] ?? 'draft';
+    
 
-        'user_id' => $_POST['user_id'],
+    $featuredMediaId = !empty($_POST['featured_media_id'])
+        ? (int) $_POST['featured_media_id']
+        : null;
+    
 
-        'title' => $_POST['title'],
+    /*
+    |--------------------------------------------------------------------------
+    | Validate basic fields
+    |--------------------------------------------------------------------------
+    */
 
-        'slug' => $_POST['slug'],
+    if ($userId <= 0) {
+        $_SESSION['error'] = 'Invalid author.';
 
-        'content' => $_POST['content'],
-
-        'status' => $_POST['status'],
-
-
-        'featured_media_id' => !empty($_POST['featured_media_id'])
-            ? $_POST['featured_media_id']
-            : null,
-
-
-        'hero_title' => $_POST['hero_title'] ?? null,
-
-        'hero_subtitle' => $_POST['hero_subtitle'] ?? null,
-
-
-        'main_heading' => $_POST['main_heading'] ?? null,
-
-        'main_content' => $_POST['main_content'] ?? null,
-
-
-        'column1_title' => $_POST['column1_title'] ?? null,
-
-        'column1_content' => $_POST['column1_content'] ?? null,
+        header('Location: /admin/posts/create');
+        exit;
+    }
 
 
-        'column2_title' => $_POST['column2_title'] ?? null,
+    if ($title === '') {
+        $_SESSION['error'] = 'Title is required.';
 
-        'column2_content' => $_POST['column2_content'] ?? null,
-
-
-        'column3_title' => $_POST['column3_title'] ?? null,
-
-        'column3_content' => $_POST['column3_content'] ?? null,
+        header('Location: /admin/posts/create');
+        exit;
+    }
 
 
-        'column4_title' => $_POST['column4_title'] ?? null,
+    if ($slug === '') {
+        $_SESSION['error'] = 'Slug is required.';
 
-        'column4_content' => $_POST['column4_content'] ?? null,
-
-
-        'column5_title' => $_POST['column5_title'] ?? null,
-
-        'column5_content' => $_POST['column5_content'] ?? null,
+        header('Location: /admin/posts/create');
+        exit;
+    }
 
 
-        'seo_title' => $_POST['seo_title'] ?? null,
+    /*
+    |--------------------------------------------------------------------------
+    | Validate status
+    |--------------------------------------------------------------------------
+    */
 
-        'seo_description' => $_POST['seo_description'] ?? null
-
+    $allowedStatuses = [
+        'draft',
+        'published',
     ];
 
 
+    if (!in_array($status, $allowedStatuses, true)) {
+        $_SESSION['error'] = 'Invalid post status.';
+
+        header('Location: /admin/posts/create');
+        exit;
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Validate author exists
+    |--------------------------------------------------------------------------
+    */
+
+    $user = $this->userRepository->findById($userId);
+
+    if (!$user) {
+        $_SESSION['error'] = 'Selected author does not exist.';
+
+        header('Location: /admin/posts/create');
+        exit;
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Validate featured media
+    |--------------------------------------------------------------------------
+    */
+
+    if ($featuredMediaId !== null) {
+
+        $image = $this->imageRepository->findById(
+            $featuredMediaId
+        );
+
+        if (!$image) {
+            $_SESSION['error'] =
+                'Selected image does not exist.';
+
+            header('Location: /admin/posts/create');
+            exit;
+        }
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Build post data
+    |--------------------------------------------------------------------------
+    */
+
+    $data = [
+
+        'user_id' => $userId,
+
+        'title' => $title,
+
+        'slug' => $slug,
+
+        'content' => $content,
+
+        'status' => $status,
+
+        'featured_media_id' => $featuredMediaId,
+
+        'hero_title' => trim(
+            $_POST['hero_title'] ?? ''
+        ) ?: null,
+
+        'hero_subtitle' => trim(
+            $_POST['hero_subtitle'] ?? ''
+        ) ?: null,
+
+        'hero_image_alt' => trim(
+            $_POST['hero_image_alt'] ?? ''
+        ) ?: null,
+        
+
+        'main_heading' => trim(
+            $_POST['main_heading'] ?? ''
+        ) ?: null,
+
+        'main_content' => $_POST['main_content'] ?? null,
+
+        'column1_title' => trim(
+            $_POST['column1_title'] ?? ''
+        ) ?: null,
+
+        'column1_content' => $_POST['column1_content'] ?? null,
+
+        'column2_title' => trim(
+            $_POST['column2_title'] ?? ''
+        ) ?: null,
+
+        'column2_content' => $_POST['column2_content'] ?? null,
+
+        'column3_title' => trim(
+            $_POST['column3_title'] ?? ''
+        ) ?: null,
+
+        'column3_content' => $_POST['column3_content'] ?? null,
+
+        'column4_title' => trim(
+            $_POST['column4_title'] ?? ''
+        ) ?: null,
+
+        'column4_content' => $_POST['column4_content'] ?? null,
+
+        'column5_title' => trim(
+            $_POST['column5_title'] ?? ''
+        ) ?: null,
+
+        'column5_content' => $_POST['column5_content'] ?? null,
+
+        'seo_title' => trim(
+            $_POST['seo_title'] ?? ''
+        ) ?: null,
+
+        'seo_description' => trim(
+            $_POST['seo_description'] ?? ''
+        ) ?: null,
+    ];
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Create post
+    |--------------------------------------------------------------------------
+    */
+try {
+
     $this->postRepository->adminCreate($data);
 
+    $_SESSION['success'] =
+        'Post created successfully.';
 
-    header('Location: /admin/posts?success=created');
+} catch (\Throwable $e) {
 
-    exit;
+    error_log(
+        'AdminPostsController::store() failed: '
+        . $e->getMessage()
+    );
+
+    error_log(
+        'SQL error code: '
+        . $e->getCode()
+    );
+
+    $_SESSION['error'] =
+        'Unable to create post.';
 }
 
+
+    header('Location: /admin/posts');
+    exit;
+}
     public function edit(): void
 {
     $this->authService->requireAdmin();
@@ -173,73 +317,258 @@ public function update(): void
 {
     $this->authService->requireAdmin();
 
-
-    $data = [
-
-        'id' => $_POST['id'],
-
-        'user_id' => $_POST['user_id'],
-
-        'title' => $_POST['title'],
-
-        'slug' => $_POST['slug'],
-
-        'content' => $_POST['content'],
-
-        'status' => $_POST['status'],
+    $this->csrf->requireValidToken();
 
 
-        'featured_media_id' => !empty($_POST['featured_media_id'])
-            ? $_POST['featured_media_id']
-            : null,
+    $id = (int) ($_POST['id'] ?? 0);
+
+    $userId = (int) ($_POST['user_id'] ?? 0);
+
+    $title = trim($_POST['title'] ?? '');
+
+    $slug = trim($_POST['slug'] ?? '');
+
+    $content = $_POST['content'] ?? '';
+
+    $status = $_POST['status'] ?? 'draft';
 
 
-        'hero_title' => $_POST['hero_title'] ?? null,
-
-        'hero_subtitle' => $_POST['hero_subtitle'] ?? null,
-
-
-        'main_heading' => $_POST['main_heading'] ?? null,
-
-        'main_content' => $_POST['main_content'] ?? null,
+    $featuredMediaId = !empty($_POST['featured_media_id'])
+        ? (int) $_POST['featured_media_id']
+        : null;
 
 
-        'column1_title' => $_POST['column1_title'] ?? null,
+    /*
+    |--------------------------------------------------------------------------
+    | Validate post ID
+    |--------------------------------------------------------------------------
+    */
 
-        'column1_content' => $_POST['column1_content'] ?? null,
+    if ($id <= 0) {
 
+        $_SESSION['error'] =
+            'Invalid post.';
 
-        'column2_title' => $_POST['column2_title'] ?? null,
+        header('Location: /admin/posts');
 
-        'column2_content' => $_POST['column2_content'] ?? null,
-
-
-        'column3_title' => $_POST['column3_title'] ?? null,
-
-        'column3_content' => $_POST['column3_content'] ?? null,
-
-
-        'column4_title' => $_POST['column4_title'] ?? null,
-
-        'column4_content' => $_POST['column4_content'] ?? null,
+        exit;
+    }
 
 
-        'column5_title' => $_POST['column5_title'] ?? null,
+    /*
+    |--------------------------------------------------------------------------
+    | Validate author
+    |--------------------------------------------------------------------------
+    */
 
-        'column5_content' => $_POST['column5_content'] ?? null,
+    if ($userId <= 0) {
+
+        $_SESSION['error'] =
+            'Invalid author.';
+
+        header(
+            'Location: /admin/posts/edit?id=' . $id
+        );
+
+        exit;
+    }
 
 
-        'seo_title' => $_POST['seo_title'] ?? null,
+    $user = $this->userRepository->findById($userId);
 
-        'seo_description' => $_POST['seo_description'] ?? null
+    if (!$user) {
 
+        $_SESSION['error'] =
+            'Selected author does not exist.';
+
+        header(
+            'Location: /admin/posts/edit?id=' . $id
+        );
+
+        exit;
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Validate basic fields
+    |--------------------------------------------------------------------------
+    */
+
+    if ($title === '') {
+
+        $_SESSION['error'] =
+            'Title is required.';
+
+        header(
+            'Location: /admin/posts/edit?id=' . $id
+        );
+
+        exit;
+    }
+
+
+    if ($slug === '') {
+
+        $_SESSION['error'] =
+            'Slug is required.';
+
+        header(
+            'Location: /admin/posts/edit?id=' . $id
+        );
+
+        exit;
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Validate status
+    |--------------------------------------------------------------------------
+    */
+
+    $allowedStatuses = [
+        'draft',
+        'published',
     ];
 
 
-    $this->postRepository->adminUpdate($data);
+    if (!in_array($status, $allowedStatuses, true)) {
+
+        $_SESSION['error'] =
+            'Invalid post status.';
+
+        header(
+            'Location: /admin/posts/edit?id=' . $id
+        );
+
+        exit;
+    }
 
 
-    header('Location: /admin/posts?success=updated');
+    /*
+    |--------------------------------------------------------------------------
+    | Validate featured media
+    |--------------------------------------------------------------------------
+    */
+
+    if ($featuredMediaId !== null) {
+
+        $image = $this->imageRepository->findById(
+            $featuredMediaId
+        );
+
+        if (!$image) {
+
+            $_SESSION['error'] =
+                'Selected image does not exist.';
+
+            header(
+                'Location: /admin/posts/edit?id=' . $id
+            );
+
+            exit;
+        }
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Build post data
+    |--------------------------------------------------------------------------
+    */
+
+    $data = [
+
+        'id' => $id,
+
+        'user_id' => $userId,
+
+        'title' => $title,
+
+        'slug' => $slug,
+
+        'content' => $content,
+
+        'status' => $status,
+
+        'featured_media_id' => $featuredMediaId,
+
+        'hero_title' => trim(
+            $_POST['hero_title'] ?? ''
+        ) ?: null,
+
+        'hero_subtitle' => trim(
+            $_POST['hero_subtitle'] ?? ''
+        ) ?: null,
+
+        'main_heading' => trim(
+            $_POST['main_heading'] ?? ''
+        ) ?: null,
+
+        'main_content' => $_POST['main_content'] ?? null,
+
+        'column1_title' => trim(
+            $_POST['column1_title'] ?? ''
+        ) ?: null,
+
+        'column1_content' => $_POST['column1_content'] ?? null,
+
+        'column2_title' => trim(
+            $_POST['column2_title'] ?? ''
+        ) ?: null,
+
+        'column2_content' => $_POST['column2_content'] ?? null,
+
+        'column3_title' => trim(
+            $_POST['column3_title'] ?? ''
+        ) ?: null,
+
+        'column3_content' => $_POST['column3_content'] ?? null,
+
+        'column4_title' => trim(
+            $_POST['column4_title'] ?? ''
+        ) ?: null,
+
+        'column4_content' => $_POST['column4_content'] ?? null,
+
+        'column5_title' => trim(
+            $_POST['column5_title'] ?? ''
+        ) ?: null,
+
+        'column5_content' => $_POST['column5_content'] ?? null,
+
+        'seo_title' => trim(
+            $_POST['seo_title'] ?? ''
+        ) ?: null,
+
+        'seo_description' => trim(
+            $_POST['seo_description'] ?? ''
+        ) ?: null,
+    ];
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Update post
+    |--------------------------------------------------------------------------
+    */
+
+    try {
+
+        $this->postRepository->adminUpdate($data);
+
+        $_SESSION['success'] =
+            'Post updated successfully.';
+
+    } catch (\Throwable $e) {
+
+        $_SESSION['error'] =
+            'Unable to update post.';
+    }
+
+
+    header('Location: /admin/posts');
 
     exit;
 }
@@ -247,14 +576,38 @@ public function delete(): void
 {
     $this->authService->requireAdmin();
 
-
-    $id = (int)$_POST['id'];
-
-
-    $this->postRepository->adminDelete($id);
+    $this->csrf->requireValidToken();
 
 
-    header('Location: /admin/posts?success=deleted');
+    $id = (int) ($_POST['id'] ?? 0);
+
+
+    if ($id <= 0) {
+
+        $_SESSION['error'] =
+            'Invalid post.';
+
+        header('Location: /admin/posts');
+
+        exit;
+    }
+
+
+    try {
+
+        $this->postRepository->adminDelete($id);
+
+        $_SESSION['success'] =
+            'Post deleted successfully.';
+
+    } catch (\Throwable $e) {
+
+        $_SESSION['error'] =
+            'Unable to delete post.';
+    }
+
+
+    header('Location: /admin/posts');
 
     exit;
 }

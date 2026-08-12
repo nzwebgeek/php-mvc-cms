@@ -67,6 +67,7 @@ class AdminPagesController extends Controller
     {
         $this->auth->requireAdmin();
 
+        $this->csrf->requireValidToken();
 
         $data = [
 
@@ -80,9 +81,8 @@ class AdminPagesController extends Controller
             'hero_subtitle' => trim($_POST['hero_subtitle'] ?? ''),
 
             'hero_media_id' => !empty($_POST['hero_media_id'])
-                ? $_POST['hero_media_id']
+                ? (int)$_POST['hero_media_id']
                 : null,
-         
 
             'hero_image_alt' => trim($_POST['hero_image_alt'] ?? ''),
 
@@ -177,6 +177,7 @@ class AdminPagesController extends Controller
     {
         $this->auth->requireAdmin();
 
+          $this->csrf->requireValidToken();
 
         $data = [
 
@@ -269,7 +270,8 @@ class AdminPagesController extends Controller
     {
         $this->auth->requireAdmin();
 
-
+        $this->csrf->requireValidToken();
+        
         $id = (int)($_POST['id'] ?? 0);
 
 

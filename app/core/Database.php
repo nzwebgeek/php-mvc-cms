@@ -17,7 +17,7 @@ class Database
         'dbname',
         'username',
         'password',
-        'charset'
+        'charset',
     ];
 
     public static function connect(array $config): PDO
@@ -27,10 +27,18 @@ class Database
         }
 
         foreach (self::REQUIRED_KEYS as $key) {
-
-            if (!isset($config[$key])) {
+            if (!array_key_exists($key, $config)) {
                 throw new InvalidArgumentException(
                     "Missing database config: {$key}"
+                );
+            }
+
+            if (
+                $key !== 'password'
+                && trim((string) $config[$key]) === ''
+            ) {
+                throw new InvalidArgumentException(
+                    "Empty database config: {$key}"
                 );
             }
         }
@@ -43,7 +51,6 @@ class Database
         );
 
         try {
-
             self::$connection = new PDO(
                 $dsn,
                 $config['username'],
@@ -54,18 +61,7 @@ class Database
                     PDO::ATTR_EMULATE_PREPARES => false,
                 ]
             );
-
         } catch (PDOException $e) {
-
-            if (!empty($config['debug'])) {
-
-                throw new PDOException(
-                    $e->getMessage(),
-                    0,
-                    $e
-                );
-            }
-
             throw new PDOException(
                 'Database connection failed.',
                 0,

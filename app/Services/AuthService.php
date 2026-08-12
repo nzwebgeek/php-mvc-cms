@@ -4,13 +4,16 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Repositories\UserRepository;
+
 /*--Add Authentication Functions here, AuthService handles registration/authentication logic--*/
 class AuthService
 {
+    private const SESSION_IDLE_TIMEOUT = 1800; // 30 minutes
     public function __construct(
     private UserRepository $users,
     private Mailer $mailer,
-    private PasswordService $passwords
+    private PasswordService $passwords,
+    
     ) {
     }
 
@@ -45,6 +48,7 @@ class AuthService
     $_SESSION['user_id'] = $user['id'];
     $_SESSION['username'] = $user['username'];
     $_SESSION['role'] = strtolower($user['role']);
+    $_SESSION['last_activity'] = time();
     
     return ServiceResult::success(
         'Login successful.'
@@ -137,11 +141,28 @@ public function register(
 
       // Existing methods...
 
-    public function isLoggedIn(): bool
-    {
-        return isset($_SESSION['user_id']);
+public function isLoggedIn(): bool
+{
+    if (!isset($_SESSION['user_id'])) {
+        return false;
     }
 
+    $lastActivity = $_SESSION['last_activity'] ?? null;
+
+    if (!is_int($lastActivity) && !ctype_digit((string) $lastActivity)) {
+        $this->logout();
+        return false;
+    }
+
+    if (time() - (int) $lastActivity >= self::SESSION_IDLE_TIMEOUT) {
+        $this->logout();
+        return false;
+    }
+
+    $_SESSION['last_activity'] = time();
+
+    return true;
+}
     public function isSuperAdmin(): bool{
     return ($_SESSION['role'] ?? '') === 'super admin';
     }
@@ -188,7 +209,9 @@ public function register(
 
     public function currentUserId(): ?int
     {
-        return $_SESSION['user_id'] ?? null;
+       return isset($_SESSION['user_id'])
+        ? (int) $_SESSION['user_id']
+        : null;
     }
 
     public function currentUsername(): ?string

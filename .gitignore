@@ -3,3 +3,7 @@
 /.env
 
 /storage/logs/
+
+/storage/*.log
+
+node_modules/

@@ -8,31 +8,32 @@
         ← Back to Users
     </a>
 
-    <form method="POST" action="/admin/users/create">
+   <form method="POST" action="/admin/users/create">
 
-        <div class="form-group">
+    <input
+        type="hidden"
+        name="csrf_token"
+        value="<?= htmlspecialchars(
+            $csrfToken ?? '',
+            ENT_QUOTES,
+            'UTF-8'
+        ) ?>"
+    >
 
-            <label for="username">
-                Username
-            </label>
-            <input
-            type="hidden"
-            name="csrf_token"
-            value="<?= htmlspecialchars(
-                $csrfToken ?? '',
-                ENT_QUOTES,
-                'UTF-8'
-            ) ?>"
+    <div class="form-group">
+
+        <label for="username">
+            Username
+        </label>
+
+        <input
+            type="text"
+            id="username"
+            name="username"
+            required
         >
 
-                    <input
-                type="text"
-                id="username"
-                name="username"
-                required
-            >
-
-        </div>
+    </div>
 
 
         <div class="form-group">

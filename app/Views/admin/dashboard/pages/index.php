@@ -147,6 +147,11 @@ Edit
 method="POST"
 style="display:inline;">
 
+<input
+    type="hidden"
+    name="csrf_token"
+    value="<?= htmlspecialchars($csrfToken, ENT_QUOTES, 'UTF-8') ?>"
+>
 
 <input 
 type="hidden"

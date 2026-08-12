@@ -72,14 +72,12 @@
                     <div class="media-actions">
 
                         <!-- View -->
-                        <a
-                            href="<?= htmlspecialchars($image['filepath']) ?>"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            class="blue-button"
-                        >
-                            View
-                        </a>
+                      <a
+                        href="/admin/media/view?id=<?= (int) $image['id'] ?>"
+                        class="blue-button"
+                    >
+                        View
+                    </a>
 
 
                         <!-- Delete -->
@@ -92,7 +90,11 @@
                             <input
                                 type="hidden"
                                 name="csrf_token"
-                                value="<?= htmlspecialchars($csrfToken) ?>"
+                                value="<?= htmlspecialchars(
+                                $csrfToken ?? '',
+                                ENT_QUOTES,
+                                'UTF-8'
+                            ) ?>"
                             >
 
 
