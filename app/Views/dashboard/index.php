@@ -44,20 +44,6 @@ button {
 
 <main class="dashboard-page">
 
-<?php if(isset($_SESSION['message'])): ?>
-
-<div class="message">
-
-    <?= htmlspecialchars($_SESSION['message']) ?>
-
-</div>
-
-
-<?php unset($_SESSION['message']); ?>
-
-<!--Nothing Showing here-->
-<?php endif; ?>
-
 <header class="dashboard-header">
 
 <div>
@@ -81,7 +67,19 @@ button {
     </a>
 
 </div>
+<?php if(isset($_SESSION['message'])): ?>
 
+<div class="message">
+
+    <?= htmlspecialchars($_SESSION['message']) ?>
+
+</div>
+
+
+<?php unset($_SESSION['message']); ?>
+
+<!--Nothing Showing here-->
+<?php endif; ?>
 <div class="welcome">
 
     <h2>
