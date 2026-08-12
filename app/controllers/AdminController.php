@@ -32,15 +32,7 @@ class AdminController extends Controller
 
     public function index(): void
     {
-        if (!$this->auth->isLoggedIn()) {
-            header('Location: /login');
-            exit;
-        }
-
-        if (!$this->auth->isAdmin()) {
-            header('Location: /dashboard');
-            exit;
-        }
+        $this->auth->requireAdmin();
 
         $stats = [
             'users' => $this->adminRepository->countUsers(),
@@ -71,15 +63,8 @@ class AdminController extends Controller
 
     public function users(): void
     {
-        if (!$this->auth->isLoggedIn()) {
-            header('Location: /login');
-            exit;
-        }
-
-        if (!$this->auth->isAdmin()) {
-            header('Location: /dashboard');
-            exit;
-        }
+       
+        $this->auth->requireAdmin();
 
         $users = $this->userRepository->all();
 
@@ -96,15 +81,8 @@ class AdminController extends Controller
 
     public function createUser(): void
     {
-        if (!$this->auth->isLoggedIn()) {
-            header('Location: /login');
-            exit;
-        }
-
-        if (!$this->auth->isAdmin()) {
-            header('Location: /dashboard');
-            exit;
-        }
+       
+        $this->auth->requireAdmin();
 
         $this->view(
             'admin/dashboard/users/create',
@@ -118,12 +96,9 @@ class AdminController extends Controller
 
     public function storeUser(): void
     {
-        $this->csrf->requireValidToken();
+        $this->auth->requireAdmin();
 
-        if (!$this->auth->isAdmin()) {
-            header('Location: /dashboard');
-            exit;
-        }
+        $this->csrf->requireValidToken();
 
         $username = trim($_POST['username'] ?? '');
         $email = trim($_POST['email'] ?? '');
@@ -174,10 +149,8 @@ class AdminController extends Controller
 
     public function editUser(): void
     {
-        if (!$this->auth->isAdmin()) {
-            header('Location: /dashboard');
-            exit;
-        }
+        
+        $this->auth->requireAdmin();
 
         $id = (int) ($_GET['id'] ?? 0);
 
@@ -201,17 +174,9 @@ class AdminController extends Controller
 
     public function updateUser(): void
     {
+        $this->auth->requireSuperAdmin();
+
         $this->csrf->requireValidToken();
-
-        if (!$this->auth->isLoggedIn()) {
-            header('Location: /login');
-            exit;
-        }
-
-        if (!$this->auth->isSuperAdmin()) {
-            header('Location: /admin/users');
-            exit;
-        }
 
         $id = (int) ($_POST['id'] ?? 0);
         $username = trim($_POST['username'] ?? '');
@@ -236,17 +201,9 @@ class AdminController extends Controller
 
     public function deleteUser(): void
     {
+        $this->auth->requireSuperAdmin();
+
         $this->csrf->requireValidToken();
-
-        if (!$this->auth->isLoggedIn()) {
-            header('Location: /login');
-            exit;
-        }
-
-        if (!$this->auth->isSuperAdmin()) {
-            header('Location: /admin/users');
-            exit;
-        }
 
         $id = (int) ($_POST['id'] ?? 0);
 
@@ -273,15 +230,7 @@ class AdminController extends Controller
 
     public function media(): void
     {
-        if (!$this->auth->isLoggedIn()) {
-            header('Location: /login');
-            exit;
-        }
-
-        if (!$this->auth->isAdmin()) {
-            header('Location: /dashboard');
-            exit;
-        }
+         $this->auth->requireAdmin();
 
         $images = $this->imageRepository->all();
 
@@ -298,16 +247,9 @@ class AdminController extends Controller
 
     public function uploadMedia(): void
     {
-        if (!$this->auth->isLoggedIn()) {
-            header('Location: /login');
-            exit;
-        }
-
-        if (!$this->auth->isAdmin()) {
-            header('Location: /dashboard');
-            exit;
-        }
-
+       
+        $this->auth->requireAdmin();
+        
         $this->view(
             'admin/dashboard/media/upload',
             [
@@ -320,15 +262,7 @@ class AdminController extends Controller
 
     public function storeMedia(): void
     {
-        if (!$this->auth->isLoggedIn()) {
-            header('Location: /login');
-            exit;
-        }
-
-        if (!$this->auth->isAdmin()) {
-            header('Location: /dashboard');
-            exit;
-        }
+        $this->auth->requireAdmin();
 
         $this->csrf->requireValidToken();
 
@@ -358,15 +292,9 @@ class AdminController extends Controller
 
     public function viewMedia(): void
     {
-        if (!$this->auth->isLoggedIn()) {
-            header('Location: /login');
-            exit;
-        }
+        $this->auth->requireAdmin();
 
-        if (!$this->auth->isAdmin()) {
-            header('Location: /dashboard');
-            exit;
-        }
+        $this->csrf->requireValidToken();
 
         $id = (int) ($_GET['id'] ?? 0);
 

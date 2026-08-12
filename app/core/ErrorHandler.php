@@ -13,89 +13,86 @@ class ErrorHandler
     ) {
     }
 
-public function register(): void
-{
-    set_exception_handler(
-        [$this, 'handleException']
-    );
+    public function register(): void
+    {
+        set_exception_handler(
+            [$this, 'handleException']
+        );
 
-    set_error_handler(
-        [$this, 'handleError']
-    );
+        set_error_handler(
+            [$this, 'handleError']
+        );
 
-    register_shutdown_function(
-        [$this, 'handleShutdown']
-    );
-}
-
-public function handleError(
-    int $severity,
-    string $message,
-    string $file,
-    int $line
-): bool {
-    if (!(error_reporting() & $severity)) {
-        return false;
+        register_shutdown_function(
+            [$this, 'handleShutdown']
+        );
     }
 
-    $exception = new \ErrorException(
-        $message,
-        0,
-        $severity,
-        $file,
-        $line
-    );
+    public function handleError(
+        int $severity,
+        string $message,
+        string $file,
+        int $line
+    ): bool {
+        if (!(error_reporting() & $severity)) {
+            return false;
+        }
 
-    $this->handleException($exception);
+        $exception = new \ErrorException(
+            $message,
+            0,
+            $severity,
+            $file,
+            $line
+        );
 
-    return true;
-}
+        $this->handleException($exception);
 
-public function handleShutdown(): void
-{
-    $error = error_get_last();
-
-    if ($error === null) {
-        return;
+        return true;
     }
 
-    $fatalErrors = [
-        E_ERROR,
-        E_PARSE,
-        E_CORE_ERROR,
-        E_COMPILE_ERROR,
-    ];
+    public function handleShutdown(): void
+    {
+        $error = error_get_last();
 
-    if (!in_array(
-        $error['type'],
-        $fatalErrors,
-        true
-    )) {
-        return;
+        if ($error === null) {
+            return;
+        }
+
+        $fatalErrors = [
+            E_ERROR,
+            E_PARSE,
+            E_CORE_ERROR,
+            E_COMPILE_ERROR,
+        ];
+
+        if (!in_array(
+            $error['type'],
+            $fatalErrors,
+            true
+        )) {
+            return;
+        }
+
+        $exception = new \ErrorException(
+            $error['message'],
+            0,
+            $error['type'],
+            $error['file'],
+            $error['line']
+        );
+
+        $this->handleException($exception);
     }
-
-    $exception = new \ErrorException(
-        $error['message'],
-        0,
-        $error['type'],
-        $error['file'],
-        $error['line']
-    );
-
-    $this->handleException($exception);
-}
-
 
     public function handleException(
         Throwable $exception
     ): void {
-
         $this->logException($exception);
 
         if (!headers_sent()) {
             http_response_code(500);
         }
-
 
         if ($this->isDebug()) {
             $this->renderDevelopmentError($exception);
@@ -110,45 +107,47 @@ public function handleShutdown(): void
         return $this->config['app']['debug'] ?? false;
     }
 
-private function logException(
-    Throwable $exception
-): void {
+    private function logException(
+        Throwable $exception
+    ): void {
+        $logDirectory = dirname(__DIR__, 2)
+            . '/storage/logs';
 
-    $logDirectory = dirname(__DIR__, 2)
-        . '/storage/logs';
+        if (!is_dir($logDirectory)) {
+            if (
+                !mkdir($logDirectory, 0750, true)
+                && !is_dir($logDirectory)
+            ) {
+                return;
+            }
+        }
 
-    if (!is_dir($logDirectory)) {
-        mkdir(
-            $logDirectory,
-            0755,
-            true
+        if (!is_writable($logDirectory)) {
+            return;
+        }
+
+        $logFile = $logDirectory . '/app.log';
+
+        $message = sprintf(
+            "[%s] %s: %s in %s:%d\n%s\n\n",
+            date('Y-m-d H:i:s'),
+            get_class($exception),
+            $exception->getMessage(),
+            $exception->getFile(),
+            $exception->getLine(),
+            $exception->getTraceAsString()
+        );
+
+        file_put_contents(
+            $logFile,
+            $message,
+            FILE_APPEND | LOCK_EX
         );
     }
-
-    $logFile = $logDirectory . '/app.log';
-
-    $message = sprintf(
-        "[%s] %s: %s in %s:%d\n%s\n\n",
-        date('Y-m-d H:i:s'),
-        get_class($exception),
-        $exception->getMessage(),
-        $exception->getFile(),
-        $exception->getLine(),
-        $exception->getTraceAsString()
-    );
-
-    file_put_contents(
-        $logFile,
-        $message,
-        FILE_APPEND | LOCK_EX
-    );
-}
-
 
     private function renderDevelopmentError(
         Throwable $exception
     ): void {
-
         echo '<!DOCTYPE html>';
         echo '<html lang="en">';
         echo '<head>';
@@ -216,17 +215,16 @@ private function logException(
         echo '</html>';
     }
 
-  private function renderProductionError(): void
-{
-    $viewPath = dirname(__DIR__)
-        . '/Views/errors/500.php';
+    private function renderProductionError(): void
+    {
+        $viewPath = dirname(__DIR__)
+            . '/Views/errors/500.php';
 
-    if (!is_readable($viewPath)) {
-        echo 'Something went wrong.';
-        return;
+        if (!is_readable($viewPath)) {
+            echo 'Something went wrong.';
+            return;
+        }
+
+        require $viewPath;
     }
-
-    require $viewPath;
-}
-
 }

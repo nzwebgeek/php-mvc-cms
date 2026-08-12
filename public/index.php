@@ -24,7 +24,7 @@ use App\Core\Router;
 
 
 require dirname(__DIR__) . '/vendor/autoload.php';
-
+// bootstrap already loads .env and config.php
 $container = require dirname(__DIR__) . '/bootstrap/app.php';
 
 $config = require dirname(__DIR__) . '/config/config.php';

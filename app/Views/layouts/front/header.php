@@ -1,8 +1,4 @@
 <?php
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-
 // Temporarily disabled during development
 /*
 if (!empty($settings['maintenance_mode']) && !isset($_SESSION['user_id'])) {

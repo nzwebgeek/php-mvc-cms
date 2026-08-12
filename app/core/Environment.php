@@ -12,7 +12,7 @@ class Environment
     {
         if (!is_readable($file)) {
             throw new RuntimeException(
-                "Environment file not found: {$file}"
+                'Environment configuration is unavailable.'
             );
         }
 
@@ -21,18 +21,26 @@ class Environment
             FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES
         );
 
-        foreach ($lines as $line) {
+        if ($lines === false) {
+            throw new RuntimeException(
+                'Unable to read environment configuration.'
+            );
+        }
 
+        foreach ($lines as $lineNumber => $line) {
             $line = trim($line);
 
-            // Ignore blank lines and comments
             if ($line === '' || str_starts_with($line, '#')) {
                 continue;
             }
 
-            // Ignore malformed lines
             if (!str_contains($line, '=')) {
-                continue;
+                throw new RuntimeException(
+                    sprintf(
+                        'Invalid environment configuration on line %d.',
+                        $lineNumber + 1
+                    )
+                );
             }
 
             [$name, $value] = explode('=', $line, 2);
@@ -40,12 +48,23 @@ class Environment
             $name = trim($name);
             $value = trim($value);
 
-            // Remove surrounding quotes
             if (
-                strlen($value) >= 2 &&
-                (
-                    ($value[0] === '"' && $value[-1] === '"') ||
-                    ($value[0] === "'" && $value[-1] === "'")
+                $name === ''
+                || !preg_match('/^[A-Za-z_][A-Za-z0-9_]*$/', $name)
+            ) {
+                throw new RuntimeException(
+                    sprintf(
+                        'Invalid environment variable name on line %d.',
+                        $lineNumber + 1
+                    )
+                );
+            }
+
+            if (
+                strlen($value) >= 2
+                && (
+                    ($value[0] === '"' && $value[-1] === '"')
+                    || ($value[0] === "'" && $value[-1] === "'")
                 )
             ) {
                 $value = substr($value, 1, -1);

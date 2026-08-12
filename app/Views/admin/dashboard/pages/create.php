@@ -3,6 +3,13 @@
 <div class="admin-card">
 
 <form method="POST" action="/admin/pages/store">
+    
+    <input
+            type="hidden"
+            name="csrf_token"
+            value="<?= htmlspecialchars($csrfToken, ENT_QUOTES, 'UTF-8') ?>"
+        >
+
 
     <h2>General</h2>
 
@@ -83,7 +90,7 @@
 
     <label>Hero Image</label>
 
-    <select name="hero_media_id" onchange="priviewHero(this)">
+    <select name="hero_media_id" onchange="previewHero(this)">
 
         <option value="">
             -- Select Hero Image --
@@ -92,20 +99,11 @@
         <?php foreach ($images as $image): ?>
 
             <option
-        value="<?= $image['id']; ?>"
-        data-image="<?= htmlspecialchars($image['filepath']); ?>">
-
-    <?= htmlspecialchars($image['filename']); ?>
-
-    </option>
-    <div class="form-group">
-
-    <img
-        id="hero-preview"
-        src=""
-        style="display:none;max-width:250px;">
-
-</div>
+                value="<?= (int)$image['id']; ?>"
+                data-image="<?= htmlspecialchars($image['filepath'], ENT_QUOTES, 'UTF-8'); ?>"
+            >
+                <?= htmlspecialchars($image['filename'], ENT_QUOTES, 'UTF-8'); ?>
+            </option>
 
         <?php endforeach; ?>
 
@@ -113,6 +111,16 @@
 
 </div>
 
+<div class="form-group">
+
+    <img
+        id="hero-preview"
+        src=""
+        alt="Hero image preview"
+        style="display:none; max-width:250px;"
+    >
+
+</div>
     <div class="form-group">
 
         <label>

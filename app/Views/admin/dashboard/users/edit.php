@@ -23,7 +23,7 @@ Edit User
 <input 
 type="hidden"
 name="id"
-value="<?= $user['id'] ?>">
+value="<?= (int)$user['id'] ?>">
 
 
 <label>

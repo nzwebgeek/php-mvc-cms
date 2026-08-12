@@ -1,73 +1,104 @@
-<h1>
-    Media Details
-</h1>
+<div class="admin-card">
 
-<p>
-    <a href="/admin/media">
-        ← Back to Media Library
-    </a>
-</p>
+    <h1>
+        Media Details
+    </h1>
 
+    <p>
+        <a href="/admin/media" class="blue-button">
+            ← Back to Media Library
+        </a>
+    </p>
 
-<div class="media-detail-image">
+    <div class="media-detail-image">
 
-    <img
-        src="<?= htmlspecialchars($image['filepath']) ?>"
-        alt="<?= htmlspecialchars($image['filename']) ?>"
-        style="max-width: 700px; max-height: 500px; width: auto; height: auto; display: block;"
-    >
+        <img
+            src="<?= htmlspecialchars(
+                $image['filepath'],
+                ENT_QUOTES,
+                'UTF-8'
+            ) ?>"
+            alt="<?= htmlspecialchars(
+                $image['filename'],
+                ENT_QUOTES,
+                'UTF-8'
+            ) ?>"
+            style="
+                max-width: 700px;
+                max-height: 500px;
+                width: auto;
+                height: auto;
+                display: block;
+            "
+        >
 
-</div>
-
+    </div>
 
     <div class="media-detail-info">
 
         <h2>
-            <?= htmlspecialchars($image['filename']) ?>
+            <?= htmlspecialchars(
+                $image['filename'],
+                ENT_QUOTES,
+                'UTF-8'
+            ) ?>
         </h2>
-
 
         <p>
             <strong>ID:</strong>
-            <?= (int)$image['id'] ?>
+            <?= (int) $image['id'] ?>
         </p>
-
 
         <p>
             <strong>Filename:</strong>
-            <?= htmlspecialchars($image['filename']) ?>
+            <?= htmlspecialchars(
+                $image['filename'],
+                ENT_QUOTES,
+                'UTF-8'
+            ) ?>
         </p>
-
 
         <p>
             <strong>File path:</strong>
-            <?= htmlspecialchars($image['filepath']) ?>
+            <?= htmlspecialchars(
+                $image['filepath'],
+                ENT_QUOTES,
+                'UTF-8'
+            ) ?>
         </p>
-
 
         <p>
             <strong>MIME type:</strong>
-            <?= htmlspecialchars($image['mime_type'] ?? 'Unknown') ?>
+            <?= htmlspecialchars(
+                $image['mime_type'] ?? 'Unknown',
+                ENT_QUOTES,
+                'UTF-8'
+            ) ?>
         </p>
-
 
         <p>
             <strong>Uploaded:</strong>
-            <?= htmlspecialchars($image['uploaded_at'] ?? 'Unknown') ?>
+            <?= htmlspecialchars(
+                $image['uploaded_at'] ?? 'Unknown',
+                ENT_QUOTES,
+                'UTF-8'
+            ) ?>
         </p>
 
-
-        <div>
+        <div class="media-actions">
 
             <a
-                href="<?= htmlspecialchars($image['filepath']) ?>"
+                href="<?= htmlspecialchars(
+                    $image['filepath'],
+                    ENT_QUOTES,
+                    'UTF-8'
+                ) ?>"
                 target="_blank"
-                rel="noopener"
+                rel="noopener noreferrer"
                 class="green-button"
             >
                 Open Image
             </a>
-
 
             <form
                 method="POST"
@@ -79,16 +110,18 @@
                 <input
                     type="hidden"
                     name="csrf_token"
-                    value="<?= htmlspecialchars($csrfToken) ?>"
+                    value="<?= htmlspecialchars(
+                        $csrfToken,
+                        ENT_QUOTES,
+                        'UTF-8'
+                    ) ?>"
                 >
-
 
                 <input
                     type="hidden"
                     name="id"
-                    value="<?= (int)$image['id'] ?>"
+                    value="<?= (int) $image['id'] ?>"
                 >
-
 
                 <button
                     type="submit"
