@@ -43,7 +43,6 @@ class PasswordResetService
             $token
         );
 
-
         $expires = date(
             'Y-m-d H:i:s',
             strtotime('+1 hour')
@@ -63,6 +62,9 @@ class PasswordResetService
             );
         }
 
+            error_log(
+        'RESET TOKEN LENGTH: ' . strlen($token)
+    );
 
         $sent = $this->mailer->sendPasswordReset(
             $user['email'],
@@ -109,12 +111,24 @@ class PasswordResetService
             $token
         );
 
-
         $user = $this->users->findByResetToken(
-            $tokenHash
-        );
+    $tokenHash
+);
 
+if (!$user) {
+    die(
+        'SERVICE TOKEN HASH: ' . $tokenHash .
+        '<br>No matching user found'
+    );
+}
 
+die(
+    'SERVICE TOKEN HASH: ' . $tokenHash .
+    '<br>User found: ' . $user['email']
+);
+
+       
+      
         if (!$user) {
             return ServiceResult::error(
                 'Invalid or expired reset link.'

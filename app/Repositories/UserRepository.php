@@ -233,25 +233,22 @@ public function deleteUser(int $id): bool
         ]);
     }
 
-    public function verifyEmail(
-        string $token
-    ): bool {
+public function verifyEmail(string $token): bool
+{
+    $stmt = $this->db->prepare("
+        UPDATE users
+        SET
+            email_verified = 1,
+            verification_token = NULL
+        WHERE verification_token = :token
+    ");
 
-        $stmt = $this->db->prepare("
-            UPDATE users
-            SET
-                email_verified = 1,
-                verification_token = NULL
-            WHERE verification_token = :token
-        ");
+    $stmt->execute([
+        'token' => $token
+    ]);
 
-        return $stmt->execute([
-            'token' => $token
-        ]);
-    }
-
-
-    public function findRoleIdByName(
+    return $stmt->rowCount() > 0;
+}    public function findRoleIdByName(
         string $role
     ): ?int {
 
@@ -301,21 +298,23 @@ public function deleteUser(int $id): bool
     ): ?array {
 
         $stmt = $this->db->prepare("
-            SELECT
-                id,
-                username,
-                email
-            FROM users
-            WHERE reset_token = :token
-            AND reset_expires > NOW()
-        ");
+        SELECT
+            id,
+            username,
+            email,
+            reset_token,
+            reset_expires
+        FROM users
+        WHERE reset_token = :token
+        LIMIT 1
+    ");
 
-        $stmt->execute([
-            'token' => $tokenHash
-        ]);
+    $stmt->execute([
+        'token' => $tokenHash
+    ]);
 
-        return $stmt->fetch() ?: null;
-    }
+    return $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
+}
 
 
 

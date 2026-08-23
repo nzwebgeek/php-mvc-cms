@@ -10,17 +10,32 @@
 <!-- TOP TWO FEATURED IMAGES -->
 <section class="comment-content-box">
 
-   <?php foreach ($featuredImages as $image): ?>
-
-<div class="comment-content-img">
+ <?php if (!empty($settings['featured_image_1_path'])): ?>
 
     <img
-        src="<?= htmlspecialchars($image['filepath']); ?>"
-        alt="<?= htmlspecialchars($image['filename']); ?>">
+        src="<?= htmlspecialchars($settings['featured_image_1_path']) ?>"
+        alt="Featured blog image 1"
+    >
 
-</div>
+<?php endif; ?>
 
-<?php endforeach; ?>
+
+ <?php if (!empty($settings['featured_image_2_path'])): ?>
+
+            <div class="blog-featured-image">
+
+                <img
+                    src="<?= htmlspecialchars(
+                        $settings['featured_image_2_path'],
+                        ENT_QUOTES,
+                        'UTF-8'
+                    ) ?>"
+                    alt="Featured blog image 2"
+                >
+
+            </div>
+
+        <?php endif; ?>
 </section>
 
 

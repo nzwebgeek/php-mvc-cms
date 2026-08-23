@@ -531,7 +531,36 @@ Recent Posts
     transform: translateY(-1px);
 }
 
+/* =========================================================
+   BLOG IMAGE PREVIEWS
+   ========================================================= */
 
+.blog-image-preview {
+    width: 100%;
+    max-width: 500px;
+
+    margin-top: 12px;
+    margin-bottom: 20px;
+
+    padding: 10px;
+
+    background: #f8fafc;
+
+    border: 1px solid #e5e7eb;
+
+    border-radius: 8px;
+}
+
+.blog-image-preview img {
+    display: block;
+
+    width: 100%;
+    height: 220px;
+
+    object-fit: cover;
+
+    border-radius: 6px;
+}
 /* ==========================================
    Responsive
 ========================================== */

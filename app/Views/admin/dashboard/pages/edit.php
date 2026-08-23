@@ -129,7 +129,7 @@ onchange="previewHero(this)">
 
 <option
 value="<?= $image['id']; ?>"
-data-image="/<?= htmlspecialchars($image['filepath']?? '', ENT_QUOTES, 'UTF-8'); ?>"
+data-image="<?= htmlspecialchars($image['filepath']?? '', ENT_QUOTES, 'UTF-8'); ?>"
 <?= ($page['hero_media_id'] ?? null) == $image['id']
 ? 'selected'
 : ''; ?>>
@@ -160,7 +160,7 @@ data-image="/<?= htmlspecialchars($image['filepath']?? '', ENT_QUOTES, 'UTF-8');
   <?php if (!empty($page['image_path'])): ?>
 
     <img
-        src="/<?= htmlspecialchars($page['image_path']?? '', ENT_QUOTES, 'UTF-8'); ?>"
+        src="<?= htmlspecialchars($page['image_path']?? '', ENT_QUOTES, 'UTF-8'); ?>"
         alt="<?= htmlspecialchars($page['hero_image_alt'] ?? '', ENT_QUOTES, 'UTF-8'); ?>"
         style="max-width:250px;border:1px solid #ccc;padding:5px;">
 

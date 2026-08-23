@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Controllers\PasswordResetController;
 use App\Controllers\BlogController;
 use App\Controllers\AuthController;
 use App\Controllers\PageController;
@@ -40,10 +41,10 @@ $router->post(
     [CommentController::class, 'store']
 );
 
-$router->get(
+/*$router->get(
     '/contact',
     [PageController::class, 'show']
-);
+);*/
 
 /*
 |--------------------------------------------------------------------------
@@ -338,3 +339,22 @@ $router->post(
     ]
 );
 
+$router->get(
+    '/forgot-password',
+    [PasswordResetController::class, 'requestForm']
+);
+
+$router->post(
+    '/forgot-password',
+    [PasswordResetController::class, 'request']
+);
+
+$router->get(
+    '/reset-password',
+    [PasswordResetController::class, 'resetForm']
+);
+
+$router->post(
+    '/reset-password',
+    [PasswordResetController::class, 'reset']
+);

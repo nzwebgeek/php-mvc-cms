@@ -1,242 +1,699 @@
-# Legacy PHP CMS Migration Journey
+# Stage Three MVC CMS
 
-> A personal learning project documenting the process of transforming a legacy procedural PHP CMS/Blog into a modern MVC application.
+A custom PHP MVC Content Management System built as a hands-on backend development and portfolio project.
 
-## Overview
+The project focuses on building a structured PHP application from the HTTP request layer through controllers, services, repositories, database operations, authentication, email verification, and external services.
 
-This repository began as a way to document what I was learning while studying PHP architecture, software design, and modern development practices.
-
-The original project was a traditional PHP CMS/blog built with procedural code, `mysqli`, mixed HTML/PHP templates, and tightly coupled business logic. Rather than starting over, I chose to refactor it incrementally, using the existing application as a practical case study.
-
-The goal isn't simply to "rewrite" the application.
-
-It's to understand **why** modern architecture exists by experiencing the problems it solves.
+It also provided practical experience with **production debugging, Linux server administration, mail delivery, security, and deployment troubleshooting**.
 
 ---
 
-## Original Application
+## Project Overview
 
-The legacy application includes features commonly found in older PHP projects:
+Stage Three MVC CMS is a custom-built PHP application following an MVC-style, layered architecture.
 
-* Procedural PHP
-* `mysqli` database access
-* PHP mixed directly with HTML
-* Global configuration files
-* Direct SQL queries in page files
-* Basic CMS functionality
-* Blog posts
-* Categories
-* User authentication
-* Admin dashboard
-* File uploads
-* Contact forms
+The application includes:
 
-While functional, the codebase became increasingly difficult to maintain as features were added.
-
-Common issues included:
-
-* Repeated SQL logic
-* Duplicated validation
-* Large page files with multiple responsibilities
-* Difficult testing
-* Tight coupling between UI and business logic
-* Minimal separation of concerns
-
----
-
-# Why Migrate?
-
-Rather than abandoning the project, I decided to use it as a long-term refactoring exercise.
-
-This repository documents:
-
-* architectural decisions
-* mistakes
-* refactoring strategies
-* lessons learned
-* implementation notes
-* comparisons between "old" and "new" approaches
-
-The migration is intentionally incremental.
-
-Instead of rewriting everything at once, individual components are replaced while the application continues to function.
-
----
-
-# Project Goals
-
-* Learn MVC architecture through practice
-* Improve maintainability
-* Reduce duplicated code
-* Introduce dependency injection
-* Improve routing
-* Separate business logic from presentation
-* Improve security
-* Increase testability
-* Modernize development workflow
-
----
-
-# Planned Modern Features
-
-## Architecture
-
-* MVC structure
-* Front Controller pattern
-* Router
-* Controllers
-* Models
-* Services
-* Repository pattern
-* Dependency Injection
-* PSR-4 autoloading
-* Composer
-
----
-
-## Database
-
-* Replace `mysqli` with PDO
-* Prepared statements everywhere
-* Repository abstraction
-* Database migrations
-* Seeders
-
----
-
-## Authentication
-
-* Session management improvements
-* Password hashing
-* Remember Me functionality
-* Role-based authorization
+* User registration and authentication
+* Email address verification
+* Password hashing and validation
+* Session management
+* Role-based access control
+* User, Admin, and Super Admin roles
+* User management
+* Content management
+* Blog functionality
+* Comments
+* Media/image management
+* Contact form email delivery
+* Password reset functionality
 * CSRF protection
-* Login throttling
+* Database repositories
+* Service-based business logic
+* Dependency injection
+* Production error troubleshooting
+* Server-side email delivery
+
+The goal was to move beyond simple PHP scripting and develop an understanding of how a structured backend application is designed, secured, debugged, and deployed.
 
 ---
 
-## Security
+# Technology Stack
 
-* CSRF tokens
-* XSS protection
-* Output escaping
-* Input validation
-* SQL injection prevention
-* Secure session handling
-* Content Security Policy (planned)
+### Backend
 
----
-
-## Frontend
-
-* Template layout system
-* Reusable components
-* Flash messages
-* Pagination
-* Responsive admin panel
-* Better asset organization
-
----
-
-## Developer Experience
-
-* Composer
-* Environment configuration
-* Error handling
-* Logging
-* Configuration management
-* Better project structure
-
----
-
-## Code Quality
-
-* Namespaces
-* SOLID principles
+* PHP 8+
 * Object-Oriented PHP
-* Design patterns where appropriate
+* MySQL / MariaDB
+* PDO
+* PHP Sessions
+* PHP `mail()`
+
+### Architecture
+
+* MVC-style architecture
+* Controllers
+* Services
+* Repositories
+* Dependency Injection
+* Core application classes
+* Views
+
+### Server / Development
+
+* Linux
+* Git / GitHub
+* Command-line debugging
+* PHP configuration
+* Server-side logging
+* Mail transport troubleshooting
+
+---
+
+# Application Architecture
+
+The application separates responsibilities between controllers, services, repositories, and views.
+
+```text
+HTTP Request
+     |
+     v
+ Controller
+     |
+     v
+  Service
+     |
+     v
+Repository
+     |
+     v
+ Database
+```
+
+A simplified project structure:
+
+```text
+app/
+├── Controllers/
+│   ├── AdminController.php
+│   ├── AuthController.php
+│   ├── ContactController.php
+│   └── VerifyController.php
+│
+├── Services/
+│   ├── AuthService.php
+│   ├── CsrfService.php
+│   ├── Mailer.php
+│   ├── PasswordService.php
+│   └── ServiceResult.php
+│
+├── Repositories/
+│   ├── UserRepository.php
+│   ├── AdminRepository.php
+│   ├── ImageRepository.php
+│   └── ...
+│
+├── Core/
+│   └── Controller.php
+│
+└── Views/
+    ├── auth/
+    ├── admin/
+    └── ...
+```
+
+The purpose of this structure is to keep application logic from becoming concentrated inside controllers or individual PHP files.
+
+---
+
+# Authentication & Authorization
+
+Authentication is handled through dedicated services rather than being implemented directly inside controllers.
+
+Users can:
+
+1. Register
+2. Receive a verification email
+3. Verify their email address
+4. Log in
+5. Access protected areas
+6. Log out
+
+Passwords are never stored in plain text and are hashed using PHP's password hashing functionality.
+
+```php
+$hashedPassword = $this->passwords->hash($password);
+```
+
+Email verification is required before a user can authenticate successfully.
+
+```php
+if (!$user['email_verified']) {
+    return ServiceResult::warning(
+        'Please verify your email before logging in.'
+    );
+}
+```
+
+---
+
+# Role-Based Access Control
+
+The application supports multiple levels of access:
+
+* **User**
+* **Admin**
+* **Super Admin**
+
+Authentication services provide permission checks such as:
+
+```php
+$this->auth->requireAdmin();
+```
+
+and:
+
+```php
+$this->auth->requireSuperAdmin();
+```
+
+This allows sensitive functionality to be restricted according to the user's role.
+
+For example:
+
+* Users access normal application functionality
+* Admins manage users and content
+* Super Admins perform higher-level administrative operations
+
+---
+
+# Security
+
+Security was considered throughout the application rather than being treated as a separate feature.
+
+Implemented security measures include:
+
+* Password hashing
+* Password validation
+* Email verification
+* Cryptographically random verification tokens
+* CSRF protection
+* Session regeneration
+* Role-based authorization
+* Protected administrative routes
+* Input trimming
+* HTML escaping
+* Authentication checks
+* Restrictions on sensitive administrative actions
+
+CSRF protection is applied to state-changing requests:
+
+```php
+$this->csrf->requireValidToken();
+```
+
+Forms receive a CSRF token through the CSRF service.
+
+```php
+'csrfToken' => $this->csrf->token(),
+```
+
+Verification tokens are generated using PHP's cryptographically secure random generator:
+
+```php
+$token = bin2hex(random_bytes(32));
+```
+
+---
+
+# Dependency Injection
+
+Services are injected into controllers rather than being instantiated repeatedly inside controller methods.
+
+For example:
+
+```php
+public function __construct(
+    private readonly AuthService $auth,
+    private readonly AdminRepository $adminRepository,
+    private readonly UserRepository $userRepository,
+    private readonly ImageRepository $imageRepository,
+    private readonly CsrfService $csrf,
+    private readonly PasswordService $passwords,
+    private readonly Mailer $mailer
+) {
+}
+```
+
+The application bootstrap creates and configures dependencies before passing them to the required services and controllers.
+
+This improves:
+
+* Maintainability
+* Testability
+* Separation of concerns
+* Configuration management
+* Code reuse
+
+---
+
+# Database Repository Pattern
+
+Database access is separated into repository classes.
+
+Instead of placing SQL queries directly inside controllers:
+
+```php
+$this->userRepository->createUser(...);
+```
+
+The controller coordinates the request while the repository handles database operations.
+
+This separation keeps database logic isolated from application and presentation logic.
+
+---
+
+# User Creation Workflow
+
+The administrative user creation process follows a structured workflow:
+
+```text
+Admin submits form
+        |
+        v
+Admin authentication checked
+        |
+        v
+CSRF token checked
+        |
+        v
+Input collected and validated
+        |
+        v
+Password validated
+        |
+        v
+Username and email checked
+        |
+        v
+Role resolved
+        |
+        v
+Verification token generated
+        |
+        v
+Password hashed
+        |
+        v
+User created in database
+        |
+        v
+Verification email sent
+        |
+        v
+User verifies account
+```
+
+This provides a more robust workflow than directly inserting a user into the database.
+
+---
+
+# Email Verification
+
+Email verification is implemented through a dedicated `Mailer` service.
+
+When a user is created, a cryptographically random verification token is generated and stored with the user record.
+
+```php
+$token = bin2hex(random_bytes(32));
+```
+
+The token is then passed to the mailer:
+
+```php
+$sent = $this->mailer->sendVerificationEmail(
+    $email,
+    $username,
+    $token
+);
+```
+
+The email functionality is kept separate from the controllers to improve maintainability and separation of concerns.
+
+---
+
+# Production Debugging Case Study
+
+One of the most valuable parts of the project was troubleshooting email delivery on a production server.
+
+The application reported:
+
+```text
+mail() => true
+```
+
+However, the email was not initially appearing in Gmail.
+
+This demonstrated an important distinction:
+
+> A successful `mail()` result does not necessarily mean that the email has reached the recipient.
+
+The complete delivery chain was investigated:
+
+```text
+Application
+     |
+     v
+Mailer Service
+     |
+     v
+PHP mail()
+     |
+     v
+Sendmail-compatible transport
+     |
+     v
+Exim
+     |
+     v
+Mail Server
+     |
+     v
+Recipient
+```
+
+The investigation included:
+
+* Checking whether PHP supported `mail()`
+* Inspecting PHP mail configuration
+* Identifying the configured sendmail-compatible transport
+* Inspecting the server's mail transport
+* Testing PHP mail independently
+* Adding application-level logging
+* Verifying recipients and sender configuration
+* Tracing the user creation and verification workflow
+
+Application logging was used to trace the request through individual stages rather than guessing where the problem existed.
+
+The debugging process reinforced an important backend development principle:
+
+**Application-level success and system-level success are not always the same thing.**
+
+---
+
+# Debugging & Production Experience
+
+The project provided practical experience troubleshooting applications on a real Linux server.
+
+Tools and techniques used included:
+
+```text
+php -l
+php -i
+grep
+sed
+find
+ps
+application logs
+server logs
+```
+
+These were used to investigate issues involving:
+
+* PHP configuration
+* Mail transport
+* Dependency injection
+* Controller dependencies
+* Service dependencies
+* Email delivery
+* Verification tokens
+* User creation
+* Role IDs
+* CSRF validation
+* Authentication
+* Server permissions
+* Production configuration
+* Application logging
+
+A particularly useful debugging technique was breaking a request into individual stages and determining exactly how far it progressed before failing.
+
+---
+
+# Key Learning Outcomes
+
+This project significantly expanded my understanding of backend development and production troubleshooting.
+
+### PHP & Backend Development
+
+* Object-oriented PHP
+* Type declarations
+* Classes and interfaces
+* Namespaces
+* Exceptions
+* Sessions
+* Password hashing
+* Email handling
+* Application configuration
+
+### Architecture
+
+* MVC
+* Controllers
+* Services
+* Repositories
+* Dependency Injection
+* Separation of concerns
+* Application bootstrap
+
+### Security
+
+* Authentication
+* Authorization
+* RBAC
+* CSRF protection
+* Password security
+* Session management
+* Email verification
+* Input handling
+
+### Database
+
+* PDO
+* MySQL / MariaDB
+* Repository pattern
+* CRUD operations
+* User records
+* Roles
+* Relationships
+
+### Production
+
+* Linux command line
+* PHP configuration
+* Mail transport
+* Server permissions
+* Application logging
+* Production debugging
+* Troubleshooting external services
+
+---
+
+# What I Would Improve Next
+
+The current application provides a strong foundation, but there are several areas I would improve as development continues.
+
+Planned improvements include:
+
+* Replace PHP `mail()` with a dedicated SMTP service
+* Add automated tests
+* Add unit tests for services
+* Add authentication integration tests
+* Improve structured application logging
+* Improve form validation
+* Add stronger rate limiting
+* Add login attempt protection
+* Improve exception handling
+* Add database migrations
+* Improve environment-based configuration
+* Improve secret management
+* Add static analysis
+* Add automated code quality checks
+* Add CI/CD using GitHub Actions
+* Automate deployment
+
+These improvements would move the application further toward production-grade software engineering practices.
+
+---
+
+# Project Status
+
+The following functionality has been successfully tested:
+
+* User creation
+* Password hashing
+* Role assignment
+* Verification token generation
+* Verification email generation
+* Email delivery
+* Account verification
+* User login
+* Authentication checks
+* Admin access control
+* Super Admin access control
+* CSRF validation
+* Media management
+
+A complete test workflow has been successfully demonstrated:
+
+```text
+Administrator creates user
+        |
+        v
+User assigned a role
+        |
+        v
+Verification token generated
+        |
+        v
+Verification email sent
+        |
+        v
+User verifies account
+        |
+        v
+User logs in
+        |
+        v
+Authenticated access granted
+```
+
+---
+
+# What This Project Demonstrates
+
+The main value of this project is not simply that it implements a CMS.
+
+It demonstrates the ability to work across multiple layers of a backend application:
+
+```text
+User Interface
+      |
+      v
+HTTP Request
+      |
+      v
+Controller
+      |
+      v
+Service
+      |
+      v
+Repository
+      |
+      v
+Database
+```
+
+And, when external services are involved:
+
+```text
+Application
+      |
+      v
+Service
+      |
+      v
+External System
+      |
+      v
+Production Environment
+```
+
+When problems occurred, the focus was on identifying the failing layer and tracing the system systematically rather than making random code changes.
+
+This project therefore provided practical experience in:
+
+* Backend architecture
+* Security
+* Authentication
+* Authorization
+* Database integration
+* Dependency management
+* Email delivery
+* Linux
+* Production debugging
+* Application logging
+* Troubleshooting external services
+
+---
+
+# Portfolio Value
+
+This project was developed as a practical learning and portfolio project rather than simply following a tutorial.
+
+The most valuable development experience came from solving problems where the application appeared to be functioning correctly while the complete system was not.
+
+The email verification issue was a good example.
+
+Although PHP reported:
+
+```text
+mail() = true
+```
+
+the message was not initially reaching Gmail.
+
+Investigating the issue required tracing the application through PHP configuration, dependency injection, the Mailer service, Linux, the sendmail-compatible transport, Exim, server configuration, and application logging.
+
+That experience reinforced the importance of understanding the complete technology stack and using systematic debugging rather than relying on assumptions.
+
+---
+
+# Future Direction
+
+The long-term goal is to continue evolving the project toward a more production-oriented application by introducing:
+
+* Automated testing
+* SMTP email delivery
+* CI/CD
 * Static analysis
-* Unit testing
-* Integration testing
+* Automated deployment
+* Improved observability
+* Stronger validation and rate limiting
+* Better configuration and secret management
+* Database migrations
 
 ---
 
-# Migration Strategy
+# Author
 
-The migration follows an incremental approach.
+Developed as a practical PHP/MVC learning and portfolio project.
 
-Instead of replacing the entire application, each feature is migrated individually.
-
-Typical workflow:
-
-1. Understand the existing implementation.
-2. Identify pain points.
-3. Design a cleaner solution.
-4. Refactor into MVC.
-5. Test.
-6. Repeat.
-
-This approach allows continuous learning while keeping the application functional.
+The goal of the project is to demonstrate continuous development, problem solving, backend architecture, security awareness, debugging, and the ability to troubleshoot real-world production issues.
 
 ---
 
-# What I've Learned So Far
+## GitHub Repository Description
 
-Some of the biggest lessons have little to do with syntax.
+> **Custom PHP MVC CMS demonstrating authentication, RBAC, CSRF protection, email verification, database repositories, dependency injection, and production troubleshooting.**
 
-I've learned that:
+### Suggested Topics
 
-* Architecture matters more as projects grow.
-* Small abstractions often remove large amounts of duplicated code.
-* Good folder structure makes development easier.
-* Dependency injection improves flexibility.
-* Business logic should never live inside templates.
-* Refactoring is a skill that improves with practice.
-* Perfect architecture isn't the goal—maintainable architecture is.
-
----
-
-# Current Status
-
-This project is actively evolving.
-
-Some areas are fully migrated, while others remain intentionally untouched so the differences between the legacy and modern implementations can be documented.
-
-The repository reflects the learning process, not just the finished result.
-
----
-
-# Roadmap
-
-* [ ] Implement MVC framework foundation
-* [ ] Complete routing system
-* [ ] Refactor authentication
-* [ ] Migrate all database interactions to PDO
-* [ ] Introduce service layer
-* [ ] Implement repository pattern
-* [ ] Add dependency injection container
-* [ ] Improve validation
-* [ ] Build reusable view components
-* [ ] Add testing framework
-* [ ] Improve documentation
-* [ ] Docker development environment
-* [ ] REST API
-* [ ] Optional SPA frontend experiments
-
----
-
-# Philosophy
-
-This project isn't about creating yet another PHP framework.
-
-It's about understanding how modern PHP applications are structured by carefully evolving a real-world legacy codebase.
-
-Every refactor is documented, every mistake is part of the process, and every improvement is an opportunity to learn.
-
-If you're also migrating an older PHP project, I hope these notes save you time—or at least reassure you that refactoring is rarely a straight line.
-
----
-
-## License
-
-This repository is provided for educational purposes and personal learning. Feel free to explore the code, compare approaches, and adapt ideas for your own projects.
+```text
+php
+mvc
+mysql
+mariadb
+pdo
+authentication
+authorization
+rbac
+csrf
+dependency-injection
+backend
+cms
+web-development
+linux
+email
+security
+```

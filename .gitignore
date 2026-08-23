@@ -8,3 +8,12 @@
 
 node_modules/.env
 .env
+# Environment / secrets
+.env
+
+# Database backups
+database-backup/
+
+# Temporary / backup files
+*.corrupted
+*.before-*

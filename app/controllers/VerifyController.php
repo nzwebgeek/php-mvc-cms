@@ -43,8 +43,7 @@ class VerifyController extends Controller
         }
 
 
-        $this->view('auth/verify', [
-            'message' => 'Your account has been verified successfully.'
-        ]);
+       header('Location: /login?verified=1');
+exit;
     }
 }

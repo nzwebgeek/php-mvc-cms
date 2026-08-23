@@ -66,18 +66,6 @@ class ImageRepository extends Repository
     }
 
 
-    public function getBlogFeaturedImages(): array
-    {
-        $stmt = $this->db->query("
-            SELECT *
-            FROM images
-            LIMIT 2
-        ");
-
-        return $stmt->fetchAll();
-    }
-
-
     public function all(): array
     {
         $stmt = $this->db->query("

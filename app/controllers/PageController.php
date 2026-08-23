@@ -7,6 +7,7 @@ namespace App\Controllers;
 use App\Core\Controller;
 use App\Repositories\PageRepository;
 use App\Repositories\SettingsRepository;
+use App\Repositories\BlogSettingsRepository;
 use App\Services\CsrfService;
 
 class PageController extends Controller
@@ -14,40 +15,48 @@ class PageController extends Controller
     public function __construct(
         private PageRepository $pages,
         private SettingsRepository $settings,
-         private CsrfService $csrf
+        private BlogSettingsRepository $blogSettings,
+        private CsrfService $csrf
     ) {
     }
 
-public function home(): void
-{
-    $settings = $this->settings->get();
+    public function home(): void
+    {
+        $settings = $this->settings->get();
 
-    $pages = $this->pages->getAll();
+        $pages = $this->pages->getAll();
 
-    $this->view('pages/home', [
-        'pages' => $pages,
-        'settings' => $settings,
-        'csrfToken' => $this->csrf->token()
-    ]);
-}
-   public function show(string $slug): void
-{
-    $page = $this->pages->findBySlug($slug);
+        $blogSettings = $this->blogSettings->get();
 
-    if (!$page) {
-        $this->view('errors/404');
-        return;
+        $this->view('pages/home', [
+            'pages' => $pages,
+            'settings' => $settings,
+            'blogSettings' => $blogSettings,
+            'csrfToken' => $this->csrf->token()
+        ]);
     }
 
-    $settings = $this->settings->get();
+    public function show(string $slug): void
+    {
+        $page = $this->pages->findBySlug($slug);
 
-    $pages = $this->pages->getAll();
+        if (!$page) {
+            $this->view('errors/404');
+            return;
+        }
 
-    $this->view('pages/page', [
-        'page' => $page,
-        'pages' => $pages,
-        'settings' => $settings,
-        'csrfToken' => $this->csrf->token()
-    ]);
-}
+        $settings = $this->settings->get();
+
+        $pages = $this->pages->getAll();
+
+        $blogSettings = $this->blogSettings->get();
+
+        $this->view('pages/page', [
+            'page' => $page,
+            'pages' => $pages,
+            'settings' => $settings,
+            'blogSettings' => $blogSettings,
+            'csrfToken' => $this->csrf->token()
+        ]);
+    }
 }

@@ -7,12 +7,14 @@ namespace App\Controllers;
 use App\Core\Controller;
 use App\Repositories\PageRepository;
 use App\Repositories\SettingsRepository;
+use App\Services\Mailer;
 
 class ContactController extends Controller
 {
     public function __construct(
         private SettingsRepository $settings,
-        private PageRepository $pages
+        private PageRepository $pages,
+         private Mailer $mailer
     ) {
     }
 
@@ -50,16 +52,17 @@ class ContactController extends Controller
         $body .= "Country: $country\n\n";
         $body .= "Message:\n$message";
 
-        $headers = [
-            "From: $email",
-            "Reply-To: $email"
-        ];
-
-        if ($email && mail($to, $subject, $body, implode("\r\n", $headers))) {
-            $data['success'] = 'Email successfully sent!';
-        } else {
-            $data['error'] = 'Failed to send email.';
-        }
+       if ($email && $this->mailer->sendContactEmail(
+    $to,
+    "$fname $lname",
+    $email,
+    $country,
+    $message
+)) {
+    $data['success'] = 'Email successfully sent!';
+} else {
+    $data['error'] = 'Failed to send email.';
+}
 
         $this->view('pages/contact/contact', $data);
     }

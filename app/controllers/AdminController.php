@@ -294,8 +294,6 @@ class AdminController extends Controller
     {
         $this->auth->requireAdmin();
 
-        $this->csrf->requireValidToken();
-
         $id = (int) ($_GET['id'] ?? 0);
 
         if ($id <= 0) {

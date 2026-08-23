@@ -20,7 +20,11 @@
         <input
             type="hidden"
             name="csrf_token"
-            value="<?= htmlspecialchars($csrfToken, ENT_QUOTES, 'UTF-8') ?>"
+            value="<?= htmlspecialchars(
+                $csrfToken,
+                ENT_QUOTES,
+                'UTF-8'
+            ) ?>"
         >
 
         <input
@@ -114,7 +118,9 @@
 
                     <option
                         value="<?= (int) $user['id'] ?>"
-                        <?= (int) $user['id'] === (int) ($post['user_id'] ?? 0)
+                        <?= (int) $user['id'] === (int) (
+                            $post['user_id'] ?? 0
+                        )
                             ? 'selected'
                             : '' ?>
                     >
@@ -138,6 +144,9 @@
 
         <h2>Featured Image</h2>
 
+
+        <!-- Current featured image -->
+
         <div class="form-group">
 
             <label>
@@ -146,7 +155,12 @@
 
             <?php if (!empty($post['image_path'])): ?>
 
-                <p>
+                <div
+                    style="
+                        margin-top:10px;
+                        margin-bottom:10px;
+                    "
+                >
 
                     <img
                         src="<?= htmlspecialchars(
@@ -160,14 +174,23 @@
                             'UTF-8'
                         ) ?>"
                         width="180"
-                        style="border-radius:6px;"
+                        style="
+                            display:block;
+                            border-radius:6px;
+                            max-width:300px;
+                            max-height:200px;
+                            object-fit:cover;
+                        "
                     >
 
-                </p>
+                </div>
+
 
                 <?php if (!empty($post['image_filename'])): ?>
 
                     <p>
+                        <strong>Current file:</strong>
+
                         <?= htmlspecialchars(
                             $post['image_filename'],
                             ENT_QUOTES,
@@ -179,12 +202,16 @@
 
             <?php else: ?>
 
-                <p>No featured image selected.</p>
+                <p>
+                    No featured image selected.
+                </p>
 
             <?php endif; ?>
 
         </div>
 
+
+        <!-- Select new featured image -->
 
         <div class="form-group">
 
@@ -211,7 +238,9 @@
                             ENT_QUOTES,
                             'UTF-8'
                         ) ?>"
-                        <?= (int) $image['id'] === (int) ($post['featured_media_id'] ?? 0)
+                        <?= (int) $image['id'] === (int) (
+                            $post['featured_media_id'] ?? 0
+                        )
                             ? 'selected'
                             : '' ?>
                     >
@@ -229,19 +258,49 @@
         </div>
 
 
-        <div class="form-group">
+        <!-- =========================================================
+             Selected Image Preview
+        ========================================================== -->
+
+        <div
+            class="form-group"
+            id="selected-image-preview-container"
+        >
 
             <label>
-                New Image Preview
+                Selected Image Preview
             </label>
 
-            <img
-                id="image-preview"
-                src=""
-                alt=""
-                width="180"
-                style="display:none;border-radius:6px;"
+            <div
+                style="
+                    margin-top:10px;
+                    min-height:40px;
+                "
             >
+
+                <img
+                    id="image-preview"
+                    src=""
+                    alt="Selected featured image"
+                    style="
+                        display:none;
+                        width:300px;
+                        max-width:100%;
+                        max-height:220px;
+                        object-fit:cover;
+                        border-radius:6px;
+                        border:1px solid #ddd;
+                    "
+                >
+
+                <p
+                    id="no-image-preview"
+                    style="display:none;"
+                >
+                    No image selected.
+                </p>
+
+            </div>
 
         </div>
 
@@ -519,29 +578,88 @@
 
 function previewImage(select)
 {
-    const option = select.options[select.selectedIndex];
+    const preview =
+        document.getElementById('image-preview');
 
-    const image = option.getAttribute('data-image');
+    const noImage =
+        document.getElementById('no-image-preview');
 
-    const preview = document.getElementById('image-preview');
+    if (!preview || !noImage) {
+        return;
+    }
 
-    if (image) {
-        preview.src = image;
-        preview.style.display = 'block';
-    } else {
+
+    const selectedOption =
+        select.options[select.selectedIndex];
+
+
+    if (!selectedOption) {
+
         preview.src = '';
         preview.style.display = 'none';
+
+        noImage.style.display = 'block';
+
+        return;
+    }
+
+
+    const image =
+        selectedOption.getAttribute('data-image');
+
+
+    /*
+     * An image was selected.
+     */
+    if (image) {
+
+        preview.src = image;
+
+        preview.alt =
+            selectedOption.textContent.trim();
+
+        preview.style.display = 'block';
+
+        noImage.style.display = 'none';
+
+    }
+
+
+    /*
+     * "-- No Image --" was selected.
+     */
+    else {
+
+        preview.src = '';
+
+        preview.alt = '';
+
+        preview.style.display = 'none';
+
+        noImage.style.display = 'block';
+
     }
 }
 
-document.addEventListener('DOMContentLoaded', function () {
 
-    const select = document.getElementById('featured_media_id');
+/*
+ * Show the currently selected image
+ * when the edit page loads.
+ */
+document.addEventListener(
+    'DOMContentLoaded',
+    function () {
 
-    if (select) {
-        previewImage(select);
+        const select =
+            document.getElementById(
+                'featured_media_id'
+            );
+
+        if (select) {
+            previewImage(select);
+        }
+
     }
-
-});
+);
 
 </script>

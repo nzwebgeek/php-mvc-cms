@@ -2,11 +2,6 @@
 
 declare(strict_types=1);
 
-/*
- * Responsibility:
- * Display blog posts to visitors.
- */
-
 namespace App\Controllers;
 
 use App\Core\Controller;
@@ -23,24 +18,23 @@ class BlogController extends Controller
         private SettingsRepository $settings,
         private PageRepository $pages,
         private CommentRepository $comments,
-         private CsrfService $csrf
+        private CsrfService $csrf
     ) {
     }
 
     public function index(): void
     {
+        $settings = $this->settings->get();
+
         $this->view('pages/blog/blog', [
 
             'posts' => $this->posts->all(),
 
-            'featuredImages' => $this->posts->getBlogImages(),
-
-            'settings' => $this->settings->get(),
+            'settings' => $settings,
 
             'pages' => $this->pages->getAll(),
 
             'csrfToken' => $this->csrf->token(),
-
 
         ]);
     }
@@ -63,7 +57,7 @@ class BlogController extends Controller
             'comments' => $comments,
             'settings' => $this->settings->get(),
             'pages' => $this->pages->getAll(),
-             'csrfToken' => $this->csrf->token(),
+            'csrfToken' => $this->csrf->token(),
         ]);
     }
 }

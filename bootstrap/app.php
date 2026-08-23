@@ -2,6 +2,12 @@
 
 declare(strict_types=1);
 
+require dirname(__DIR__) . '/vendor/autoload.php';
+
+require dirname(__DIR__) . '/vendor/autoload.php';
+
+use App\Controllers\PasswordResetController;
+use App\Services\PasswordResetService;
 use App\Repositories\RoleRepository;
 use App\Controllers\AdminController;
 use App\Repositories\PageRepository;
@@ -31,7 +37,7 @@ use App\Controllers\AdminPagesController;
 use App\Repositories\CommentRepository;
 use App\Controllers\CommentController;
 use App\Core\Environment;
-
+use App\Controllers\ContactController;
 
 
 Environment::load(
@@ -57,6 +63,7 @@ $pageRepository = new PageRepository($db);
 $blogSettingsRepository = new BlogSettingsRepository($db);
 $adminRepository = new AdminRepository($db);
 $roleRepository = new RoleRepository($db);
+$passwordService = new PasswordService();
 
 // Models
 
@@ -72,6 +79,12 @@ $mailer = new Mailer(
     $config['mail']['from']
 );
 
+$passwordResetService = new PasswordResetService(
+    $userRepository,
+    $mailer,
+    $passwordService
+);
+
 
 $authService = new AuthService(
     $userRepository,
@@ -80,6 +93,13 @@ $authService = new AuthService(
 );
 $authController = new AuthController(
     $authService,
+    $pageRepository,
+    $settingsRepository,
+    $csrfService
+);
+
+$passwordResetController = new PasswordResetController(
+    $passwordResetService,
     $pageRepository,
     $settingsRepository,
     $csrfService
@@ -118,7 +138,23 @@ $errorController = new ErrorController(
     $settingsRepository,
     $csrfService
 );
+
+$contactController = new ContactController(
+    $settingsRepository,
+    $pageRepository,
+    $mailer
+);
+
 // Bind services
+$container->set(
+    PasswordResetController::class,
+    $passwordResetController
+);
+
+$container->set(
+    ContactController::class,
+    $contactController
+);
 $container->set(
     UserRepository::class,
     $userRepository
@@ -165,6 +201,7 @@ $settingsController = new SettingsController(
     $authService,
     $settingsRepository,
     $blogSettingsRepository,
+    $imageRepository,
     $csrfService
 );
 

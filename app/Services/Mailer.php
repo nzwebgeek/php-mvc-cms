@@ -80,4 +80,37 @@ class Mailer
         $headers
     );
 }
+public function sendContactEmail(
+    string $to,
+    string $name,
+    string $email,
+    string $country,
+    string $message
+): bool {
+
+    $subject = "New Contact Form Submission from {$name}";
+
+    $body = "
+        New contact form submission:
+
+        Name: {$name}
+        Email: {$email}
+        Country: {$country}
+
+        Message:
+        {$message}
+    ";
+
+    $headers  = "MIME-Version: 1.0\r\n";
+    $headers .= "Content-type:text/plain;charset=UTF-8\r\n";
+    $headers .= "From: {$this->from}\r\n";
+    $headers .= "Reply-To: {$email}\r\n";
+
+    return mail(
+        $to,
+        $subject,
+        $body,
+        $headers
+    );
+}
 }

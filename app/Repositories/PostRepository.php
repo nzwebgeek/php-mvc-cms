@@ -68,28 +68,6 @@ public function findById(int $id): ?array
 
     return $stmt->fetch(\PDO::FETCH_ASSOC) ?: null;
 } 
-public function getBlogImages(): array
-    {
-    $stmt = $this->db->query("
-        SELECT *
-        FROM images
-        LIMIT 2
-    ");
-
-    return $stmt->fetchAll(\PDO::FETCH_ASSOC);
-}
-
-public function getBlogFeaturedImages(): array
-{
-    $stmt = $this->db->query("
-        SELECT *
-        FROM images
-        ORDER BY id DESC
-        LIMIT 2
-    ");
-
-    return $stmt->fetchAll(\PDO::FETCH_ASSOC);
-}
 
 
 // Dashboard

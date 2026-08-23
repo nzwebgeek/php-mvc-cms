@@ -24,7 +24,7 @@
                 'UTF-8'
             ) ?>"
         >
-                
+       
 <input
     type="text"
     id="username"
@@ -36,7 +36,7 @@
     ) ?>"
     required
 >
-
+<label for="email">Email</label>  
 
 <input
     type="email"
