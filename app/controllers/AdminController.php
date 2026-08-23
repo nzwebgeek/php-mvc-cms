@@ -131,7 +131,14 @@ class AdminController extends Controller
         }
 
         $roleId = $this->userRepository->findRoleIdByName($role);
-
+        
+        if ($roleId === null) {
+            $_SESSION['error'] = 'Invalid role.';
+        
+            header('Location: /admin/users/create');
+            exit;
+        }
+        
         $this->userRepository->createUser(
             $username,
             $email,
