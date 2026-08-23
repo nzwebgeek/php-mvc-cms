@@ -30,6 +30,10 @@ Reusable application components
 Screenshots
 
 Screenshots will be added as the current interface is finalised.
+<img width="1107" height="788" alt="cms-admin-posts" src="https://github.com/user-attachments/assets/539e1ab3-e8df-4f4f-b962-5ce13210e17f" />
+<img width="920" height="804" alt="cms-admin" src="https://github.com/user-attachments/assets/66e0e07b-034e-460c-9c14-68ea1612309d" />
+<img width="1186" height="880" alt="cms-user-dashboard" src="https://github.com/user-attachments/assets/b0319739-d794-4db5-9673-a342910d9164" />
+<img width="851" height="757" alt="cms-home" src="https://github.com/user-attachments/assets/4f5f423e-3830-4832-939f-ac487062c9ef" />
 
 Architecture
 
