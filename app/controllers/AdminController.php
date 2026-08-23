@@ -292,11 +292,9 @@ class AdminController extends Controller
 
     public function viewMedia(): void
     {
-        $this->auth->requireAdmin();
+         $this->auth->requireAdmin();
 
-        $this->csrf->requireValidToken();
-
-        $id = (int) ($_GET['id'] ?? 0);
+         $id = (int) ($_GET['id'] ?? 0);
 
         if ($id <= 0) {
             $_SESSION['error'] =
