@@ -329,16 +329,9 @@ class AdminController extends Controller
 
     public function deleteMedia(): void
     {
-        if (!$this->auth->isLoggedIn()) {
-            header('Location: /login');
-            exit;
-        }
-
-        if (!$this->auth->isAdmin()) {
-            header('Location: /dashboard');
-            exit;
-        }
-
+       
+        $this->auth->requireAdmin();
+        
         $this->csrf->requireValidToken();
 
         $id = (int) ($_POST['id'] ?? 0);
