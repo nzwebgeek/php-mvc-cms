@@ -1,5 +1,3 @@
-# Legacy PHP CMS Migration Journey
-
 # PHP MVC CMS
 
 A full-stack content management system built with PHP, MySQL and a custom MVC architecture.
