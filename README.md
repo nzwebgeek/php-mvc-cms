@@ -61,7 +61,7 @@ php-mvc-cms/
 └── composer.lock        # Locked dependency versions
 
 
-## Overview
+## Development Journey
 
 This repository began as a way to document what I was learning while studying PHP architecture, software design, and modern development practices.
 
