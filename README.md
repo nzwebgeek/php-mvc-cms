@@ -1,6 +1,26 @@
 # Legacy PHP CMS Migration Journey
 
-> A personal learning project documenting the process of transforming a legacy procedural PHP CMS/Blog into a modern MVC application.
+# PHP MVC CMS
+
+A full-stack content management system built with PHP, MySQL and a custom MVC architecture.
+
+This project started as a legacy PHP application and has been progressively refactored into a more structured, maintainable MVC application using object-oriented PHP, PDO and Composer.
+
+## Features
+
+- Custom MVC architecture
+- Object-oriented PHP
+- MySQL database integration using PDO
+- CRUD functionality
+- User authentication
+- Session management
+- Password hashing
+- Form validation
+- Database abstraction
+- Composer dependency management
+- Responsive frontend
+- Reusable application components
+
 
 ## Overview
 
