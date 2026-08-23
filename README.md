@@ -34,6 +34,22 @@ This project started as a legacy PHP application and has been progressively refa
 - Responsive frontend
 - Reusable application components
 
+## Architecture
+
+The application follows a custom MVC architecture designed to separate responsibilities between the application's models, views and controllers.
+
+```text
+app/
+├── controllers/
+├── models/
+├── views/
+└── ...
+
+bootstrap/
+config/
+public/
+routes/
+
 
 ## Overview
 
