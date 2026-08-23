@@ -6,6 +6,19 @@ A full-stack content management system built with PHP, MySQL and a custom MVC ar
 
 This project started as a legacy PHP application and has been progressively refactored into a more structured, maintainable MVC application using object-oriented PHP, PDO and Composer.
 
+## Technologies
+
+- PHP
+- MySQL
+- PDO
+- HTML5
+- CSS3
+- JavaScript
+- Composer
+- MVC
+- Object-Oriented Programming
+
+
 ## Features
 
 - Custom MVC architecture
