@@ -36,18 +36,26 @@ This project started as a legacy PHP application and has been progressively refa
 
 ## Architecture
 
-## Architecture
+This project uses a custom MVC architecture with separate layers for controllers, models, views, services and repositories.
 
-The application uses a custom MVC architecture with additional service and repository layers to separate responsibilities and keep the codebase maintainable.
+The structure is designed to separate presentation, application logic and data access, making the application easier to maintain, test and extend.
 
 ```text
-app/
-├── controllers/     # Handles HTTP requests and application flow
-├── models/          # Represents application data and domain logic
-├── Views/           # Handles presentation and user interface
-├── Services/        # Contains application/business logic
-├── Repositories/    # Handles data access and database operations
-└── core/            # Core framework/application functionality
+php-mvc-cms/
+├── app/
+│   ├── controllers/     # Handles HTTP requests and application flow
+│   ├── models/          # Application data and domain models
+│   ├── Views/           # Presentation layer
+│   ├── Services/        # Application and business logic
+│   ├── Repositories/    # Data access and database operations
+│   └── core/            # Core application functionality
+│
+├── bootstrap/           # Application bootstrapping
+├── config/              # Configuration
+├── public/              # Public web root and entry point
+├── routes/              # Application routes
+├── composer.json        # PHP dependencies and autoloading
+└── composer.lock        # Locked dependency versions
 
 
 ## Overview
