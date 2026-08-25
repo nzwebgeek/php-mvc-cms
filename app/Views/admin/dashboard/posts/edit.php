@@ -1,10 +1,11 @@
 <?php
+
 /**
  * @var array $post
  * @var array $users
  * @var array $images
  * @var string $csrfToken
-*/
+ */
 ?>
 
 <div class="admin-card">
@@ -32,7 +33,6 @@
             name="id"
             value="<?= (int) $post['id'] ?>"
         >
-
 
         <!-- =========================================================
              Basic Post Information
@@ -184,7 +184,6 @@
                     >
 
                 </div>
-
 
                 <?php if (!empty($post['image_filename'])): ?>
 

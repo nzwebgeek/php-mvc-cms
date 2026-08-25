@@ -123,7 +123,7 @@
                         Copyright Text
                     </label>
 
-                    <input
+                   <input
                         type="text"
                         id="copyright_text"
                         name="copyright_text"

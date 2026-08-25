@@ -22,7 +22,6 @@ class SettingsController extends Controller
     ) {
     }
 
-
     public function index(): void
     {
         if (!$this->auth->isLoggedIn()) {
@@ -54,7 +53,6 @@ class SettingsController extends Controller
         );
     }
 
-
     public function update(): void
     {
         $this->csrf->requireValidToken();
@@ -69,32 +67,42 @@ class SettingsController extends Controller
             exit;
         }
 
-        $siteName = trim($_POST['site_name'] ?? '');
+        $siteName = trim(
+            $_POST['site_name'] ?? ''
+        );
 
-        $contactEmail =
-            trim($_POST['contact_email'] ?? '');
+        $contactEmail = trim(
+            $_POST['contact_email'] ?? ''
+        );
 
-        $contactPhone =
-            trim($_POST['contact_phone'] ?? '');
+        $contactPhone = trim(
+            $_POST['contact_phone'] ?? ''
+        );
 
-        $copyrightText =
-            trim($_POST['copyright_text'] ?? '');
+        $copyrightText = trim(
+            $_POST['copyright_text'] ?? ''
+        );
 
-        $theme =
-            trim($_POST['theme'] ?? 'Light');
+        $theme = trim(
+            $_POST['theme'] ?? 'Light'
+        );
 
         $maintenanceMode =
-            isset($_POST['maintenance_mode']) ? 1 : 0;
+            isset($_POST['maintenance_mode'])
+                ? 1
+                : 0;
 
-        $adminEmail =
-            trim($_POST['admin_email'] ?? '');
+        $adminEmail = trim(
+            $_POST['admin_email'] ?? ''
+        );
 
-        $seoTitle =
-            trim($_POST['seo_title'] ?? '');
+        $seoTitle = trim(
+            $_POST['seo_title'] ?? ''
+        );
 
-        $seoDescription =
-            trim($_POST['seo_description'] ?? '');
-
+        $seoDescription = trim(
+            $_POST['seo_description'] ?? ''
+        );
 
         /*
          * Featured blog images
@@ -110,9 +118,7 @@ class SettingsController extends Controller
                 ? (int) $_POST['featured_image_2_id']
                 : null;
 
-
         try {
-
             $this->settingsRepository->update(
                 $siteName,
                 $contactEmail,
@@ -129,13 +135,10 @@ class SettingsController extends Controller
 
             $_SESSION['success'] =
                 'Settings saved successfully.';
-
         } catch (\Throwable $e) {
-
             $_SESSION['error'] =
                 'Unable to save settings.';
         }
-
 
         header('Location: /admin/settings');
         exit;

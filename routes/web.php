@@ -15,6 +15,7 @@ use App\Controllers\AdminPostsController;
 use App\Controllers\AdminPagesController;
 use App\Controllers\CommentController;
 use App\Controllers\SettingsController;
+
 /*
 |--------------------------------------------------------------------------
 | Pages
@@ -40,11 +41,6 @@ $router->post(
     '/blog/comment/store',
     [CommentController::class, 'store']
 );
-
-/*$router->get(
-    '/contact',
-    [PageController::class, 'show']
-);*/
 
 /*
 |--------------------------------------------------------------------------
@@ -101,11 +97,13 @@ $router->post(
     '/admin/settings/update',
     [SettingsController::class, 'update']
 );
+
 /*
 |--------------------------------------------------------------------------
 | Admin Media
 |--------------------------------------------------------------------------
 */
+
 $router->get(
     '/admin/media',
     [AdminController::class, 'media']
@@ -130,6 +128,7 @@ $router->post(
     '/admin/media/delete',
     [AdminController::class, 'deleteMedia']
 );
+
 /*
 |--------------------------------------------------------------------------
 | Admin Posts
@@ -311,6 +310,12 @@ $router->get(
     [VerifyController::class, 'verify']
 );
 
+/*
+|--------------------------------------------------------------------------
+| Contact
+|--------------------------------------------------------------------------
+*/
+
 $router->get(
     '/contact',
     [ContactController::class, 'index']
@@ -320,6 +325,12 @@ $router->post(
     '/contact',
     [ContactController::class, 'send']
 );
+
+/*
+|--------------------------------------------------------------------------
+| Dashboard Profile
+|--------------------------------------------------------------------------
+*/
 
 $router->post(
     '/dashboard/upload-image',
@@ -338,6 +349,12 @@ $router->post(
         'changePassword'
     ]
 );
+
+/*
+|--------------------------------------------------------------------------
+| Password Reset
+|--------------------------------------------------------------------------
+*/
 
 $router->get(
     '/forgot-password',

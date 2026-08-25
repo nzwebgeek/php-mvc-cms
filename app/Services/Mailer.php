@@ -17,17 +17,14 @@ class Mailer
         $this->from = $from;
     }
 
-
     public function sendPasswordReset(
         string $email,
         string $username,
         string $token
     ): bool {
-
         $link = $this->appUrl .
             '/reset-password?token=' .
             $token;
-
 
         $subject = 'Password Reset';
 
@@ -39,7 +36,6 @@ class Mailer
             {$link}
         ";
 
-
         return mail(
             $email,
             $subject,
@@ -48,69 +44,68 @@ class Mailer
     }
 
     public function sendVerificationEmail(
-    string $email,
-    string $username,
-    string $token
-): bool {
+        string $email,
+        string $username,
+        string $token
+    ): bool {
+        $verifyLink = $this->appUrl .
+            '/verify?token=' .
+            $token;
 
-    $verifyLink = $this->appUrl .
-        '/verify?token=' .
-        $token;
+        $subject = 'Confirm your account';
 
-    $subject = 'Confirm your account';
+        $body = "
+            <h2>Welcome {$username}</h2>
 
-    $body = "
-        <h2>Welcome {$username}</h2>
+            <p>Please confirm your email address by clicking this link:</p>
 
-        <p>Please confirm your email address by clicking this link:</p>
+            <a href=\"{$verifyLink}\">
+                Verify Account
+            </a>
+        ";
 
-        <a href=\"{$verifyLink}\">
-            Verify Account
-        </a>
-    ";
+        $headers = "MIME-Version: 1.0\r\n";
+        $headers .= "Content-type:text/html;charset=UTF-8\r\n";
+        $headers .= "From: {$this->from}\r\n";
 
-    $headers  = "MIME-Version: 1.0\r\n";
-    $headers .= "Content-type:text/html;charset=UTF-8\r\n";
-    $headers .= "From: {$this->from}\r\n";
+        return mail(
+            $email,
+            $subject,
+            $body,
+            $headers
+        );
+    }
 
-    return mail(
-        $email,
-        $subject,
-        $body,
-        $headers
-    );
-}
-public function sendContactEmail(
-    string $to,
-    string $name,
-    string $email,
-    string $country,
-    string $message
-): bool {
+    public function sendContactEmail(
+        string $to,
+        string $name,
+        string $email,
+        string $country,
+        string $message
+    ): bool {
+        $subject = "New Contact Form Submission from {$name}";
 
-    $subject = "New Contact Form Submission from {$name}";
+        $body = "
+            New contact form submission:
 
-    $body = "
-        New contact form submission:
+            Name: {$name}
+            Email: {$email}
+            Country: {$country}
 
-        Name: {$name}
-        Email: {$email}
-        Country: {$country}
+            Message:
+            {$message}
+        ";
 
-        Message:
-        {$message}
-    ";
+        $headers = "MIME-Version: 1.0\r\n";
+        $headers .= "Content-type:text/plain;charset=UTF-8\r\n";
+        $headers .= "From: {$this->from}\r\n";
+        $headers .= "Reply-To: {$email}\r\n";
 
-    $headers  = "MIME-Version: 1.0\r\n";
-    $headers .= "Content-type:text/plain;charset=UTF-8\r\n";
-    $headers .= "From: {$this->from}\r\n";
-    $headers .= "Reply-To: {$email}\r\n";
-
-    return mail(
-        $to,
-        $subject,
-        $body,
-        $headers
-    );
-}
+        return mail(
+            $to,
+            $subject,
+            $body,
+            $headers
+        );
+    }
 }

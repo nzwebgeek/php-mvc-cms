@@ -294,6 +294,7 @@ class AdminController extends Controller
     {
         $this->auth->requireAdmin();
 
+
         $id = (int) ($_GET['id'] ?? 0);
 
         if ($id <= 0) {

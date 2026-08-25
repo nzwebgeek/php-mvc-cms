@@ -14,7 +14,7 @@ class ContactController extends Controller
     public function __construct(
         private SettingsRepository $settings,
         private PageRepository $pages,
-         private Mailer $mailer
+        private Mailer $mailer
     ) {
     }
 
@@ -37,33 +37,56 @@ class ContactController extends Controller
             'error'    => '',
         ];
 
-        $fname = filter_input(INPUT_POST, 'fname', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-        $lname = filter_input(INPUT_POST, 'lname', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-        $email = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
-        $country = filter_input(INPUT_POST, 'country', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-        $message = filter_input(INPUT_POST, 'message', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $fname = filter_input(
+            INPUT_POST,
+            'fname',
+            FILTER_SANITIZE_FULL_SPECIAL_CHARS
+        );
 
-        $to = "fabricflannigan@gmail.com";
-        $subject = "New Contact Form Submission from $fname $lname";
+        $lname = filter_input(
+            INPUT_POST,
+            'lname',
+            FILTER_SANITIZE_FULL_SPECIAL_CHARS
+        );
 
-        $body = "First Name: $fname\n";
-        $body .= "Last Name: $lname\n";
-        $body .= "Email: $email\n";
-        $body .= "Country: $country\n\n";
-        $body .= "Message:\n$message";
+        $email = filter_input(
+            INPUT_POST,
+            'email',
+            FILTER_VALIDATE_EMAIL
+        );
 
-       if ($email && $this->mailer->sendContactEmail(
-    $to,
-    "$fname $lname",
-    $email,
-    $country,
-    $message
-)) {
-    $data['success'] = 'Email successfully sent!';
-} else {
-    $data['error'] = 'Failed to send email.';
-}
+        $country = filter_input(
+            INPUT_POST,
+            'country',
+            FILTER_SANITIZE_FULL_SPECIAL_CHARS
+        );
 
-        $this->view('pages/contact/contact', $data);
+        $message = filter_input(
+            INPUT_POST,
+            'message',
+            FILTER_SANITIZE_FULL_SPECIAL_CHARS
+        );
+
+        $to = 'fabricflannigan@gmail.com';
+
+        if (
+            $email &&
+            $this->mailer->sendContactEmail(
+                $to,
+                trim(($fname ?? '') . ' ' . ($lname ?? '')),
+                $email,
+                $country ?? '',
+                $message ?? ''
+            )
+        ) {
+            $data['success'] = 'Email successfully sent!';
+        } else {
+            $data['error'] = 'Failed to send email.';
+        }
+
+        $this->view(
+            'pages/contact/contact',
+            $data
+        );
     }
 }

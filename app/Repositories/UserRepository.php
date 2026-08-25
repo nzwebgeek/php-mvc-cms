@@ -1,86 +1,87 @@
 <?php
 
 declare(strict_types=1);
-/*UserRepository handles database queries*/
+
+/*
+ * UserRepository handles database queries.
+ */
+
 namespace App\Repositories;
 
 use App\Core\Repository;
 use PDO;
-// UserRepository handles database persistence
+
 class UserRepository extends Repository
 {
-      /*
+    /*
     |--------------------------------------------------------------------------
     | Administration
     |--------------------------------------------------------------------------
     */
-    public function countUsers(): int{
-    $stmt = $this->db->query("
-        SELECT COUNT(*) 
-        FROM users
-    ");
 
-    return (int)$stmt->fetchColumn();
-    }
-  public function all(): array{
-    $stmt = $this->db->query("
-        SELECT
-            u.id,
-            u.username,
-            u.email,
-            u.email_verified,
-            r.name AS role
-
-        FROM users u
-
-        LEFT JOIN roles r
-            ON u.role_id = r.id
-
-        ORDER BY u.id DESC
-    ");
-
-    return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
-
-public function deleteUser(int $id): bool
-{
-    try {
-
-        $this->db->beginTransaction();
-
-
-        $stmt = $this->db->prepare("
-            DELETE FROM comments
-            WHERE user_id = :id
+    public function countUsers(): int
+    {
+        $stmt = $this->db->query("
+            SELECT COUNT(*)
+            FROM users
         ");
 
-        $stmt->execute([
-            'id' => $id
-        ]);
+        return (int) $stmt->fetchColumn();
+    }
 
-
-        $stmt = $this->db->prepare("
-            DELETE FROM users
-            WHERE id = :id
+    public function all(): array
+    {
+        $stmt = $this->db->query("
+            SELECT
+                u.id,
+                u.username,
+                u.email,
+                u.email_verified,
+                r.name AS role
+            FROM users u
+            LEFT JOIN roles r
+                ON u.role_id = r.id
+            ORDER BY u.id DESC
         ");
 
-        $result = $stmt->execute([
-            'id' => $id
-        ]);
-
-
-        $this->db->commit();
-
-        return $result;
-
-
-    } catch (\Exception $e) {
-
-        $this->db->rollBack();
-
-        throw $e;
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-}
+
+    public function deleteUser(int $id): bool
+    {
+        try {
+            $this->db->beginTransaction();
+
+            $stmt = $this->db->prepare("
+                DELETE FROM comments
+                WHERE user_id = :id
+            ");
+
+            $stmt->execute([
+                'id' => $id
+            ]);
+
+            $stmt = $this->db->prepare("
+                DELETE FROM users
+                WHERE id = :id
+            ");
+
+            $result = $stmt->execute([
+                'id' => $id
+            ]);
+
+            $this->db->commit();
+
+            return $result;
+        } catch (\Exception $e) {
+            if ($this->db->inTransaction()) {
+                $this->db->rollBack();
+            }
+
+            throw $e;
+        }
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Authentication
@@ -90,7 +91,6 @@ public function deleteUser(int $id): bool
     public function findByUsername(
         string $username
     ): ?array {
-
         $stmt = $this->db->prepare("
             SELECT
                 u.id,
@@ -113,11 +113,9 @@ public function deleteUser(int $id): bool
         return $user ?: null;
     }
 
-
     public function findByEmail(
         string $email
     ): ?array {
-
         $stmt = $this->db->prepare("
             SELECT
                 id,
@@ -138,34 +136,34 @@ public function deleteUser(int $id): bool
         return $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
     }
 
-
-
     /*
     |--------------------------------------------------------------------------
     | Registration
     |--------------------------------------------------------------------------
     */
-    public function usernameExists(string $username): bool{
-    $stmt = $this->db->prepare("
-        SELECT COUNT(*) 
-        FROM users 
-        WHERE username = :username
-    ");
 
-    $stmt->execute([
-        'username' => $username
-    ]);
-
-    return $stmt->fetchColumn() > 0;
-}
-
-
-
-    public function emailExists(string $email): bool
-    {
+    public function usernameExists(
+        string $username
+    ): bool {
         $stmt = $this->db->prepare("
-            SELECT COUNT(*) 
-            FROM users 
+            SELECT COUNT(*)
+            FROM users
+            WHERE username = :username
+        ");
+
+        $stmt->execute([
+            'username' => $username
+        ]);
+
+        return $stmt->fetchColumn() > 0;
+    }
+
+    public function emailExists(
+        string $email
+    ): bool {
+        $stmt = $this->db->prepare("
+            SELECT COUNT(*)
+            FROM users
             WHERE email = :email
         ");
 
@@ -180,12 +178,11 @@ public function deleteUser(int $id): bool
         string $username,
         string $email
     ): bool {
-
         $stmt = $this->db->prepare("
             SELECT id
             FROM users
             WHERE username = :username
-            OR email = :email
+               OR email = :email
         ");
 
         $stmt->execute([
@@ -196,7 +193,6 @@ public function deleteUser(int $id): bool
         return (bool) $stmt->fetch();
     }
 
-
     public function createUser(
         string $username,
         string $email,
@@ -204,7 +200,6 @@ public function deleteUser(int $id): bool
         int $roleId,
         string $token
     ): bool {
-
         $stmt = $this->db->prepare("
             INSERT INTO users
             (
@@ -233,25 +228,27 @@ public function deleteUser(int $id): bool
         ]);
     }
 
-public function verifyEmail(string $token): bool
-{
-    $stmt = $this->db->prepare("
-        UPDATE users
-        SET
-            email_verified = 1,
-            verification_token = NULL
-        WHERE verification_token = :token
-    ");
+    public function verifyEmail(
+        string $token
+    ): bool {
+        $stmt = $this->db->prepare("
+            UPDATE users
+            SET
+                email_verified = 1,
+                verification_token = NULL
+            WHERE verification_token = :token
+        ");
 
-    $stmt->execute([
-        'token' => $token
-    ]);
+        $stmt->execute([
+            'token' => $token
+        ]);
 
-    return $stmt->rowCount() > 0;
-}    public function findRoleIdByName(
+        return $stmt->rowCount() > 0;
+    }
+
+    public function findRoleIdByName(
         string $role
     ): ?int {
-
         $stmt = $this->db->prepare("
             SELECT id
             FROM roles
@@ -262,22 +259,20 @@ public function verifyEmail(string $token): bool
             'role' => $role
         ]);
 
-        $result = $stmt->fetch();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
         return $result['id'] ?? null;
     }
-
-
 
     /*
     |--------------------------------------------------------------------------
     | Password Reset
     |--------------------------------------------------------------------------
     */
+
     public function findPasswordHashById(
         int $userId
     ): ?string {
-
         $stmt = $this->db->prepare("
             SELECT password
             FROM users
@@ -296,34 +291,31 @@ public function verifyEmail(string $token): bool
     public function findByResetToken(
         string $tokenHash
     ): ?array {
-
         $stmt = $this->db->prepare("
-        SELECT
-            id,
-            username,
-            email,
-            reset_token,
-            reset_expires
-        FROM users
-        WHERE reset_token = :token
-        LIMIT 1
-    ");
+            SELECT
+                id,
+                username,
+                email,
+                reset_token,
+                reset_expires
+            FROM users
+            WHERE reset_token = :token
+              AND reset_expires > NOW()
+            LIMIT 1
+        ");
 
-    $stmt->execute([
-        'token' => $tokenHash
-    ]);
+        $stmt->execute([
+            'token' => $tokenHash
+        ]);
 
-    return $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
-}
-
-
+        return $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
+    }
 
     public function savePasswordResetToken(
         int $userId,
         string $tokenHash,
         string $expires
     ): bool {
-
         $stmt = $this->db->prepare("
             UPDATE users
             SET
@@ -339,13 +331,10 @@ public function verifyEmail(string $token): bool
         ]);
     }
 
-
-
     public function updatePassword(
         int $userId,
         string $password
     ): bool {
-
         $stmt = $this->db->prepare("
             UPDATE users
             SET
@@ -361,19 +350,15 @@ public function verifyEmail(string $token): bool
         ]);
     }
 
-
-
     /*
     |--------------------------------------------------------------------------
-    | Dashboard/Profile
+    | Dashboard / Profile
     |--------------------------------------------------------------------------
     */
-
 
     public function findById(
         int $id
     ): ?array {
-
         $stmt = $this->db->prepare("
             SELECT
                 u.id,
@@ -385,10 +370,8 @@ public function verifyEmail(string $token): bool
                 u.text_color,
                 i.filepath
             FROM users u
-
             LEFT JOIN roles r
-            ON u.role_id = r.id
-
+                ON u.role_id = r.id
             LEFT JOIN images i
                 ON u.image_id = i.id
             WHERE u.id = :id
@@ -397,54 +380,52 @@ public function verifyEmail(string $token): bool
         $stmt->execute([
             'id' => $id
         ]);
+
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if (!$user) {
             return null;
         }
 
-        $user['theme_color'] = $user['theme_color'] ?? '#007bff';
-        $user['background_color'] = $user['background_color'] ?? '#ffffff';
-        $user['text_color'] = $user['text_color'] ?? '#000000';
-        
-        return $user;
+        $user['theme_color'] =
+            $user['theme_color'] ?? '#007bff';
 
+        $user['background_color'] =
+            $user['background_color'] ?? '#ffffff';
+
+        $user['text_color'] =
+            $user['text_color'] ?? '#000000';
+
+        return $user;
     }
 
+    public function updateTheme(
+        int $id,
+        string $theme,
+        string $background,
+        string $text
+    ): bool {
+        $stmt = $this->db->prepare("
+            UPDATE users
+            SET
+                theme_color = ?,
+                background_color = ?,
+                text_color = ?
+            WHERE id = ?
+        ");
 
-
-public function updateTheme(
-    int $id,
-    string $theme,
-    string $background,
-    string $text
-): bool
-{
-
-    $stmt = $this->db->prepare(
-        "UPDATE users
-        SET theme_color = ?,
-            background_color = ?,
-            text_color = ?
-        WHERE id = ?"
-    );
-
-
-    return $stmt->execute([
-        $theme,
-        $background,
-        $text,
-        $id
-    ]);
-
-}
-
+        return $stmt->execute([
+            $theme,
+            $background,
+            $text,
+            $id
+        ]);
+    }
 
     public function updateImage(
         int $userId,
         int $imageId
     ): bool {
-
         $stmt = $this->db->prepare("
             UPDATE users
             SET image_id = :image
@@ -458,29 +439,25 @@ public function updateTheme(
     }
 
     public function updateUser(
-    int $id,
-    string $username,
-    string $email,
-    int $roleId
-): bool {
+        int $id,
+        string $username,
+        string $email,
+        int $roleId
+    ): bool {
+        $stmt = $this->db->prepare("
+            UPDATE users
+            SET
+                username = :username,
+                email = :email,
+                role_id = :role_id
+            WHERE id = :id
+        ");
 
-    $stmt = $this->db->prepare("
-        UPDATE users
-        SET 
-            username = :username,
-            email = :email,
-            role_id = :role_id
-        WHERE id = :id
-    ");
-
-
-    return $stmt->execute([
-        'id' => $id,
-        'username' => $username,
-        'email' => $email,
-        'role_id' => $roleId
-    ]);
-}
-    
-
+        return $stmt->execute([
+            'id' => $id,
+            'username' => $username,
+            'email' => $email,
+            'role_id' => $roleId
+        ]);
+    }
 }

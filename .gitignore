@@ -1,13 +1,11 @@
 /vendor/
-
 /.env
 
 /storage/logs/
-
 /storage/*.log
 
 node_modules/.env
-.env
+
 # Environment / secrets
 .env
 
