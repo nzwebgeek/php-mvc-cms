@@ -1,13 +1,16 @@
 /vendor/
-/.env
-
-/storage/logs/
-/storage/*.log
-
-node_modules/.env
 
 # Environment / secrets
 .env
+.env.*
+!.env.example
+
+# Logs
+/storage/logs/
+/storage/*.log
+
+# Dependencies
+node_modules/
 
 # Database backups
 database-backup/
