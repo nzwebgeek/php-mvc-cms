@@ -63,7 +63,7 @@ class AdminController extends Controller
 
     public function users(): void
     {
-       
+
         $this->auth->requireAdmin();
 
         $users = $this->userRepository->all();
@@ -81,7 +81,7 @@ class AdminController extends Controller
 
     public function createUser(): void
     {
-       
+
         $this->auth->requireAdmin();
 
         $this->view(
@@ -132,6 +132,13 @@ class AdminController extends Controller
 
         $roleId = $this->userRepository->findRoleIdByName($role);
 
+        if ($roleId === null) {
+            $_SESSION['error'] = 'Invalid role.';
+
+            header('Location: /admin/users/create');
+            exit;
+        }
+
         $this->userRepository->createUser(
             $username,
             $email,
@@ -149,7 +156,7 @@ class AdminController extends Controller
 
     public function editUser(): void
     {
-        
+
         $this->auth->requireAdmin();
 
         $id = (int) ($_GET['id'] ?? 0);
@@ -247,9 +254,9 @@ class AdminController extends Controller
 
     public function uploadMedia(): void
     {
-       
+
         $this->auth->requireAdmin();
-        
+
         $this->view(
             'admin/dashboard/media/upload',
             [
@@ -292,10 +299,10 @@ class AdminController extends Controller
 
     public function viewMedia(): void
     {
-        $this->auth->requireAdmin();
-
+         $this->auth->requireAdmin();
 
         $id = (int) ($_GET['id'] ?? 0);
+
 
         if ($id <= 0) {
             $_SESSION['error'] =
@@ -328,15 +335,8 @@ class AdminController extends Controller
 
     public function deleteMedia(): void
     {
-        if (!$this->auth->isLoggedIn()) {
-            header('Location: /login');
-            exit;
-        }
 
-        if (!$this->auth->isAdmin()) {
-            header('Location: /dashboard');
-            exit;
-        }
+        $this->auth->requireAdmin();
 
         $this->csrf->requireValidToken();
 
