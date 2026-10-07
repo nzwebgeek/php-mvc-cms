@@ -26,11 +26,11 @@ return [
     */
 
     'app' => [
-        'name' => getenv('APP_NAME') ?: 'Stage Three MVC CMS',
+        'name' => getenv('APP_NAME') ?: 'PHP MVC CMS',
 
         'url' => $isProduction
             ? $required('APP_URL')
-            : (getenv('APP_URL') ?: 'http://stage-three-mvc-final.test'),
+            : (getenv('APP_URL') ?: 'http://localhost:8000'),
 
         'env' => $appEnv,
 
@@ -76,7 +76,7 @@ return [
         'from' => $isProduction
             ? $required('MAIL_FROM')
             : (getenv('MAIL_FROM')
-                ?: 'noreply@stage-three-mvc.test'),
+                ?: 'noreply@example.com'),
     ],
 
 ];

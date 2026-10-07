@@ -1,6 +1,6 @@
 {
-    "name": "owner/stage-three",
-    "description": "Stage Three CMS - MVC Migration",
+    "name": "nzwebgeek/php-mvc-cms",
+    "description": "Custom PHP MVC Content Management System",
     "type": "project",
     "autoload": {
         "psr-4": {
@@ -14,8 +14,7 @@
         }
     ],
     "minimum-stability": "stable",
-   "require": {
-    "php": "^8.3"
+    "require": {
+        "php": "^8.3"
     }
-
 }
